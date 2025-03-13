@@ -21,7 +21,7 @@ if command -v gamemoderun > /dev/null 2>&1; then
 fi
 
 # Check if user already has a manual Avalonia scaling override or session type is x11.
-if [[ -n "${AVALONIA_GLOBAL_SCALE_FACTOR-}" || "$(echo "$XDG_SESSION_TYPE")" == "x11" ]]; then
+if [ -n "${AVALONIA_GLOBAL_SCALE_FACTOR-}" ] || [ "$XDG_SESSION_TYPE" = "x11" ]; then
     echo "Scaling: Performed by environment, skipping." >&2
 else
     # Query monitor config directly (GNOME), default display only.
@@ -37,16 +37,14 @@ else
         echo -n 'Scaling: Attempting to get scaling from X DPI value...' >&2
         dpi="$(xrdb -get Xft.dpi)"
         if [[ -n "${dpi}" ]]; then
-            SCALING=$(echo "scale=2; ${dpi}/96" | bc)
+            SCALING=$(awk -vdpi="$dpi" 'BEGIN{print dpi/96}')
         fi
         echo "found! Factor: ${SCALING}"
 
     # Query kscreen-doctor for Plasma as a fallback.
     elif [[ "$(echo "$XDG_CURRENT_DESKTOP")" == "KDE" ]] && command -v kscreen-doctor >/dev/null; then
-        echo -n 'Scaling: Attempting to get Plasma desktop scaling factor...' >&2
-        SCALING="$(kscreen-doctor --outputs | grep "Scale" -m 1)"
-        SCALING="${SCALING##* }"
-        SCALING=$(echo $SCALING | sed 's/\x1B\[[0-9;]*m//g') # Trim ANSI chars from ksd output.
+        # gsub strips ANSI color codes from ksd output
+        SCALING=$(kscreen-doctor --outputs | awk '/Scale:/{gsub(/\x1b\[[0-9;]*m/,""); print $2; exit}')
         echo "found! Factor: ${SCALING}"
     fi
 
