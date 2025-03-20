@@ -4,6 +4,7 @@ using Ryujinx.Audio.Backends.CompatLayer;
 using Ryujinx.Audio.Integration;
 using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
+using Ryujinx.Common.Logging;
 using Ryujinx.Graphics.Gpu;
 using Ryujinx.HLE.FileSystem;
 using Ryujinx.HLE.HOS;
@@ -83,6 +84,11 @@ namespace Ryujinx.HLE
             
             UpdateVSyncInterval();
 #pragma warning restore IDE0055
+            
+#if DEBUG
+            if (Configuration.IgnoreMissingServices)
+                Logger.Notice.Print(LogClass.Emulation, "Ignore Missing Services is enabled.", nameof(Switch));
+#endif
 
             Shared = this;
         }

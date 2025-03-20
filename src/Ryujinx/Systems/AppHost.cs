@@ -901,11 +901,6 @@ namespace Ryujinx.Ava.Systems
                     _viewModel.UiHandler
                 )
             );
-
-#if DEBUG
-         if (Device.Configuration.IgnoreMissingServices)
-             Logger.Notice.Print(LogClass.Emulation, "Ignore Missing Services is enabled.");
-#endif
         }
 
         private static IHardwareDeviceDriver InitializeAudio()
