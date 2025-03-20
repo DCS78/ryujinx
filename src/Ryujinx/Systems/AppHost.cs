@@ -194,7 +194,6 @@ namespace Ryujinx.Ava.Systems
                 _defaultCursorWin = CreateArrowCursor();
             }
 
-            ConfigurationState.Instance.System.IgnoreMissingServices.Event += UpdateIgnoreMissingServicesState;
             ConfigurationState.Instance.Graphics.AspectRatio.Event += UpdateAspectRatioState;
             ConfigurationState.Instance.System.EnableDockedMode.Event += UpdateDockedModeState;
             ConfigurationState.Instance.System.AudioVolume.Event += UpdateAudioVolumeState;
@@ -487,14 +486,6 @@ namespace Ryujinx.Ava.Systems
             Exit();
         }
 
-        private void UpdateIgnoreMissingServicesState(object sender, ReactiveEventArgs<bool> args)
-        {
-            if (Device != null)
-            {
-                Device.Configuration.IgnoreMissingServices = args.NewValue;
-            }
-        }
-
         private void UpdateAspectRatioState(object sender, ReactiveEventArgs<AspectRatio> args)
         {
             if (Device != null)
@@ -608,9 +599,7 @@ namespace Ryujinx.Ava.Systems
         {
             if (Device.Processes != null)
                 MainWindowViewModel.UpdateGameMetadata(Device.Processes.ActiveApplication.ProgramIdText);
-
-
-            ConfigurationState.Instance.System.IgnoreMissingServices.Event -= UpdateIgnoreMissingServicesState;
+            
             ConfigurationState.Instance.Graphics.AspectRatio.Event -= UpdateAspectRatioState;
             ConfigurationState.Instance.System.EnableDockedMode.Event -= UpdateDockedModeState;
             ConfigurationState.Instance.System.AudioVolume.Event -= UpdateAudioVolumeState;
@@ -912,6 +901,11 @@ namespace Ryujinx.Ava.Systems
                     _viewModel.UiHandler
                 )
             );
+
+#if DEBUG
+         if (Device.Configuration.IgnoreMissingServices)
+             Logger.Notice.Print(LogClass.Emulation, "Ignore Missing Services is enabled.");
+#endif
         }
 
         private static IHardwareDeviceDriver InitializeAudio()

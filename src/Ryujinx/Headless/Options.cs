@@ -145,9 +145,6 @@ namespace Ryujinx.Headless
             if (NeedsOverride(nameof(DramSize)))
                 DramSize = configurationState.System.DramSize;
             
-            if (NeedsOverride(nameof(IgnoreMissingServices)))
-                IgnoreMissingServices = configurationState.System.IgnoreMissingServices;
-            
             if (NeedsOverride(nameof(IgnoreControllerApplet)))
                 IgnoreControllerApplet = configurationState.System.IgnoreControllerApplet;
             
@@ -408,8 +405,10 @@ namespace Ryujinx.Headless
         [Option("dram-size", Required = false, Default = MemoryConfiguration.MemoryConfiguration4GiB, HelpText = "Set the RAM amount on the emulated system.")]
         public MemoryConfiguration DramSize { get; set; }
 
+#if DEBUG
         [Option("ignore-missing-services", Required = false, Default = false, HelpText = "Enable ignoring missing services.")]
         public bool IgnoreMissingServices { get; set; }
+#endif
         
         [Option("ignore-controller-applet", Required = false, Default = false, HelpText = "Enable ignoring the controller applet when your game loses connection to your controller.")]
         public bool IgnoreControllerApplet { get; set; }

@@ -26,6 +26,9 @@ namespace Ryujinx.Ava.Utilities
         public static bool StartFullscreenArg { get; private set; }
         public static bool HideAvailableUpdates { get; private set; }
 
+#if DEBUG
+        public static bool IgnoreMissingServices { get; private set; }
+#endif
 
         public static void ParseArguments(string[] args)
         {
@@ -185,6 +188,11 @@ namespace Ryujinx.Ava.Utilities
                     case "--hide-updates":
                         HideAvailableUpdates = true;
                         break;
+#if DEBUG
+                    case "--ignore-missing-services":
+                        IgnoreMissingServices = true;
+                        break;
+#endif
                     case "--software-gui":
                         OverrideHardwareAcceleration = false;
                         break;

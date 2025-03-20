@@ -100,7 +100,6 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.AudioVolume.Value = cff.AudioVolume;
             System.MemoryManagerMode.Value = cff.MemoryManagerMode;
             System.DramSize.Value = cff.DramSize;
-            System.IgnoreMissingServices.Value = cff.IgnoreMissingServices;
             System.IgnoreControllerApplet.Value = cff.IgnoreApplet;
             System.UseHypervisor.Value = cff.UseHypervisor;
 

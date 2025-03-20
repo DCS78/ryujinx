@@ -265,13 +265,25 @@ namespace Ryujinx.HLE.HOS
             HorizonFsClient fsClient = new(this);
 
             ServiceTable = new ServiceTable();
-            IEnumerable<ServiceEntry> services = ServiceTable.GetServices(new HorizonOptions
-                (Device.Configuration.IgnoreMissingServices,
+            
+            IEnumerable<ServiceEntry> services = ServiceTable.GetServices(new HorizonOptions(
+#if DEBUG
+                Device.Configuration.IgnoreMissingServices,
                 LibHacHorizonManager.BcatClient,
                 fsClient,
                 AccountManager,
                 Device.AudioDeviceDriver,
-                TickSource));
+                TickSource
+#else
+                LibHacHorizonManager.BcatClient,
+                fsClient,
+                AccountManager,
+                Device.AudioDeviceDriver,
+                TickSource
+#endif
+            ));
+            
+
 
             foreach (ServiceEntry service in services)
             {

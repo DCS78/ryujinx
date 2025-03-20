@@ -79,7 +79,6 @@ namespace Ryujinx.Ava.Systems.Configuration
                 AudioVolume = System.AudioVolume,
                 MemoryManagerMode = System.MemoryManagerMode,
                 DramSize = System.DramSize,
-                IgnoreMissingServices = System.IgnoreMissingServices,
                 IgnoreApplet = System.IgnoreControllerApplet,
                 UseHypervisor = System.UseHypervisor,
                 GuiColumns = new GuiColumns
@@ -203,7 +202,6 @@ namespace Ryujinx.Ava.Systems.Configuration
             System.AudioVolume.Value = 1;
             System.MemoryManagerMode.Value = MemoryManagerMode.HostMappedUnsafe;
             System.DramSize.Value = MemoryConfiguration.MemoryConfiguration4GiB;
-            System.IgnoreMissingServices.Value = false;
             System.IgnoreControllerApplet.Value = false;
             System.UseHypervisor.Value = true;
             Multiplayer.LanInterfaceId.Value = "0";

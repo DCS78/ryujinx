@@ -5248,31 +5248,6 @@
       }
     },
     {
-      "ID": "SettingsTabSystemIgnoreMissingServices",
-      "Translations": {
-        "ar_SA": "تجاهل الخدمات المفقودة",
-        "de_DE": "Ignoriere fehlende Dienste",
-        "el_GR": "Αγνόηση υπηρεσιών που λείπουν",
-        "en_US": "Ignore Missing Services",
-        "es_ES": "Ignorar servicios no implementados",
-        "fr_FR": "Ignorer les services manquants",
-        "he_IL": "התעלם משירותים חסרים",
-        "it_IT": "Ignora servizi mancanti",
-        "ja_JP": "未実装サービスを無視する",
-        "ko_KR": "누락된 서비스 무시",
-        "no_NO": "Ignorer manglende tjenester",
-        "pl_PL": "Ignoruj Brakujące Usługi",
-        "pt_BR": "Ignorar Serviços Ausentes",
-        "ru_RU": "Игнорировать отсутствующие службы",
-        "sv_SE": "Ignorera saknade tjänster",
-        "th_TH": "เมินเฉยบริการที่หายไป",
-        "tr_TR": "Eksik Servisleri Görmezden Gel",
-        "uk_UA": "Ігнорувати відсутні служби",
-        "zh_CN": "忽略缺失的服务",
-        "zh_TW": "忽略缺少的模擬器功能"
-      }
-    },
-    {
       "ID": "SettingsTabSystemIgnoreControllerApplet",
       "Translations": {
         "ar_SA": "",
@@ -16645,31 +16620,6 @@
         "uk_UA": "Використовує альтернативний макет MemoryMode для імітації моделі розробки Switch.\n\nЦе корисно лише для пакетів текстур з вищою роздільною здатністю або модифікацій із роздільною здатністю 4K. НЕ покращує продуктивність.\n\nЗалиште вимкненим, якщо не впевнені.",
         "zh_CN": "模拟 Switch 开发机的内存布局。\n\n不会提高性能，某些高清纹理包或 4k 分辨率 MOD 可能需要使用此选项。\n\n如果不确定，请保持关闭状态。",
         "zh_TW": "利用另一種 MemoryMode 配置來模仿 Switch 開發模式。\n\n這僅對高解析度紋理套件或 4K 解析度模組有用。不會提高效能。\n\n如果不確定，請設定為 4GiB。"
-      }
-    },
-    {
-      "ID": "IgnoreMissingServicesTooltip",
-      "Translations": {
-        "ar_SA": "يتجاهل خدمات نظام هوريزون غير المنفذة. قد يساعد هذا في تجاوز الأعطال عند تشغيل ألعاب معينة.\n\nاتركه معطلا إذا كنت غير متأكد.",
-        "de_DE": "Durch diese Option werden nicht implementierte Dienste der Switch-Firmware ignoriert. Dies kann dabei helfen, Abstürze beim Starten bestimmter Spiele zu umgehen.\n\nIm Zweifelsfall AUS lassen.",
-        "el_GR": "Ενεργοποίηση ή απενεργοποίηση της αγνοώησης για υπηρεσίες που λείπουν",
-        "en_US": "Ignores unimplemented Horizon OS services. This may help in bypassing crashes when booting certain games.\n\nLeave OFF if unsure.",
-        "es_ES": "Hack para ignorar servicios no implementados del Horizon OS. Esto puede ayudar a sobrepasar crasheos cuando inicies ciertos juegos.\n\nDesactívalo si no sabes qué hacer.",
-        "fr_FR": "Ignore les services Horizon OS non-intégrés. Cela peut aider à contourner les plantages lors du démarrage de certains jeux.\n\nLaissez désactivé en cas d'incertitude.",
-        "he_IL": "מתעלם מפעולות שלא קיבלו מימוש במערכת ההפעלה Horizon OS. זה עלול לעזור לעקוף קריסות של היישום במשחקים מסויימים.\n\nמוטב להשאיר כבוי אם לא בטוחים.",
-        "it_IT": "Ignora i servizi non implementati del sistema operativo Horizon. Può aiutare ad aggirare gli arresti anomali che si verificano avviando alcuni giochi.\n\nNel dubbio, lascia l'opzione disattivata.",
-        "ja_JP": "未実装の Horizon OS サービスを無視します. 特定のゲームにおいて起動時のクラッシュを回避できる場合があります.\n\nよくわからない場合はオフのままにしてください.",
-        "ko_KR": "구현되지 않은 Horizon OS 서비스는 무시됩니다. 특정 게임을 부팅할 때, 발생하는 충돌을 우회하는 데 도움이 될 수 있습니다.\n\n모르면 끔으로 두세요.",
-        "no_NO": "Ignorerer ikke implementerte Horisont OS-tjenester. Dette kan hjelpe med å omgå krasj ved oppstart av enkelte spill.\n\nLa AV hvis du er usikker.",
-        "pl_PL": "Ignoruje niezaimplementowane usługi Horizon OS. Może to pomóc w ominięciu awarii podczas uruchamiania niektórych gier.\n\nW razie wątpliwości pozostaw WYŁĄCZONE.",
-        "pt_BR": "Ignora serviços não implementados do Horizon OS. Isso pode ajudar a contornar travamentos ao inicializar certos jogos.\n\nDeixe OFF se não tiver certeza.",
-        "ru_RU": "Игнорирует нереализованные сервисы Horizon в новых прошивках. Эта настройка поможет избежать вылеты при запуске определенных игр.\n\nРекомендуется оставить выключенным.",
-        "sv_SE": "Ignorerar Horizon OS-tjänster som inte har implementerats. Detta kan avhjälpa krascher när vissa spel startar upp.\n\nLämna AV om du är osäker.",
-        "th_TH": "ละเว้นบริการ Horizon OS ที่ยังไม่ได้ใช้งาน วิธีนี้อาจช่วยในการหลีกเลี่ยงข้อผิดพลาดเมื่อบูตเกมบางเกม\n\nปล่อยให้ปิดหากคุณไม่แน่ใจ",
-        "tr_TR": "Henüz programlanmamış Horizon işletim sistemi servislerini görmezden gelir. Bu seçenek belirli oyunların açılırken çökmesinin önüne geçmeye yardımcı olabilir.\n\nEmin değilseniz devre dışı bırakın.",
-        "uk_UA": "Ігнорує нереалізовані служби Horizon OS. Це може допомогти в обході збоїв під час завантаження певних ігор.\n\nЗалиште вимкненим якщо не впевнені.",
-        "zh_CN": "开启后，游戏会忽略未实现的系统服务，从而继续运行。\n少部分新发布的游戏由于使用了新的未知系统服务，可能需要此选项来避免闪退。\n模拟器更新完善系统服务之后，则无需开启此选项。\n\n如果不确定，请保持关闭状态。",
-        "zh_TW": "忽略未實現的 Horizon OS 服務。這可能有助於在啟動某些遊戲時避免崩潰。\n\n如果不確定，請保持關閉狀態。"
       }
     },
     {

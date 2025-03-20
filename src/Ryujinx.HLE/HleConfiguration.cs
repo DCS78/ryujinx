@@ -137,12 +137,14 @@ namespace Ryujinx.HLE
         /// </summary>
         public MemoryManagerMode MemoryManagerMode { internal get; set; }
 
+#if DEBUG
         /// <summary>
         /// Control the initial state of the ignore missing services setting.
         /// If this is set to true, when a missing service is encountered, it will try to automatically handle it instead of throwing an exception.
         /// </summary>
         /// TODO: Update this again.
-        public bool IgnoreMissingServices { internal get; set; }
+        public bool IgnoreMissingServices { get; set; }
+#endif
 
         /// <summary>
         /// Aspect Ratio applied to the renderer window by the SurfaceFlinger service.
@@ -207,7 +209,9 @@ namespace Ryujinx.HLE
                                 long systemTimeOffset,
                                 string timeZone,
                                 MemoryManagerMode memoryManagerMode,
+#if DEBUG
                                 bool ignoreMissingServices,
+#endif
                                 AspectRatio aspectRatio,
                                 float audioVolume,
                                 bool useHypervisor,
@@ -232,7 +236,9 @@ namespace Ryujinx.HLE
             SystemTimeOffset = systemTimeOffset;
             TimeZone = timeZone;
             MemoryManagerMode = memoryManagerMode;
+#if DEBUG
             IgnoreMissingServices = ignoreMissingServices;
+#endif
             AspectRatio = aspectRatio;
             AudioVolume = audioVolume;
             UseHypervisor = useHypervisor;

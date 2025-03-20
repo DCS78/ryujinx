@@ -3,6 +3,7 @@ using Gommon;
 using LibHac.Tools.FsSystem;
 using Ryujinx.Ava.Systems.Configuration.System;
 using Ryujinx.Ava.Systems.Configuration.UI;
+using Ryujinx.Ava.Utilities;
 using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Configuration.Hid;
@@ -379,11 +380,6 @@ namespace Ryujinx.Ava.Systems.Configuration
             /// Defines the amount of RAM available on the emulated system, and how it is distributed
             /// </summary>
             public ReactiveObject<MemoryConfiguration> DramSize { get; private set; }
-
-            /// <summary>
-            /// Enable or disable ignoring missing services
-            /// </summary>
-            public ReactiveObject<bool> IgnoreMissingServices { get; private set; }
             
             /// <summary>
             ///  Ignore Controller Applet
@@ -427,8 +423,6 @@ namespace Ryujinx.Ava.Systems.Configuration
                 MemoryManagerMode.LogChangesToValue(nameof(MemoryManagerMode));
                 DramSize = new ReactiveObject<MemoryConfiguration>();
                 DramSize.LogChangesToValue(nameof(DramSize));
-                IgnoreMissingServices = new ReactiveObject<bool>();
-                IgnoreMissingServices.LogChangesToValue(nameof(IgnoreMissingServices));
                 IgnoreControllerApplet = new ReactiveObject<bool>();
                 IgnoreControllerApplet.LogChangesToValue(nameof(IgnoreControllerApplet));
                 AudioVolume = new ReactiveObject<float>();
@@ -835,6 +829,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         }
 
         public HleConfiguration CreateHleConfiguration() =>
+#if DEBUG
             new(
                 System.DramSize,
                 System.Language.Value.ToHLE(),
@@ -852,7 +847,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                     : System.SystemTimeOffset,
                 System.TimeZone,
                 System.MemoryManagerMode,
-                System.IgnoreMissingServices,
+                CommandLineState.IgnoreMissingServices,
                 Graphics.AspectRatio,
                 System.AudioVolume,
                 System.UseHypervisor,
@@ -863,5 +858,34 @@ namespace Ryujinx.Ava.Systems.Configuration
                 Instance.Multiplayer.GetLdnServer(),
                 Instance.Graphics.CustomVSyncInterval,
                 Instance.Hacks.ShowDirtyHacks ? Instance.Hacks.EnabledHacks : null);
+#else
+            new(
+                System.DramSize,
+                System.Language.Value.ToHLE(),
+                System.Region.Value.ToHLE(),
+                Graphics.VSyncMode,
+                System.EnableDockedMode,
+                System.EnablePtc,
+                System.EnableInternetAccess,
+                System.EnableFsIntegrityChecks 
+                    ? IntegrityCheckLevel.ErrorOnInvalid 
+                    : IntegrityCheckLevel.None,
+                System.FsGlobalAccessLogMode,
+                System.MatchSystemTime
+                    ? 0
+                    : System.SystemTimeOffset,
+                System.TimeZone,
+                System.MemoryManagerMode,
+                Graphics.AspectRatio,
+                System.AudioVolume,
+                System.UseHypervisor,
+                Multiplayer.LanInterfaceId,
+                Multiplayer.Mode,
+                Multiplayer.DisableP2p,
+                Multiplayer.LdnPassphrase,
+                Instance.Multiplayer.GetLdnServer(),
+                Instance.Graphics.CustomVSyncInterval,
+                Instance.Hacks.ShowDirtyHacks ? Instance.Hacks.EnabledHacks : null);
+#endif
     }
 }

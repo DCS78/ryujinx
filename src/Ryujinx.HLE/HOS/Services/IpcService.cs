@@ -112,7 +112,8 @@ namespace Ryujinx.HLE.HOS.Services
             int commandId = (int)context.RequestData.ReadInt64();
 
             bool serviceExists = service.CmifCommands.TryGetValue(commandId, out MethodInfo processRequest);
-
+            
+#if DEBUG
             if (context.Device.Configuration.IgnoreMissingServices || serviceExists)
             {
                 ResultCode result = ResultCode.Success;
@@ -158,6 +159,39 @@ namespace Ryujinx.HLE.HOS.Services
 
                 throw new ServiceNotImplementedException(service, context, dbgMessage);
             }
+#else
+            if (serviceExists)
+            {
+                context.ResponseData.BaseStream.Seek(_isDomain ? 0x20 : 0x10, SeekOrigin.Begin);
+                
+                Logger.Trace?.Print(LogClass.KernelIpc, $"{service.GetType().Name}: {processRequest.Name}");
+
+                ResultCode result = (ResultCode)processRequest.Invoke(service, [context]);
+
+                if (_isDomain)
+                {
+                    foreach (int id in context.Response.ObjectIds)
+                    {
+                        context.ResponseData.Write(id);
+                    }
+
+                    context.ResponseData.BaseStream.Seek(0, SeekOrigin.Begin);
+
+                    context.ResponseData.Write(context.Response.ObjectIds.Count);
+                }
+
+                context.ResponseData.BaseStream.Seek(_isDomain ? 0x10 : 0, SeekOrigin.Begin);
+
+                context.ResponseData.Write(IpcMagic.Sfco);
+                context.ResponseData.Write((long)result);
+            }
+            else
+            {
+                string dbgMessage = $"{service.GetType().FullName}: {commandId}";
+
+                throw new ServiceNotImplementedException(service, context, dbgMessage);
+            }
+#endif
         }
 
         public void CallTipcMethod(ServiceCtx context)
@@ -166,6 +200,7 @@ namespace Ryujinx.HLE.HOS.Services
 
             bool serviceExists = TipcCommands.TryGetValue(commandId, out MethodInfo processRequest);
 
+#if DEBUG
             if (context.Device.Configuration.IgnoreMissingServices || serviceExists)
             {
                 ResultCode result = ResultCode.Success;
@@ -198,6 +233,26 @@ namespace Ryujinx.HLE.HOS.Services
 
                 throw new ServiceNotImplementedException(this, context, dbgMessage);
             }
+#else
+            if (serviceExists)
+            {
+                context.ResponseData.BaseStream.Seek(0x4, SeekOrigin.Begin);
+                
+                Logger.Debug?.Print(LogClass.KernelIpc, $"{GetType().Name}: {processRequest.Name}");
+
+                ResultCode result = (ResultCode)processRequest.Invoke(this, [context]);
+
+                context.ResponseData.BaseStream.Seek(0, SeekOrigin.Begin);
+
+                context.ResponseData.Write((uint)result);
+            }
+            else
+            {
+                string dbgMessage = $"{GetType().FullName}: {commandId}";
+
+                throw new ServiceNotImplementedException(this, context, dbgMessage);
+            }
+#endif
         }
 
         protected void MakeObject(ServiceCtx context, IpcService obj)

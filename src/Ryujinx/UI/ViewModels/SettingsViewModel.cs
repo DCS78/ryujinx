@@ -208,7 +208,6 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool EnableLowPowerPptc { get; set; }
         public bool EnableInternetAccess { get; set; }
         public bool EnableFsIntegrityChecks { get; set; }
-        public bool IgnoreMissingServices { get; set; }
         public MemoryConfiguration DramSize { get; set; }
         public bool EnableShaderCache { get; set; }
         public bool EnableTextureRecompression { get; set; }
@@ -584,7 +583,6 @@ namespace Ryujinx.Ava.UI.ViewModels
             VSyncMode = config.Graphics.VSyncMode;
             EnableFsIntegrityChecks = config.System.EnableFsIntegrityChecks;
             DramSize = config.System.DramSize;
-            IgnoreMissingServices = config.System.IgnoreMissingServices;
             IgnoreApplet = config.System.IgnoreControllerApplet;
 
             // CPU
@@ -686,7 +684,6 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.System.SystemTimeOffset.Value = Convert.ToInt64((CurrentDate.ToUnixTimeSeconds() + CurrentTime.TotalSeconds) - DateTimeOffset.Now.ToUnixTimeSeconds());
             config.System.EnableFsIntegrityChecks.Value = EnableFsIntegrityChecks;
             config.System.DramSize.Value = DramSize;
-            config.System.IgnoreMissingServices.Value = IgnoreMissingServices;
             config.System.IgnoreControllerApplet.Value = IgnoreApplet;
 
             // CPU

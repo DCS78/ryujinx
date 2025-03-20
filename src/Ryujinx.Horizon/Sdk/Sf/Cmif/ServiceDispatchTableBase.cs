@@ -39,6 +39,7 @@ namespace Ryujinx.Horizon.Sdk.Sf.Cmif
 
             if (!entries.TryGetValue((int)commandId, out CommandHandler commandHandler))
             {
+#if DEBUG
                 if (HorizonStatic.Options.IgnoreMissingServices)
                 {
                     // If ignore missing services is enabled, just pretend that everything is fine.
@@ -49,8 +50,10 @@ namespace Ryujinx.Horizon.Sdk.Sf.Cmif
                     Logger.Warning?.Print(LogClass.Service, $"Missing service {objectName} (command ID: {commandId}) ignored");
 
                     return Result.Success;
-                }
-                else if (HorizonStatic.Options.ThrowOnInvalidCommandIds)
+                }                
+#endif
+
+                if (HorizonStatic.Options.ThrowOnInvalidCommandIds)
                 {
                     throw new NotImplementedException($"{objectName} command ID: {commandId} is not implemented");
                 }

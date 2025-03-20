@@ -314,6 +314,7 @@ namespace Ryujinx.Headless
 
         private static Switch InitializeEmulationContext(WindowBase window, IRenderer renderer, Options options) =>
             new(
+#if DEBUG
                 new HleConfiguration(
                         options.DramSize,
                         options.SystemLanguage,
@@ -338,6 +339,31 @@ namespace Ryujinx.Headless
                         string.Empty,
                         options.CustomVSyncInterval
                     )
+#else
+                new HleConfiguration(
+                        options.DramSize,
+                        options.SystemLanguage,
+                        options.SystemRegion,
+                        options.VSyncMode,
+                        !options.DisableDockedMode,
+                        !options.DisablePTC,
+                        options.EnableInternetAccess,
+                        !options.DisableFsIntegrityChecks ? IntegrityCheckLevel.ErrorOnInvalid : IntegrityCheckLevel.None,
+                        options.FsGlobalAccessLogMode,
+                        options.SystemTimeOffset,
+                        options.SystemTimeZone,
+                        options.MemoryManagerMode,
+                        options.AspectRatio,
+                        options.AudioVolume,
+                        options.UseHypervisor ?? true,
+                        options.MultiplayerLanInterfaceId,
+                        Common.Configuration.Multiplayer.MultiplayerMode.Disabled,
+                        false,
+                        string.Empty,
+                        string.Empty,
+                        options.CustomVSyncInterval
+                    )
+#endif
                     .Configure(
                         _virtualFileSystem,
                         _libHacHorizonManager,

@@ -313,11 +313,6 @@
                     Margin="10,0,0,0"
                     HorizontalAlignment="Stretch"
                     Orientation="Vertical">
-                    <CheckBox
-                        IsChecked="{Binding IgnoreMissingServices}"
-                        ToolTip.Tip="{ext:Locale IgnoreMissingServicesTooltip}">
-                        <TextBlock Text="{ext:Locale SettingsTabSystemIgnoreMissingServices}" />
-                    </CheckBox>
                     <CheckBox 
                         IsChecked="{Binding IgnoreApplet}"
                         ToolTip.Tip="{ext:Locale IgnoreControllerAppletTooltip}">
