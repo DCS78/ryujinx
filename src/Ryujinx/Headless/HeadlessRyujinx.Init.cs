@@ -312,60 +312,37 @@ namespace Ryujinx.Headless
 
             return new OpenGLRenderer();
         }
-        
+
         private static Switch InitializeEmulationContext(WindowBase window, IRenderer renderer, Options options) =>
             new(
+
+                new HleConfiguration(
+                    options.DramSize,
+                    options.SystemLanguage,
+                    options.SystemRegion,
+                    options.VSyncMode,
+                    !options.DisableDockedMode,
+                    !options.DisablePTC,
+                    ITickSource.RealityTickScalar,
+                    options.EnableInternetAccess,
+                    !options.DisableFsIntegrityChecks ? IntegrityCheckLevel.ErrorOnInvalid : IntegrityCheckLevel.None,
+                    options.FsGlobalAccessLogMode,
+                    options.SystemTimeOffset,
+                    options.SystemTimeZone,
+                    options.MemoryManagerMode,
 #if DEBUG
-                new HleConfiguration(
-                        options.DramSize,
-                        options.SystemLanguage,
-                        options.SystemRegion,
-                        options.VSyncMode,
-                        !options.DisableDockedMode,
-                        !options.DisablePTC,
-                        ITickSource.RealityTickScalar,
-                        options.EnableInternetAccess,
-                        !options.DisableFsIntegrityChecks ? IntegrityCheckLevel.ErrorOnInvalid : IntegrityCheckLevel.None,
-                        options.FsGlobalAccessLogMode,
-                        options.SystemTimeOffset,
-                        options.SystemTimeZone,
-                        options.MemoryManagerMode,
-                        options.IgnoreMissingServices,
-                        options.AspectRatio,
-                        options.AudioVolume,
-                        options.UseHypervisor ?? true,
-                        options.MultiplayerLanInterfaceId,
-                        Common.Configuration.Multiplayer.MultiplayerMode.Disabled,
-                        false,
-                        string.Empty,
-                        string.Empty,
-                        options.CustomVSyncInterval
-                    )
-#else
-                new HleConfiguration(
-                        options.DramSize,
-                        options.SystemLanguage,
-                        options.SystemRegion,
-                        options.VSyncMode,
-                        !options.DisableDockedMode,
-                        !options.DisablePTC,
-                        options.EnableInternetAccess,
-                        !options.DisableFsIntegrityChecks ? IntegrityCheckLevel.ErrorOnInvalid : IntegrityCheckLevel.None,
-                        options.FsGlobalAccessLogMode,
-                        options.SystemTimeOffset,
-                        options.SystemTimeZone,
-                        options.MemoryManagerMode,
-                        options.AspectRatio,
-                        options.AudioVolume,
-                        options.UseHypervisor ?? true,
-                        options.MultiplayerLanInterfaceId,
-                        Common.Configuration.Multiplayer.MultiplayerMode.Disabled,
-                        false,
-                        string.Empty,
-                        string.Empty,
-                        options.CustomVSyncInterval
-                    )
+                    options.IgnoreMissingServices,
 #endif
+                    options.AspectRatio,
+                    options.AudioVolume,
+                    options.UseHypervisor ?? true,
+                    options.MultiplayerLanInterfaceId,
+                    Common.Configuration.Multiplayer.MultiplayerMode.Disabled,
+                    false,
+                    string.Empty,
+                    string.Empty,
+                    options.CustomVSyncInterval
+                )
                     .Configure(
                         _virtualFileSystem,
                         _libHacHorizonManager,

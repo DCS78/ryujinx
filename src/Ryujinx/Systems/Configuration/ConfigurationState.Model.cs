@@ -843,68 +843,36 @@ namespace Ryujinx.Ava.Systems.Configuration
         }
 
         public HleConfiguration CreateHleConfiguration() =>
+            new(
+                System.DramSize,
+                System.Language.Value.ToHLE(),
+                System.Region.Value.ToHLE(),
+                Graphics.VSyncMode,
+                System.EnableDockedMode,
+                System.EnablePtc,
+                System.TickScalar,
+                System.EnableInternetAccess,
+                System.EnableFsIntegrityChecks 
+                    ? IntegrityCheckLevel.ErrorOnInvalid 
+                    : IntegrityCheckLevel.None,
+                System.FsGlobalAccessLogMode,
+                System.MatchSystemTime
+                    ? 0
+                    : System.SystemTimeOffset,
+                System.TimeZone,
+                System.MemoryManagerMode,
 #if DEBUG
-            new(
-                System.DramSize,
-                System.Language.Value.ToHLE(),
-                System.Region.Value.ToHLE(),
-                Graphics.VSyncMode,
-                System.EnableDockedMode,
-                System.EnablePtc,
-                System.TickScalar,
-                System.EnableInternetAccess,
-                System.EnableFsIntegrityChecks 
-                    ? IntegrityCheckLevel.ErrorOnInvalid 
-                    : IntegrityCheckLevel.None,
-                System.FsGlobalAccessLogMode,
-                System.MatchSystemTime
-                    ? 0
-                    : System.SystemTimeOffset,
-                System.TimeZone,
-                System.MemoryManagerMode,
                 CommandLineState.IgnoreMissingServices,
-                Graphics.AspectRatio,
-                System.AudioVolume,
-                System.UseHypervisor,
-                Multiplayer.LanInterfaceId,
-                Multiplayer.Mode,
-                Multiplayer.DisableP2p,
-                Multiplayer.LdnPassphrase,
-                Instance.Multiplayer.GetLdnServer(),
-                Instance.Graphics.CustomVSyncInterval,
-                Instance.Hacks.ShowDirtyHacks ? Instance.Hacks.EnabledHacks : null);
-#else
-            new(
-                System.DramSize,
-                System.Language.Value.ToHLE(),
-                System.Region.Value.ToHLE(),
-                Graphics.VSyncMode,
-                System.EnableDockedMode,
-                System.EnablePtc,
-                System.TickScalar,
-                System.EnableInternetAccess,
-                System.EnableFsIntegrityChecks 
-                    ? IntegrityCheckLevel.ErrorOnInvalid 
-                    : IntegrityCheckLevel.None,
-                System.FsGlobalAccessLogMode,
-                System.MatchSystemTime
-                    ? 0
-                    : System.SystemTimeOffset,
-                System.TimeZone,
-                System.MemoryManagerMode,
-                Graphics.AspectRatio,
-                System.AudioVolume,
-                System.UseHypervisor,
-                Multiplayer.LanInterfaceId,
-                Multiplayer.Mode,
-                Multiplayer.DisableP2p,
-                Multiplayer.LdnPassphrase,
-                Instance.Multiplayer.GetLdnServer(),
-                Instance.Graphics.CustomVSyncInterval,
-                Instance.Hacks.ShowDirtyHacks ? Instance.Hacks.EnabledHacks : null);
 #endif
-                Multiplayer.GetLdnServer(),
-                Graphics.CustomVSyncInterval,
-                Hacks.ShowDirtyHacks ? Hacks.EnabledHacks : null);
+                Graphics.AspectRatio,
+                System.AudioVolume,
+                System.UseHypervisor,
+                Multiplayer.LanInterfaceId,
+                Multiplayer.Mode,
+                Multiplayer.DisableP2p,
+                Multiplayer.LdnPassphrase,
+                Instance.Multiplayer.GetLdnServer(),
+                Instance.Graphics.CustomVSyncInterval,
+                Instance.Hacks.ShowDirtyHacks ? Instance.Hacks.EnabledHacks : null);
     }
 }
