@@ -231,6 +231,7 @@ namespace Ryujinx.Headless
             _enableKeyboard = option.EnableKeyboard;
             _enableMouse = option.EnableMouse;
             
+            LoadPlayerConfiguration(option.InputProfileHandheldName, option.InputIdHandheld, PlayerIndex.Handheld);
             LoadPlayerConfiguration(option.InputProfile1Name, option.InputId1, PlayerIndex.Player1);
             LoadPlayerConfiguration(option.InputProfile2Name, option.InputId2, PlayerIndex.Player2); 
             LoadPlayerConfiguration(option.InputProfile3Name, option.InputId3, PlayerIndex.Player3);
@@ -239,7 +240,7 @@ namespace Ryujinx.Headless
             LoadPlayerConfiguration(option.InputProfile6Name, option.InputId6, PlayerIndex.Player6);
             LoadPlayerConfiguration(option.InputProfile7Name, option.InputId7, PlayerIndex.Player7);
             LoadPlayerConfiguration(option.InputProfile8Name, option.InputId8, PlayerIndex.Player8);
-            LoadPlayerConfiguration(option.InputProfileHandheldName, option.InputIdHandheld, PlayerIndex.Handheld);
+            
             
             if (_inputConfiguration.Count == 0)
             {
@@ -314,12 +315,6 @@ namespace Ryujinx.Headless
             
             void LoadPlayerConfiguration(string inputProfileName, string inputId, PlayerIndex index)
             {
-                if (index == PlayerIndex.Handheld && _inputConfiguration.Count > 0)
-                {
-                    Logger.Info?.Print(LogClass.Configuration, "Skipping handheld configuration as there are already other players configured.");
-                    return;
-                }
-                
                 InputConfig inputConfig = option.InheritedInputConfigs[index] ?? HandlePlayerConfiguration(inputProfileName, inputId, index);
 
                 if (inputConfig != null)

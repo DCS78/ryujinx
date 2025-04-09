@@ -20,6 +20,7 @@ using Ryujinx.Input;
 using Silk.NET.Vulkan;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ConfigGamepadInputId = Ryujinx.Common.Configuration.Hid.Controller.GamepadInputId;
@@ -71,6 +72,9 @@ namespace Ryujinx.Headless
                     return null;
                 }
             }
+
+            if (index != PlayerIndex.Handheld && _inputConfiguration.Any(x => x.PlayerIndex == PlayerIndex.Handheld))
+                return null;
 
             IGamepad gamepad = _inputManager.KeyboardDriver.GetGamepad(inputId);
 
