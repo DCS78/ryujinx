@@ -566,6 +566,7 @@ namespace ARMeilleure.Translation.PTC
         {
             if (AreCarriersEmpty() || ContainsBlacklistedFunctions())
             {
+                ResetCarriersIfNeeded();
                 return;
             }
 
