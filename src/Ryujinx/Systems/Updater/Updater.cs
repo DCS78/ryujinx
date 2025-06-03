@@ -117,6 +117,7 @@ namespace Ryujinx.Ava.Systems
             try
             {
                 buildSizeClient.DefaultRequestHeaders.Add("Range", "bytes=0-0");
+                buildSizeClient.Timeout = TimeSpan.FromSeconds(10); // GitLab instance is located in Ukraine. Connection times will vary across the world.
 
                 HttpResponseMessage message = await buildSizeClient.GetAsync(new Uri(_buildUrl), HttpCompletionOption.ResponseHeadersRead);
 

@@ -1,6 +1,5 @@
 ﻿using Gommon;
 using Ryujinx.Ava.Common.Locale;
-using Ryujinx.Ava.Common.Models.Github;
 using Ryujinx.Ava.Common.Models.GitLab;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Common;
@@ -8,6 +7,7 @@ using Ryujinx.Common.Helper;
 using Ryujinx.Common.Logging;
 using Ryujinx.Common.Utilities;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
@@ -41,6 +41,8 @@ namespace Ryujinx.Ava.Systems
             {
                 using HttpClient jsonClient = ConstructHttpClient();
 
+                jsonClient.Timeout = TimeSpan.FromSeconds(10); // GitLab instance is located in Ukraine. Connection times will vary across the world.
+
                 if (_currentGitLabReleaseChannel == null)
                 {
                     GitLabReleaseChannels releaseChannels = await GitLabReleaseChannels.GetAsync(jsonClient);
@@ -55,16 +57,12 @@ namespace Ryujinx.Ava.Systems
 
                 string fetchedJson = await jsonClient.GetStringAsync(_currentGitLabReleaseChannel.GetLatestReleaseApiUrl());
                 GitLabReleasesJsonResponse fetched = JsonHelper.Deserialize(fetchedJson, _glSerializerContext.GitLabReleasesJsonResponse);
+                
                 _buildVer = fetched.TagName;
-
-                foreach (GitLabReleaseAssetJsonResponse.GitLabReleaseAssetLinkJsonResponse asset in fetched.Assets.Links)
-                {
-                    if (asset.AssetName.StartsWith("ryujinx") && asset.AssetName.EndsWith(_platformExt))
-                    {
-                        _buildUrl = asset.Url;
-                        break;
-                    }
-                }
+                _buildUrl = fetched.Assets.Links
+                    .FirstOrDefault(link => 
+                        link.AssetName.StartsWith("ryujinx") && link.AssetName.EndsWith(_platformExt)
+                    )?.Url;
 
                 // If build not done, assume no new update are available.
                 if (_buildUrl is null)
