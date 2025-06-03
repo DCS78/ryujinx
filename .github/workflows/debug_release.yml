@@ -69,6 +69,8 @@ jobs:
           
           ./gli.exe --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/ryujinx --command=UploadGenericPackage "ryubing|${{ steps.version_info.outputs.build_version }}|release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.zip"
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Packing Linux builds
         if: matrix.platform.os == 'ubuntu-latest'
@@ -87,6 +89,8 @@ jobs:
           
           gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/ryujinx --command=UploadGenericPackage "ryubing|${{ steps.version_info.outputs.build_version }}|release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz"
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Build AppImage (Linux)
         if: matrix.platform.os == 'ubuntu-latest'
