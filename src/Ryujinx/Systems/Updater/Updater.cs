@@ -144,7 +144,7 @@ namespace Ryujinx.Ava.Systems
                         break;
                     // Secondary button maps to no, which in this case is the show changelog button.
                     case UserResult.No:
-                        OpenHelper.OpenUrl(ReleaseInformation.GetChangelogUrl(currentVersion, newVersion, _changelogUrlFormat.Format(currentVersion)));
+                        OpenHelper.OpenUrl(ReleaseInformation.GetChangelogUrl(currentVersion, newVersion, _stableUrlFormat.Format(currentVersion)));
                         goto RequestUserToUpdate;
                     default:
                         _running = false;
