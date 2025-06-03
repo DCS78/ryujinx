@@ -6,6 +6,7 @@ using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.Zip;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Common.Models.Github;
+using Ryujinx.Ava.Common.Models.GitLab;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common;
@@ -29,13 +30,11 @@ using System.Threading.Tasks;
 
 namespace Ryujinx.Ava.Systems
 {
-    internal static class Updater
+    internal static partial class Updater
     {
-        private static ReleaseChannels.Channel? _currentReleaseChannel;
-
-        private const string GitHubApiUrl = "https://api.github.com";
-
-        private static readonly GithubReleasesJsonSerializerContext _serializerContext = new(JsonHelper.GetDefaultSerializerOptions());
+        private static readonly GithubReleasesJsonSerializerContext _ghSerializerContext = new(JsonHelper.GetDefaultSerializerOptions());
+        private static readonly GitLabReleasesJsonSerializerContext _glSerializerContext = new(JsonHelper.GetDefaultSerializerOptions());
+        
 
         private static readonly string _homeDir = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string _updateDir = Path.Combine(Path.GetTempPath(), "Ryujinx", "update");
@@ -54,121 +53,8 @@ namespace Ryujinx.Ava.Systems
 
         private static readonly string[] _windowsDependencyDirs = [];
 
-        public static async Task<Optional<(Version Current, Version Incoming)>> CheckVersionAsync(bool showVersionUpToDate = false)
-        {
-            if (!Version.TryParse(Program.Version, out Version currentVersion))
-            {
-                Logger.Error?.Print(LogClass.Application, $"Failed to convert the current {RyujinxApp.FullAppName} version!");
-
-                await ContentDialogHelper.CreateWarningDialog(
-                    LocaleManager.Instance[LocaleKeys.DialogUpdaterConvertFailedMessage],
-                    LocaleManager.Instance[LocaleKeys.DialogUpdaterCancelUpdateMessage]);
-
-                _running = false;
-
-                return default;
-            }
-
-            Logger.Info?.Print(LogClass.Application, "Checking for updates.");
-
-            // Get latest version number from GitHub API
-            try
-            {
-                using HttpClient jsonClient = ConstructHttpClient();
-
-                if (_currentReleaseChannel == null)
-                {
-                    ReleaseChannels releaseChannels = await ReleaseInformation.GetReleaseChannelsAsync(jsonClient);
-
-                    _currentReleaseChannel = ReleaseInformation.IsCanaryBuild
-                        ? releaseChannels.Canary
-                        : releaseChannels.Stable;
-                }
-
-                string fetchedJson = await jsonClient.GetStringAsync(_currentReleaseChannel.Value.GetLatestReleaseApiUrl());
-                GithubReleasesJsonResponse fetched = JsonHelper.Deserialize(fetchedJson, _serializerContext.GithubReleasesJsonResponse);
-                _buildVer = fetched.TagName;
-
-                foreach (GithubReleaseAssetJsonResponse asset in fetched.Assets)
-                {
-                    if (asset.Name.StartsWith("ryujinx") && asset.Name.EndsWith(_platformExt))
-                    {
-                        _buildUrl = asset.BrowserDownloadUrl;
-
-                        if (asset.State != "uploaded")
-                        {
-                            if (showVersionUpToDate)
-                            {
-                                UserResult userResult = await ContentDialogHelper.CreateUpdaterUpToDateInfoDialog(
-                                    LocaleManager.Instance[LocaleKeys.DialogUpdaterAlreadyOnLatestVersionMessage],
-                                    string.Empty);
-
-                                if (userResult is UserResult.Ok)
-                                {
-                                    OpenHelper.OpenUrl(ReleaseInformation.GetChangelogForVersion(currentVersion, _currentReleaseChannel.Value));
-                                }
-                            }
-
-                            Logger.Info?.Print(LogClass.Application, "Up to date.");
-
-                            _running = false;
-
-                            return default;
-                        }
-
-                        break;
-                    }
-                }
-
-                // If build not done, assume no new update are available.
-                if (_buildUrl is null)
-                {
-                    if (showVersionUpToDate)
-                    {
-                        UserResult userResult = await ContentDialogHelper.CreateUpdaterUpToDateInfoDialog(
-                            LocaleManager.Instance[LocaleKeys.DialogUpdaterAlreadyOnLatestVersionMessage],
-                            string.Empty);
-
-                        if (userResult is UserResult.Ok)
-                        {
-                            OpenHelper.OpenUrl(ReleaseInformation.GetChangelogForVersion(currentVersion, _currentReleaseChannel.Value));
-                        }
-                    }
-
-                    Logger.Info?.Print(LogClass.Application, "Up to date.");
-
-                    _running = false;
-
-                    return default;
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.Error?.Print(LogClass.Application, exception.Message);
-
-                await ContentDialogHelper.CreateErrorDialog(
-                    LocaleManager.Instance[LocaleKeys.DialogUpdaterFailedToGetVersionMessage]);
-
-                _running = false;
-
-                return default;
-            }
-
-            if (!Version.TryParse(_buildVer, out Version newVersion))
-            {
-                Logger.Error?.Print(LogClass.Application, $"Failed to convert the received {RyujinxApp.FullAppName} version from GitHub!");
-
-                await ContentDialogHelper.CreateWarningDialog(
-                    LocaleManager.Instance[LocaleKeys.DialogUpdaterConvertFailedGithubMessage],
-                    LocaleManager.Instance[LocaleKeys.DialogUpdaterCancelUpdateMessage]);
-
-                _running = false;
-
-                return default;
-            }
-
-            return (currentVersion, newVersion);
-        }
+        private static string _stableUrlFormat = null;
+        private static string _changelogUrlFormat = null;
 
         public static async Task BeginUpdateAsync(bool showVersionUpToDate = false)
         {
@@ -179,7 +65,18 @@ namespace Ryujinx.Ava.Systems
 
             _running = true;
 
-            Optional<(Version, Version)> versionTuple = await CheckVersionAsync(showVersionUpToDate);
+            Optional<(Version, Version)> versionTuple;
+
+            try
+            {
+                versionTuple = await CheckGitLabVersionAsync(showVersionUpToDate);
+            }
+            catch (Exception e)
+            {
+                Logger.Error?.PrintMsg(LogClass.Application, "Update checking from GitLab failed; falling back to GitHub.");
+                Logger.Error?.PrintMsg(LogClass.Application, e.Message);
+                versionTuple = await CheckGitHubVersionAsync(showVersionUpToDate);
+            }
 
             if (_running is false || !versionTuple.HasValue)
                 return;
@@ -196,7 +93,7 @@ namespace Ryujinx.Ava.Systems
 
                     if (userResult is UserResult.Ok)
                     {
-                        OpenHelper.OpenUrl(ReleaseInformation.GetChangelogForVersion(currentVersion, _currentReleaseChannel.Value));
+                        OpenHelper.OpenUrl(_changelogUrlFormat.Format(currentVersion));
                     }
                 }
 
@@ -247,7 +144,7 @@ namespace Ryujinx.Ava.Systems
                         break;
                     // Secondary button maps to no, which in this case is the show changelog button.
                     case UserResult.No:
-                        OpenHelper.OpenUrl(ReleaseInformation.GetChangelogUrl(currentVersion, newVersion, _currentReleaseChannel.Value));
+                        OpenHelper.OpenUrl(ReleaseInformation.GetChangelogUrl(currentVersion, newVersion, _changelogUrlFormat.Format(currentVersion)));
                         goto RequestUserToUpdate;
                     default:
                         _running = false;
