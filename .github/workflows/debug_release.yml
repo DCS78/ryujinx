@@ -199,6 +199,8 @@ jobs:
       - macos_release
       - release
     steps:
+      - uses: actions/checkout@v4
+
       - name: Get version info
         id: version_info
         run: |
