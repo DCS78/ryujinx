@@ -77,7 +77,7 @@ namespace Ryujinx.Ava.Systems
 
                         if (userResult is UserResult.Ok)
                         {
-                            OpenHelper.OpenUrl(_currentGitHubReleaseChannel.Value.GetSpecificReleaseUrl(currentVersion));
+                            OpenHelper.OpenUrl(_currentGitLabReleaseChannel.UrlFormat.Format(currentVersion));
                         }
                     }
 

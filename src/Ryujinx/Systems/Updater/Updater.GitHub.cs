@@ -17,8 +17,6 @@ namespace Ryujinx.Ava.Systems
     internal static partial class Updater
     {
         private static GitHubReleaseChannels.Channel? _currentGitHubReleaseChannel;
-
-        private const string GitHubApiUrl = "https://api.github.com";
         
         public static async Task<Optional<(Version Current, Version Incoming)>> CheckGitHubVersionAsync(bool showVersionUpToDate = false)
         {
@@ -74,7 +72,7 @@ namespace Ryujinx.Ava.Systems
 
                                 if (userResult is UserResult.Ok)
                                 {
-                                    OpenHelper.OpenUrl(_currentGitHubReleaseChannel.Value.GetSpecificReleaseUrl(currentVersion));
+                                    OpenHelper.OpenUrl(_currentGitHubReleaseChannel.Value.UrlFormat.Format(currentVersion));
                                 }
                             }
 
@@ -100,7 +98,7 @@ namespace Ryujinx.Ava.Systems
 
                         if (userResult is UserResult.Ok)
                         {
-                            OpenHelper.OpenUrl(_currentGitHubReleaseChannel.Value.GetSpecificReleaseUrl(currentVersion));
+                            OpenHelper.OpenUrl(_currentGitHubReleaseChannel.Value.UrlFormat.Format(currentVersion));
                         }
                     }
 
@@ -169,14 +167,12 @@ namespace Ryujinx.Ava.Systems
             public readonly string Owner;
             public readonly string Repo;
 
-            public string UrlFormat => $"https://github.com/{ToString()}/releases/{0}";
+            public string UrlFormat => $"https://github.com/{ToString()}/releases/{{0}}";
 
             public override string ToString() => $"{Owner}/{Repo}";
 
             public string GetLatestReleaseApiUrl() =>
                 $"https://api.github.com/repos/{ToString()}/releases/latest";
-            
-            public string GetSpecificReleaseUrl(Version version) => $"https://github.com/{ToString()}/releases/{version}";
         }
     }
 
