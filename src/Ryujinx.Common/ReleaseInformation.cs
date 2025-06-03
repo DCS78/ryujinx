@@ -32,10 +32,10 @@ namespace Ryujinx.Common
 
         public static string Version => IsValid ? BuildVersion : Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
 
-        public static string GetChangelogUrl(Version currentVersion, Version newVersion, string stableUrl) =>
+        public static string GetChangelogUrl(Version currentVersion, Version newVersion) =>
             IsCanaryBuild
                 ? $"https://git.ryujinx.app/ryubing/ryujinx/-/compare/Canary-{currentVersion}...Canary-{newVersion}"
-                : stableUrl;
+                : $"https://git.ryujinx.app/ryubing/ryujinx/-/releases/{newVersion}";
     }
 
 

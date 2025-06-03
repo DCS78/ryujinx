@@ -52,8 +52,7 @@ namespace Ryujinx.Ava.Systems
         private static bool _running;
 
         private static readonly string[] _windowsDependencyDirs = [];
-
-        private static string _stableUrlFormat = null;
+        
         private static string _changelogUrlFormat = null;
 
         public static async Task<Optional<(Version, Version)>> CheckForUpdateAsync(bool showVersionUpToDate = false)
@@ -117,7 +116,9 @@ namespace Ryujinx.Ava.Systems
             try
             {
                 buildSizeClient.DefaultRequestHeaders.Add("Range", "bytes=0-0");
-                buildSizeClient.Timeout = TimeSpan.FromSeconds(10); // GitLab instance is located in Ukraine. Connection times will vary across the world.
+                
+                // GitLab instance is located in Ukraine. Connection times will vary across the world.
+                buildSizeClient.Timeout = TimeSpan.FromSeconds(10);
 
                 HttpResponseMessage message = await buildSizeClient.GetAsync(new Uri(_buildUrl), HttpCompletionOption.ResponseHeadersRead);
 
@@ -153,7 +154,7 @@ namespace Ryujinx.Ava.Systems
                         break;
                     // Secondary button maps to no, which in this case is the show changelog button.
                     case UserResult.No:
-                        OpenHelper.OpenUrl(ReleaseInformation.GetChangelogUrl(currentVersion, newVersion, _stableUrlFormat.Format(currentVersion)));
+                        OpenHelper.OpenUrl(ReleaseInformation.GetChangelogUrl(currentVersion, newVersion));
                         goto RequestUserToUpdate;
                     default:
                         _running = false;

@@ -49,7 +49,6 @@ namespace Ryujinx.Ava.Systems
                         : releaseChannels.Stable;
 
                     _changelogUrlFormat = _currentGitHubReleaseChannel.Value.UrlFormat;
-                    _stableUrlFormat = releaseChannels.Stable.UrlFormat;
                 }
 
                 string fetchedJson = await jsonClient.GetStringAsync(_currentGitHubReleaseChannel.Value.GetLatestReleaseApiUrl());
@@ -72,7 +71,7 @@ namespace Ryujinx.Ava.Systems
 
                                 if (userResult is UserResult.Ok)
                                 {
-                                    OpenHelper.OpenUrl(_currentGitHubReleaseChannel.Value.UrlFormat.Format(currentVersion));
+                                    OpenHelper.OpenUrl(_changelogUrlFormat.Format(currentVersion));
                                 }
                             }
 
@@ -98,7 +97,7 @@ namespace Ryujinx.Ava.Systems
 
                         if (userResult is UserResult.Ok)
                         {
-                            OpenHelper.OpenUrl(_currentGitHubReleaseChannel.Value.UrlFormat.Format(currentVersion));
+                            OpenHelper.OpenUrl(_changelogUrlFormat.Format(currentVersion));
                         }
                     }
 

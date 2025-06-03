@@ -19,8 +19,7 @@ namespace Ryujinx.Ava.Systems
     {
         private static GitLabReleaseChannels.ChannelType _currentGitLabReleaseChannel;
 
-        private static async Task<Optional<(Version Current, Version Incoming)>> CheckGitLabVersionAsync(
-            bool showVersionUpToDate = false)
+        private static async Task<Optional<(Version Current, Version Incoming)>> CheckGitLabVersionAsync(bool showVersionUpToDate = false)
         {
             if (!Version.TryParse(Program.Version, out Version currentVersion))
             {
@@ -39,12 +38,10 @@ namespace Ryujinx.Ava.Systems
             Logger.Info?.Print(LogClass.Application, "Checking for updates from https://git.ryujinx.app.");
 
             // Get latest version number from GitLab API
-            
             using HttpClient jsonClient = ConstructHttpClient();
 
-            jsonClient.Timeout =
-                TimeSpan.FromSeconds(
-                    10); // GitLab instance is located in Ukraine. Connection times will vary across the world.
+            // GitLab instance is located in Ukraine. Connection times will vary across the world.
+            jsonClient.Timeout = TimeSpan.FromSeconds(10); 
 
             if (_currentGitLabReleaseChannel == null)
             {
@@ -55,7 +52,6 @@ namespace Ryujinx.Ava.Systems
                     : releaseChannels.Stable;
 
                 _changelogUrlFormat = _currentGitLabReleaseChannel.UrlFormat;
-                _stableUrlFormat = releaseChannels.Stable.UrlFormat;
             }
 
             string fetchedJson = await jsonClient.GetStringAsync(_currentGitLabReleaseChannel.GetLatestReleaseApiUrl());
@@ -78,7 +74,7 @@ namespace Ryujinx.Ava.Systems
 
                     if (userResult is UserResult.Ok)
                     {
-                        OpenHelper.OpenUrl(_currentGitLabReleaseChannel.UrlFormat.Format(currentVersion));
+                        OpenHelper.OpenUrl(_changelogUrlFormat.Format(currentVersion));
                     }
                 }
 
