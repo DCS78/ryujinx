@@ -47,6 +47,8 @@ namespace Ryujinx.Ava.Systems
                     _currentGitHubReleaseChannel = ReleaseInformation.IsCanaryBuild
                         ? releaseChannels.Canary
                         : releaseChannels.Stable;
+                    
+                    Logger.Info?.Print(LogClass.Application, $"Loaded GitHub release channel for '{(ReleaseInformation.IsCanaryBuild ? "canary" : "stable")}'");
 
                     _changelogUrlFormat = _currentGitHubReleaseChannel.Value.UrlFormat;
                 }

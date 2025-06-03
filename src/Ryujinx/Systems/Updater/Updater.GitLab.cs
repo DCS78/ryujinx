@@ -50,6 +50,8 @@ namespace Ryujinx.Ava.Systems
                 _currentGitLabReleaseChannel = ReleaseInformation.IsCanaryBuild
                     ? releaseChannels.Canary
                     : releaseChannels.Stable;
+                
+                Logger.Info?.Print(LogClass.Application, $"Loaded GitLab release channel for '{(ReleaseInformation.IsCanaryBuild ? "canary" : "stable")}'");
 
                 _changelogUrlFormat = _currentGitLabReleaseChannel.UrlFormat;
             }
