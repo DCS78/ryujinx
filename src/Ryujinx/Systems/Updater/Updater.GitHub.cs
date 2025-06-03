@@ -18,7 +18,7 @@ namespace Ryujinx.Ava.Systems
     {
         private static GitHubReleaseChannels.Channel? _currentGitHubReleaseChannel;
         
-        public static async Task<Optional<(Version Current, Version Incoming)>> CheckGitHubVersionAsync(bool showVersionUpToDate = false)
+        private static async Task<Optional<(Version Current, Version Incoming)>> CheckGitHubVersionAsync(bool showVersionUpToDate = false)
         {
             if (!Version.TryParse(Program.Version, out Version currentVersion))
             {

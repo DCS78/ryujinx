@@ -56,15 +56,8 @@ namespace Ryujinx.Ava.Systems
         private static string _stableUrlFormat = null;
         private static string _changelogUrlFormat = null;
 
-        public static async Task BeginUpdateAsync(bool showVersionUpToDate = false)
+        public static async Task<Optional<(Version, Version)>> CheckForUpdateAsync(bool showVersionUpToDate = false)
         {
-            if (_running)
-            {
-                return;
-            }
-
-            _running = true;
-
             Optional<(Version, Version)> versionTuple;
 
             try
@@ -77,6 +70,21 @@ namespace Ryujinx.Ava.Systems
                 Logger.Error?.PrintMsg(LogClass.Application, e.Message);
                 versionTuple = await CheckGitHubVersionAsync(showVersionUpToDate);
             }
+
+            return versionTuple;
+        }
+        
+        
+        public static async Task BeginUpdateAsync(bool showVersionUpToDate = false)
+        {
+            if (_running)
+            {
+                return;
+            }
+
+            _running = true;
+
+            Optional<(Version, Version)> versionTuple = await CheckForUpdateAsync(showVersionUpToDate);
 
             if (_running is false || !versionTuple.HasValue)
                 return;
