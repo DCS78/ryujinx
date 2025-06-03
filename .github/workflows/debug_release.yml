@@ -72,6 +72,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install GitLabCli
+        if: matrix.platform.os == 'ubuntu-latest'
+        run: |
+          mkdir -p $HOME/.bin
+          gh release download -R GreemDev/GLI -O gli -p 'GitLabCli-linux_x64'
+          chmod +x gli
+          mv gli $HOME/.bin/
+          echo "$HOME/.bin" >> $GITHUB_PATH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Packing Linux builds
         if: matrix.platform.os == 'ubuntu-latest'
         run: |
@@ -81,16 +92,8 @@ jobs:
           tar -czvf ../release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz ../publish
           popd
           
-          mkdir -p $HOME/.bin
-          gh release download -R GreemDev/GLI -O gli -p 'GitLabCli-linux_x64'
-          chmod +x gli
-          mv gli $HOME/.bin/
-          echo "$HOME/.bin" >> $GITHUB_PATH
-          
           gli --access-token=${{ secrets.GITLAB_TOKEN }} --project=ryubing/ryujinx --command=UploadGenericPackage "ryubing|${{ steps.version_info.outputs.build_version }}|release_output/ryujinx-${{ steps.version_info.outputs.build_version }}-${{ matrix.platform.zip_os_name }}.tar.gz"
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Build AppImage (Linux)
         if: matrix.platform.os == 'ubuntu-latest'
