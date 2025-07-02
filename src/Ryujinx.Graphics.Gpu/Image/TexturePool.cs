@@ -649,7 +649,7 @@ namespace Ryujinx.Graphics.Gpu.Image
                 swizzleB,
                 swizzleA);
 
-            if (formatInfo.Format.IsDepthOrStencil())
+            if (formatInfo.Format.IsDepthOrStencil)
             {
                 swizzleR = SwizzleComponent.Red;
                 swizzleG = SwizzleComponent.Red;

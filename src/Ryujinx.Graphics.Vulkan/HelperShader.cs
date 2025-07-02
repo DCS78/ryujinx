@@ -403,7 +403,7 @@ namespace Ryujinx.Graphics.Vulkan
                 0f,
                 1f);
 
-            bool dstIsDepthOrStencil = dst.Info.Format.IsDepthOrStencil();
+            bool dstIsDepthOrStencil = dst.Info.Format.IsDepthOrStencil;
 
             if (dstIsDepthOrStencil)
             {
@@ -1048,7 +1048,7 @@ namespace Ryujinx.Graphics.Vulkan
             Span<int> shaderParams = stackalloc int[ParamsBufferSize / sizeof(int)];
 
             int samples = src.Info.Samples;
-            bool isDepthOrStencil = src.Info.Format.IsDepthOrStencil();
+            bool isDepthOrStencil = src.Info.Format.IsDepthOrStencil;
             ImageAspectFlags aspectFlags = src.Info.Format.ConvertAspectFlags();
 
             // X and Y are the expected texture samples.
@@ -1174,7 +1174,7 @@ namespace Ryujinx.Graphics.Vulkan
             Span<int> shaderParams = stackalloc int[ParamsBufferSize / sizeof(int)];
 
             int samples = dst.Info.Samples;
-            bool isDepthOrStencil = src.Info.Format.IsDepthOrStencil();
+            bool isDepthOrStencil = src.Info.Format.IsDepthOrStencil;
             ImageAspectFlags aspectFlags = src.Info.Format.ConvertAspectFlags();
 
             // X and Y are the expected texture samples.
