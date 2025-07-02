@@ -139,7 +139,7 @@ namespace Ryujinx.Graphics.Gpu.Image
             _allOffsets = size.AllOffsets;
             _sliceSizes = size.SliceSizes;
 
-            if (Storage.Target.HasDepthOrLayers() && Storage.Info.GetSlices() > GranularLayerThreshold)
+            if (Storage.Target.HasDepthOrLayers && Storage.Info.GetSlices() > GranularLayerThreshold)
             {
                 _hasLayerViews = true;
                 _hasMipViews = true;

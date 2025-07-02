@@ -273,7 +273,7 @@ namespace Ryujinx.Graphics.Shader.Translation
             bool coherent,
             bool separate)
         {
-            var dimensions = type == SamplerType.None ? 0 : type.GetDimensions();
+            var dimensions = type == SamplerType.None ? 0 : type.Dimensions;
             var dict = isImage ? _usedImages : _usedTextures;
 
             var usageFlags = TextureUsageFlags.None;
@@ -282,7 +282,7 @@ namespace Ryujinx.Graphics.Shader.Translation
             {
                 usageFlags |= TextureUsageFlags.NeedsScaleValue;
 
-                var canScale = _stage.SupportsRenderScale() && arrayLength == 1 && !write && dimensions == 2;
+                var canScale = _stage.SupportsRenderScale && arrayLength == 1 && !write && dimensions == 2;
 
                 if (!canScale)
                 {
@@ -355,7 +355,7 @@ namespace Ryujinx.Graphics.Shader.Translation
 
             if (arrayLength != 1 && type != SamplerType.None)
             {
-                prefix += type.ToShortSamplerType();
+                prefix += type.ShortTypeName;
             }
 
             if (isImage)
@@ -433,8 +433,8 @@ namespace Ryujinx.Graphics.Shader.Translation
             {
                 selectedMeta.UsageFlags |= TextureUsageFlags.NeedsScaleValue;
 
-                var dimensions = type.GetDimensions();
-                var canScale = _stage.SupportsRenderScale() && selectedInfo.ArrayLength == 1 && dimensions == 2;
+                var dimensions = type.Dimensions;
+                var canScale = _stage.SupportsRenderScale && selectedInfo.ArrayLength == 1 && dimensions == 2;
 
                 if (!canScale)
                 {
