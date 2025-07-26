@@ -51,7 +51,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             foreach (var entry in CompatibilityDatabase.Entries)
             {
-                entry.GameName = _appLibrary.Applications.Items.SingleOrDefault(x => string.Equals(x.IdString, entry.TitleId, StringComparison.OrdinalIgnoreCase))?.Name ?? entry.GameName;
+                entry.GameName = _appLibrary.Applications.Items.SingleOrDefault(x => x.IdString.EqualsIgnoreCase(entry.TitleId))?.Name ?? entry.GameName;
             }
         }
 
