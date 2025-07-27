@@ -254,6 +254,10 @@
                     Icon="{ext:Icon fa-solid fa-circle-info}"
                     ToolTip.Tip="{ext:Locale OpenAboutTooltip}" />
                 <MenuItem
+                    Name="StarscriptDebugMenuItem"
+                    Header="Debug Starscript"
+                    Icon="{ext:Icon fa-solid fa-star}" />
+                <MenuItem
                     Name="UpdateMenuItem"
                     IsEnabled="{Binding CanUpdate}"
                     Header="{ext:Locale MenuBarHelpCheckForUpdates}"

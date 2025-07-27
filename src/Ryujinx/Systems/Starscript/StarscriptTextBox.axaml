@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:Ryujinx.Ava.Systems.Starscript"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Ryujinx.Ava.Systems.Starscript.StarscriptTextBox"
+             x:DataType="local:StarscriptTextBoxViewModel">
+    <StackPanel Spacing="10">
+        <TextBlock Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}"/>
+        <TextBlock Text="{Binding CurrentScriptResult}" IsVisible="{Binding !HasError}"/>
+        <AutoCompleteBox Name="InputBox"
+                         HorizontalAlignment="Stretch" 
+                         VerticalAlignment="Stretch" 
+                         FilterMode="Custom" 
+                         MinimumPrefixLength="0"
+                         MaxDropDownHeight="400">
+        </AutoCompleteBox>
+    </StackPanel>
+</UserControl>
+

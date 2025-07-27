@@ -8,6 +8,7 @@ using LibHac.Ns;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.Systems.AppLibrary;
 using Ryujinx.Ava.Systems.Configuration;
+using Ryujinx.Ava.Systems.Starscript;
 using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.ViewModels;
@@ -51,6 +52,8 @@ namespace Ryujinx.Ava.UI.Views.Main
             CompatibilityListMenuItem.Command = Commands.Create(() => CompatibilityListWindow.Show());
 
             UpdateMenuItem.Command = MainWindowViewModel.UpdateCommand;
+            
+            StarscriptDebugMenuItem.Command = Commands.Create(StarscriptTextBox.Show);
 
             FaqMenuItem.Command =
                 SetupGuideMenuItem.Command =
