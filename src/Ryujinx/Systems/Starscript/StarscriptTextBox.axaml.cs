@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using Humanizer;
@@ -8,6 +7,7 @@ using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Controls;
 using Ryujinx.Ava.UI.Helpers;
 using Starscript;
+using Starscript.Internal;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +20,7 @@ namespace Ryujinx.Ava.Systems.Starscript
     {
         public IReadOnlyList<string> CurrentSuggestions => ViewModel.CurrentSuggestions;
 
-        public string CurrentScriptSource => ViewModel.CurrentScriptSource;
+        public ParserResult CurrentScriptSource => ViewModel.CurrentScriptSource;
         public Exception Exception => ViewModel.Exception;
         public Script CurrentScript => ViewModel.CurrentScript;
         public StringSegment CurrentScriptResult => ViewModel.CurrentScriptResult;
@@ -28,8 +28,6 @@ namespace Ryujinx.Ava.Systems.Starscript
         public StarscriptTextBox()
         {
             InitializeComponent();
-
-            InputBox.TextInput += HandleTextChanged;
             
             InputBox.AsyncPopulator = GetSuggestionsAsync;
             InputBox.MinimumPopulateDelay = 0.Seconds();
@@ -69,12 +67,6 @@ namespace Ryujinx.Ava.Systems.Starscript
 
         private Task<IEnumerable<object>> GetSuggestionsAsync(string input, CancellationToken token)
             => Task.FromResult(ViewModel.GetSuggestions(input, token));
-
-        private void HandleTextChanged(object sender, TextInputEventArgs eventArgs)
-        {
-            if (sender is AutoCompleteBox)
-                ViewModel.CurrentScriptSource = eventArgs.Text;
-        }
 
         public static StarscriptTextBox Create(StarscriptHypervisor hv)
             => new() { ViewModel = new StarscriptTextBoxViewModel(hv) };

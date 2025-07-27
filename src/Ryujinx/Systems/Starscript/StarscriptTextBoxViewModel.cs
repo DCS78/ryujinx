@@ -5,6 +5,7 @@ using Starscript.Internal;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 
 namespace Ryujinx.Ava.Systems.Starscript
@@ -24,7 +25,7 @@ namespace Ryujinx.Ava.Systems.Starscript
         [ObservableProperty] private StringSegment _currentScriptResult;
         [ObservableProperty] private string _errorMessage;
         private Exception _exception;
-        private string _currentScriptSource;
+        private ParserResult _currentScriptSource;
         private Script _currentScript;
         
         public Exception Exception
@@ -38,12 +39,14 @@ namespace Ryujinx.Ava.Systems.Starscript
                     StarscriptException se => se.Message,
                     _ => string.Empty
                 };
+
+                HasError = value is not null;
                 
                 OnPropertyChanged();
             }
         }
         
-        public string CurrentScriptSource
+        public ParserResult CurrentScriptSource
         {
             get => _currentScriptSource;
             set
@@ -55,23 +58,11 @@ namespace Ryujinx.Ava.Systems.Starscript
                     CurrentScript = null;
                     CurrentScriptResult = null;
                     Exception = null;
-                    HasError = false;
                     return;
                 }
-
-                try
-                {
-                    CurrentScript = Compiler.DirectCompile(CurrentScriptSource);
-                    Exception = null;
-                    HasError = false;
-                }
-                catch (ParseException pe)
-                {
-                    CurrentScript = null;
-                    CurrentScriptResult = null;
-                    Exception = pe;
-                    HasError = true;
-                }
+                
+                CurrentScript = Compiler.SingleCompile(value);
+                Exception = null;
 
                 OnPropertyChanged();
             }
@@ -87,25 +78,41 @@ namespace Ryujinx.Ava.Systems.Starscript
                     CurrentScriptResult = value?.Execute(_hv)!;
                     _currentScript = value;
                     Exception = null;
-                    HasError = false;
                 }
                 catch (StarscriptException se)
                 {
                     _currentScript = null;
                     CurrentScriptResult = null;
                     Exception = se;
-                    HasError = true;
                 }
 
                 OnPropertyChanged();
             }
         }
 
+        public void ReExecuteScript()
+        {
+            if (_currentScript is null) return;
+
+            try
+            {
+                CurrentScriptResult = _currentScript.Execute(_hv)!;
+            }
+            catch (StarscriptException se)
+            {
+                CurrentScriptResult = null;
+                Exception = se;
+            }
+        }
+
         public IEnumerable<object> GetSuggestions(string input, CancellationToken token)
         {
-            CurrentScriptSource = input;
-            
-            _hv.GetCompletions(CurrentScriptSource, CurrentScriptSource.Length, CreateCallback(), token);
+            CurrentScriptSource = _hv.ParseAndGetCompletions(input, input.Length, CreateCallback(), token);
+
+            if (CurrentScriptSource.HasErrors)
+            {
+                Exception = new ParseException(CurrentScriptSource.Errors.First());
+            }
             
             OnPropertyChanged(nameof(CurrentSuggestions));
 
