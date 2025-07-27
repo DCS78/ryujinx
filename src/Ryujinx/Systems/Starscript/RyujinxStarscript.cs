@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.Systems.Starscript
                         ? "Stable"
                         : "Custom");
             Hypervisor.Set("ryujinx.version", Program.Version);
-            Hypervisor.Set("appLibrary", StarscriptHelper.Wrap(RyujinxApp.MainWindow.ApplicationLibrary));
+            Hypervisor.Set("appLibrary", RyujinxApp.MainWindow.ApplicationLibrary);
             Hypervisor.Set("currentApplication", () => 
                 RyujinxApp.MainWindow.ApplicationLibrary.FindApplication(
                     RyujinxApp.MainWindow.ViewModel.AppHost?.ApplicationId ?? 0,

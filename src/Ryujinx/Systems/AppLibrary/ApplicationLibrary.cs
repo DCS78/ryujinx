@@ -14,6 +14,7 @@ using LibHac.Tools.FsSystem.NcaUtils;
 using Ryujinx.Ava.Common.Models;
 using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Ava.Systems.Configuration.System;
+using Ryujinx.Ava.Systems.Starscript;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
@@ -25,6 +26,7 @@ using Ryujinx.HLE.HOS.SystemState;
 using Ryujinx.HLE.Loaders.Npdm;
 using Ryujinx.HLE.Loaders.Processes.Extensions;
 using Ryujinx.HLE.Utilities;
+using Starscript;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,7 +43,7 @@ using TimeSpan = System.TimeSpan;
 
 namespace Ryujinx.Ava.Systems.AppLibrary
 {
-    public class ApplicationLibrary
+    public class ApplicationLibrary : IStarscriptObject
     {
         public Language DesiredLanguage { get; set; }
         public event EventHandler<ApplicationCountUpdatedEventArgs> ApplicationCountUpdated;
@@ -1610,6 +1612,15 @@ namespace Ryujinx.Ava.Systems.AppLibrary
 
             ApplicationData newApplication = newApplications.First(it => it.IdBase == appIdBase);
             _applications.AddOrUpdate(newApplication);
+        }
+
+        private ValueMap _starscriptMap;
+
+        public ValueMap ToStarscript()
+        {
+            _starscriptMap ??= StarscriptHelper.Wrap(this);
+
+            return _starscriptMap;
         }
     }
 }
