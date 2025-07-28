@@ -107,7 +107,9 @@ namespace Ryujinx.Ava.Systems.Starscript
 
         public IEnumerable<object> GetSuggestions(string input, CancellationToken token)
         {
-            CurrentScriptSource = _hv.ParseAndGetCompletions(input, input.Length, CreateCallback(), token);
+            CurrentSuggestions.Clear();
+            
+            CurrentScriptSource = _hv.ParseAndGetCompletions(input, input.Length, CompletionCallback, token);
 
             if (CurrentScriptSource.HasErrors)
             {
@@ -119,12 +121,6 @@ namespace Ryujinx.Ava.Systems.Starscript
             return CurrentSuggestions;
         }
 
-        private CompletionCallback CreateCallback()
-        {
-            CurrentSuggestions.Clear();
-            
-            return (result, isFunction) => 
-                CurrentSuggestions.Add(isFunction ? $"{result}(" : result);
-        }
+        private void CompletionCallback(string result, bool isFunction) => CurrentSuggestions.Add(isFunction ? $"{result}(" : result);
     }
 }
