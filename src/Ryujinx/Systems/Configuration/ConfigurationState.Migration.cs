@@ -44,7 +44,6 @@ namespace Ryujinx.Ava.Systems.Configuration
                 configurationFileUpdated = true;
             }
 
-
             EnableDiscordIntegration.Value = cff.EnableDiscordIntegration;
             UpdateCheckerType.Value = shouldLoadFromFile ? cff.UpdateCheckerType : UpdateCheckerType.Value; // Get from global config only
             FocusLostActionType.Value = cff.FocusLostActionType;

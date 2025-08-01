@@ -327,8 +327,6 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             PlayerIndexes.Add(new(PlayerIndex.Handheld, LocaleManager.Instance[LocaleKeys.ControllerSettingsHandheld]));
         }
 
-
-
         private void LoadConfiguration(InputConfig inputConfig = null)
         {
             if (UseGlobalConfig && Program.UseExtraConfig)

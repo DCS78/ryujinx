@@ -38,5 +38,4 @@ namespace Ryujinx.Common
                 : $"https://git.ryujinx.app/ryubing/ryujinx/-/releases/{newVersion}";
     }
 
-
 }

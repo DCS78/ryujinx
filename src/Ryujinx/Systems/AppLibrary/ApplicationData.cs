@@ -98,7 +98,6 @@ namespace Ryujinx.Ava.Systems.AppLibrary
                 }]
             ).OrElse(string.Empty);
 
-
         [JsonIgnore] public string IdString => Id.ToString("x16");
 
         [JsonIgnore] public ulong IdBase => Id & ~0x1FFFUL;
