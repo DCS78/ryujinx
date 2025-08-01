@@ -25,7 +25,9 @@ namespace Ryujinx.Audio.Backends.SDL2
         // TODO: Add this to SDL2-CS
         // NOTE: We use a DllImport here because of marshaling issue for spec.
         [DllImport("SDL2")]
+#pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
         private static extern int SDL_GetDefaultAudioInfo(nint name, out SDL_AudioSpec spec, int isCapture);
+#pragma warning restore SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
 
         public SDL2HardwareDeviceDriver()
         {
