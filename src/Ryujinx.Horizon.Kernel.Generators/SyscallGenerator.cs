@@ -498,6 +498,7 @@ namespace Ryujinx.Horizon.Kernel.Generators
                 {
                     generator.AppendLine($"{syscall.Name}{suffix}(syscall, context);");
                 }
+
                 generator.AppendLine("break;");
 
                 generator.DecreaseIndentation();
@@ -513,7 +514,6 @@ namespace Ryujinx.Horizon.Kernel.Generators
             generator.LeaveScope();
             generator.LeaveScope();
         }
-
 
         private static bool Is32BitInteger(string canonicalTypeName)
         {
