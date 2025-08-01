@@ -100,6 +100,7 @@ namespace Ryujinx.Ava.UI.Applet
                     (float)solidColor.Color.B / 255
                 );
             }
+
             return new ThemeColor();
         }
     }
