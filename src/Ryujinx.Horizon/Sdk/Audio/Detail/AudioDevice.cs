@@ -234,7 +234,7 @@ namespace Ryujinx.Horizon.Sdk.Audio.Detail
         }
 
         [CmifCommand(15)] // 17.0.0+
-        public Result AcquireAudioOutputDeviceNotification([CopyHandle] out int eventHandle, ulong deviceId)
+        public static Result AcquireAudioOutputDeviceNotification([CopyHandle] out int eventHandle, ulong deviceId)
         {
             eventHandle = 0;
 
@@ -242,13 +242,13 @@ namespace Ryujinx.Horizon.Sdk.Audio.Detail
         }
 
         [CmifCommand(16)] // 17.0.0+
-        public Result ReleaseAudioOutputDeviceNotification(ulong deviceId)
+        public static Result ReleaseAudioOutputDeviceNotification(ulong deviceId)
         {
             return AudioResult.NotImplemented;
         }
 
         [CmifCommand(17)] // 17.0.0+
-        public Result AcquireAudioInputDeviceNotification([CopyHandle] out int eventHandle, ulong deviceId)
+        public static Result AcquireAudioInputDeviceNotification([CopyHandle] out int eventHandle, ulong deviceId)
         {
             eventHandle = 0;
 
@@ -256,19 +256,19 @@ namespace Ryujinx.Horizon.Sdk.Audio.Detail
         }
 
         [CmifCommand(18)] // 17.0.0+
-        public Result ReleaseAudioInputDeviceNotification(ulong deviceId)
+        public static Result ReleaseAudioInputDeviceNotification(ulong deviceId)
         {
             return AudioResult.NotImplemented;
         }
 
         [CmifCommand(19)] // 18.0.0+
-        public Result SetAudioDeviceOutputVolumeAutoTuneEnabled(bool enabled)
+        public static Result SetAudioDeviceOutputVolumeAutoTuneEnabled(bool enabled)
         {
             return AudioResult.NotImplemented;
         }
 
         [CmifCommand(20)] // 18.0.0+
-        public Result IsAudioDeviceOutputVolumeAutoTuneEnabled(out bool enabled)
+        public static Result IsAudioDeviceOutputVolumeAutoTuneEnabled(out bool enabled)
         {
             enabled = false;
 
