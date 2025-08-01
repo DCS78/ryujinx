@@ -34,7 +34,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         private string[] _ownedGameTitleIds = [];
 
-        private Func<CompatibilityEntry, object> _sortKeySelector = x => x.GameName; // Default sort by GameName
+        private readonly Func<CompatibilityEntry, object> _sortKeySelector = x => x.GameName; // Default sort by GameName
 
         public IEnumerable<CompatibilityEntry> CurrentEntries => OnlyShowOwnedGames
             ? _currentEntries.Where(x =>
