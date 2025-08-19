@@ -218,6 +218,10 @@ namespace Ryujinx.Ava.Systems
             ConfigurationState.Instance.Multiplayer.LdnServer.Event += UpdateLdnServerState;
             ConfigurationState.Instance.Multiplayer.DisableP2p.Event += UpdateDisableP2pState;
 
+            ConfigurationState.Instance.Debug.EnableGdbStub.Event += UpdateEnableGdbStubState;
+            ConfigurationState.Instance.Debug.GdbStubPort.Event += UpdateGdbStubPortState;
+            ConfigurationState.Instance.Debug.DebuggerSuspendOnStart.Event += UpdateDebuggerSuspendOnStartState;
+
             _gpuCancellationTokenSource = new CancellationTokenSource();
             _gpuDoneEvent = new ManualResetEvent(false);
         }
@@ -478,7 +482,10 @@ namespace Ryujinx.Ava.Systems
 
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
+                if (ConfigurationState.Instance.ShowOldUI)
+                {
+                    _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
+                }
             });
 
             _viewModel.SetUiProgressHandlers(Device);
@@ -562,6 +569,21 @@ namespace Ryujinx.Ava.Systems
         private void UpdateDisableP2pState(object sender, ReactiveEventArgs<bool> e)
         {
             Device.Configuration.MultiplayerDisableP2p = e.NewValue;
+        }
+
+        private void UpdateEnableGdbStubState(object sender, ReactiveEventArgs<bool> e)
+        {
+            Device.Configuration.EnableGdbStub = e.NewValue;
+        }
+
+        private void UpdateGdbStubPortState(object sender, ReactiveEventArgs<ushort> e)
+        {
+            Device.Configuration.GdbStubPort = e.NewValue;
+        }
+
+        private void UpdateDebuggerSuspendOnStartState(object sender, ReactiveEventArgs<bool> e)
+        {
+            Device.Configuration.DebuggerSuspendOnStart = e.NewValue;
         }
 
         public void Stop()
@@ -883,7 +905,10 @@ namespace Ryujinx.Ava.Systems
 
             _viewModel.IsPaused = false;
             _playTimer.Start();
-            _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
+            if (ConfigurationState.Instance.ShowOldUI)
+            {
+                _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
+            }
             Logger.Info?.Print(LogClass.Emulation, "Emulation was resumed");
         }
 
@@ -893,7 +918,10 @@ namespace Ryujinx.Ava.Systems
 
             _viewModel.IsPaused = true;
             _playTimer.Stop();
-            _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI, LocaleManager.Instance[LocaleKeys.Paused]);
+            if (ConfigurationState.Instance.ShowOldUI)
+            {
+                _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI, LocaleManager.Instance[LocaleKeys.Paused]);
+            }
             Logger.Info?.Print(LogClass.Emulation, "Emulation was paused");
         }
 

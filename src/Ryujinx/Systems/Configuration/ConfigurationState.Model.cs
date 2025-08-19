@@ -702,6 +702,37 @@ namespace Ryujinx.Ava.Systems.Configuration
             }
         }
 
+        /// <summary>
+        /// Debug configuration section
+        /// </summary>
+        public class DebugSection
+        {
+            /// <summary>
+            /// Enables or disables the GDB stub
+            /// </summary>
+            public ReactiveObject<bool> EnableGdbStub { get; private set; }
+
+            /// <summary>
+            /// Which TCP port should the GDB stub listen on
+            /// </summary>
+            public ReactiveObject<ushort> GdbStubPort { get; private set; }
+
+            /// <summary>
+            /// Suspend execution when starting an application
+            /// </summary>
+            public ReactiveObject<bool> DebuggerSuspendOnStart { get; private set; }
+
+            public DebugSection()
+            {
+                EnableGdbStub = new ReactiveObject<bool>();
+                EnableGdbStub.LogChangesToValue(nameof(EnableGdbStub));
+                GdbStubPort = new ReactiveObject<ushort>();
+                GdbStubPort.LogChangesToValue(nameof(GdbStubPort));
+                DebuggerSuspendOnStart = new ReactiveObject<bool>();
+                DebuggerSuspendOnStart.LogChangesToValue(nameof(DebuggerSuspendOnStart));
+            }
+        }
+
         public class HacksSection
         {
             /// <summary>
@@ -801,6 +832,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         public MultiplayerSection Multiplayer { get; private set; }
 
         /// <summary>
+        /// The Debug
+        /// </summary>
+        public DebugSection Debug { get; private set; }
+
+        /// <summary>
         ///     The Dirty Hacks section
         /// </summary>
         public HacksSection Hacks { get; private set; }
@@ -853,6 +889,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Graphics = new GraphicsSection();
             Hid = new HidSection();
             Multiplayer = new MultiplayerSection();
+            Debug = new DebugSection();
             Hacks = new HacksSection();
             UpdateCheckerType = new ReactiveObject<UpdaterType>();
             FocusLostActionType = new ReactiveObject<FocusLostType>();
@@ -892,6 +929,9 @@ namespace Ryujinx.Ava.Systems.Configuration
                 Multiplayer.DisableP2p,
                 Multiplayer.LdnPassphrase,
                 Multiplayer.GetLdnServer(),
+                Debug.EnableGdbStub,
+                Debug.GdbStubPort,
+                Debug.DebuggerSuspendOnStart,
                 Graphics.CustomVSyncInterval,
                 Hacks.ShowDirtyHacks ? Hacks.EnabledHacks : null);
     }
