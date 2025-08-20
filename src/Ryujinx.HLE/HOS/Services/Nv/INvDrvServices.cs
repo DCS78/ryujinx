@@ -1,4 +1,5 @@
 using Ryujinx.Common;
+using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Logging;
 using Ryujinx.Cpu;
 using Ryujinx.HLE.Exceptions;
@@ -12,6 +13,7 @@ using Ryujinx.HLE.HOS.Services.Nv.NvDrvServices.NvHostDbgGpu;
 using Ryujinx.HLE.HOS.Services.Nv.NvDrvServices.NvHostProfGpu;
 using Ryujinx.HLE.HOS.Services.Nv.NvDrvServices.NvMap;
 using Ryujinx.HLE.HOS.Services.Nv.Types;
+using Ryujinx.HLE.HOS.Tamper.Operations;
 using Ryujinx.Memory;
 using System;
 using System.Collections.Generic;
@@ -46,6 +48,10 @@ namespace Ryujinx.HLE.HOS.Services.Nv
             { "/dev/nvhost-dbg-gpu",  typeof(NvHostDbgGpuDeviceFile)  },
             { "/dev/nvhost-prof-gpu", typeof(NvHostProfGpuDeviceFile) },
         };
+       
+
+        private const string TMNT_SRTitleId = "0100fe701475a000";
+        private static bool IsTMNT_SR => TitleIDs.CurrentApplication.Value.OrDefault() is TMNT_SRTitleId;
 
         public static IdDictionary DeviceFileIdRegistry = new();
 
@@ -247,6 +253,19 @@ namespace Ryujinx.HLE.HOS.Services.Nv
             {
                 int fd = context.RequestData.ReadInt32();
                 NvIoctl ioctlCommand = context.RequestData.ReadStruct<NvIoctl>();
+
+                if (context.Device.DirtyHacks.IsEnabled(DirtyHack.TMNT_SRFix) && IsTMNT_SR)
+                {
+                    // Fix emulator crash before splash screen for
+                    // TMNT Shredder's Revenges 
+
+                    if ((ioctlCommand.Type == NvIoctl.NvMapCustomMagic && (ioctlCommand.Number == 0x05 || ioctlCommand.Number == 0x09)) ||
+                        (ioctlCommand.Type == NvIoctl.NvGpuAsMagic && (ioctlCommand.Number == 0x05 || ioctlCommand.Number == 0x06)))
+                    {
+                        System.Threading.Thread.Sleep(50);
+                        Logger.Notice.Print(LogClass.ServiceNv, $"Type_{ioctlCommand.Type}, Command_{ioctlCommand.Number} Delay!");
+                    }
+                }
 
                 errorCode = GetIoctlArgument(context, ioctlCommand, out Span<byte> arguments);
 

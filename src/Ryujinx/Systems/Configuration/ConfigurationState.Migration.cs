@@ -166,6 +166,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 DirtyHacks hacks = new(cff.DirtyHacks ?? []);
 
                 Hacks.Xc2MenuSoftlockFix.Value = hacks.IsEnabled(DirtyHack.Xc2MenuSoftlockFix);
+                Hacks.TMNT_SRFix.Value = hacks.IsEnabled(DirtyHack.TMNT_SRFix);
 
             }
 

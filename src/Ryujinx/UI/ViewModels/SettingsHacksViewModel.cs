@@ -17,7 +17,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         [ObservableProperty] private bool _xc2MenuSoftlockFix = ConfigurationState.Instance.Hacks.Xc2MenuSoftlockFix;
         [ObservableProperty] private bool _nifmDisableIsAnyInternetRequestAccepted = ConfigurationState.Instance.Hacks.DisableNifmIsAnyInternetRequestAccepted;
-
+        [ObservableProperty] private bool _TMNT_SRFix = ConfigurationState.Instance.Hacks.TMNT_SRFix;
         public static string Xc2MenuFixTooltip { get; } = Lambda.String(sb =>
         {
             sb.AppendLine(
@@ -38,6 +38,16 @@ namespace Ryujinx.Ava.UI.ViewModels
                 .AppendLine();
 
             sb.Append("Lets DOOM 2016 go in game.");
+        });
+
+        public static string TMNT_SRFixTooltip { get; } = Lambda.String(sb =>
+        {
+            sb.AppendLine(
+                    "This fix adds an extra 50 ms to some Ioctl service calls. This prevents the game from crashing when the cutscene starts.")
+                .AppendLine();
+
+            sb.Append(
+                "Just give the game some time to properly interact with guest memory");
         });
     }
 }

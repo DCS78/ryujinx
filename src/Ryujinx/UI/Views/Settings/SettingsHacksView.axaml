@@ -55,6 +55,20 @@
                         VerticalAlignment="Center"
                         Text="Disable IsAnyInternetRequestAccepted" />
                 </StackPanel>
+                <Separator/>
+                <StackPanel
+                        Margin="0,10,0,0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        ToolTip.Tip="{Binding DirtyHacks.TMNT_SRFixTooltip}">
+                    <CheckBox
+                        Margin="0"
+                        IsChecked="{Binding DirtyHacks.TMNT_SRFix}"/>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Text="TMNT Shredder's Revenges Fix" />
+                </StackPanel>
+                <Separator/>
             </StackPanel>
         </Border>
     </ScrollViewer>
