@@ -10,7 +10,8 @@ namespace Ryujinx.Common.Configuration
     {
         Xc2MenuSoftlockFix = 1,
         // ShaderTranslationDelay = 2
-        NifmServiceDisableIsAnyInternetRequestAccepted = 3
+        NifmServiceDisableIsAnyInternetRequestAccepted = 3,
+        TMNT_SRFix = 4
     }
 
     public readonly struct EnabledDirtyHack(DirtyHack hack, int value)

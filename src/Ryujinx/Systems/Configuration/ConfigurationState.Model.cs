@@ -743,6 +743,8 @@ namespace Ryujinx.Ava.Systems.Configuration
 
             public ReactiveObject<bool> Xc2MenuSoftlockFix { get; private set; }
 
+            public ReactiveObject<bool> TMNT_SRFix { get; private set; }
+
             public ReactiveObject<bool> DisableNifmIsAnyInternetRequestAccepted { get; private set; }
 
             public HacksSection()
@@ -752,6 +754,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 Xc2MenuSoftlockFix.Event += HackChanged;
                 DisableNifmIsAnyInternetRequestAccepted = new ReactiveObject<bool>();
                 DisableNifmIsAnyInternetRequestAccepted.Event += HackChanged;
+                TMNT_SRFix = new ReactiveObject<bool>();
+                TMNT_SRFix.Event += HackChanged;
             }
 
             private void HackChanged(object sender, ReactiveEventArgs<bool> rxe)
@@ -784,6 +788,9 @@ namespace Ryujinx.Ava.Systems.Configuration
 
                     if (DisableNifmIsAnyInternetRequestAccepted)
                         Apply(DirtyHack.NifmServiceDisableIsAnyInternetRequestAccepted);
+
+                    if (TMNT_SRFix)
+                        Apply(DirtyHack.TMNT_SRFix);
 
                     return enabledHacks.ToArray();
 
