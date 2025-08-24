@@ -46,6 +46,7 @@
             <settings:SettingsAudioView Name="AudioPage" />
             <settings:SettingsNetworkView Name="NetworkPage" />
             <settings:SettingsLoggingView Name="LoggingPage" />
+            <settings:SettingsDebugView Name="DebugPage" />
             <settings:SettingsHacksView Name="HacksPage" />
         </Grid>
         <ui:NavigationView
@@ -101,6 +102,10 @@
                     Tag="LoggingPage"
                     IconSource="Document" />
                 <ui:NavigationViewItem
+                    Content="{ext:Locale SettingsTabDebug}"
+                    Tag="DebugPage"
+                    IconSource="Star" />
+                <ui:NavigationViewItem
                     IsVisible="{Binding ShowDirtyHacks}"
                     Content="Dirty Hacks"
                     Tag="HacksPage"
@@ -123,8 +128,9 @@
                     Margin="10"
                     Content="{ext:Locale SettingsButtonReset}"
                     Command="{Binding ResetButton}" />
-                <CheckBox IsChecked="{Binding WantsToReset}"/>
-                <TextBlock Text="{ext:Locale SettingsButtonResetConfirm}"/>
+                <CheckBox IsChecked="{Binding WantsToReset}">
+                    <TextBlock Text="{ext:Locale SettingsButtonResetConfirm}" />
+                </CheckBox>
             </StackPanel>
             <ReversibleStackPanel
                 Grid.Column="2"
