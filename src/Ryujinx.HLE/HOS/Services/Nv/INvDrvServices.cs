@@ -259,8 +259,7 @@ namespace Ryujinx.HLE.HOS.Services.Nv
                     // Fix emulator crash before splash screen for
                     // TMNT Shredder's Revenges 
 
-                    if ((ioctlCommand.Type == NvIoctl.NvMapCustomMagic && (ioctlCommand.Number == 0x05 || ioctlCommand.Number == 0x09)) ||
-                        (ioctlCommand.Type == NvIoctl.NvGpuAsMagic && (ioctlCommand.Number == 0x05 || ioctlCommand.Number == 0x06)))
+                    if ((ioctlCommand.Type == NvIoctl.NvGpuAsMagic && (ioctlCommand.Number == 0x05 || ioctlCommand.Number == 0x06)))
                     {
                         System.Threading.Thread.Sleep(50);
                         Logger.Notice.Print(LogClass.ServiceNv, $"Type_{ioctlCommand.Type}, Command_{ioctlCommand.Number} Delay!");
