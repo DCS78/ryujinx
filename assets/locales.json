@@ -2563,7 +2563,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -4438,7 +4438,7 @@
         "th_TH": "จีน",
         "tr_TR": "Çince",
         "uk_UA": "Китайська",
-        "zh_CN": "中文（简体）——无效",
+        "zh_CN": "中文（简体）",
         "zh_TW": "中文 (中國)"
       }
     },
@@ -4563,7 +4563,7 @@
         "th_TH": "จีนตัวเต็ม (ไต้หวัน)",
         "tr_TR": "Tayvanca",
         "uk_UA": "Тайванська",
-        "zh_CN": "中文（繁体）——无效",
+        "zh_CN": "中文（繁体）",
         "zh_TW": "中文 (台灣)"
       }
     },
@@ -4663,7 +4663,7 @@
         "th_TH": "จีน (ตัวย่อ)",
         "tr_TR": "Basitleştirilmiş Çince",
         "uk_UA": "Спрощена китайська",
-        "zh_CN": "简体中文（推荐）",
+        "zh_CN": "简体中文",
         "zh_TW": "簡體中文"
       }
     },
@@ -4688,7 +4688,7 @@
         "th_TH": "จีน (ดั้งเดิม)",
         "tr_TR": "Geleneksel Çince",
         "uk_UA": "Традиційна китайська",
-        "zh_CN": "繁体中文（推荐）",
+        "zh_CN": "繁体中文",
         "zh_TW": "正體中文 (建議)"
       }
     },
@@ -5138,7 +5138,7 @@
         "th_TH": "4 กิบบิไบต์",
         "tr_TR": "",
         "uk_UA": "4Гб",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -5163,7 +5163,7 @@
         "th_TH": "6 กิบบิไบต์",
         "tr_TR": "",
         "uk_UA": "6Гб",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -5188,7 +5188,7 @@
         "th_TH": "8 กิบบิไบต์",
         "tr_TR": "",
         "uk_UA": "8Гб",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -5213,7 +5213,7 @@
         "th_TH": "12 กิบบิไบต์",
         "tr_TR": "",
         "uk_UA": "12Гб",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -5438,7 +5438,7 @@
         "th_TH": "คูณ 2",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "2 倍"
       }
     },
@@ -5463,7 +5463,7 @@
         "th_TH": "คูณ 4",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "4 倍"
       }
     },
@@ -5488,7 +5488,7 @@
         "th_TH": "คูณ 8",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "8 倍"
       }
     },
@@ -5513,7 +5513,7 @@
         "th_TH": "คูณ 16",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "16 倍"
       }
     },
@@ -8579,7 +8579,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -8588,7 +8588,7 @@
         "th_TH": "ตั้งค่าไฟ LED",
         "tr_TR": "",
         "uk_UA": "LED-підсвітка",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -9338,7 +9338,7 @@
         "th_TH": "ปุ่ม Tab",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Tab 鍵"
       }
     },
@@ -9379,7 +9379,7 @@
         "he_IL": "",
         "it_IT": "Ins",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Sett inn",
         "pl_PL": "",
         "pt_BR": "",
@@ -9388,7 +9388,7 @@
         "th_TH": "ปุ่ม Insert",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Insert 鍵"
       }
     },
@@ -9404,7 +9404,7 @@
         "he_IL": "",
         "it_IT": "Canc",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Slett",
         "pl_PL": "",
         "pt_BR": "",
@@ -9413,7 +9413,7 @@
         "th_TH": "ปุ่ม Delete",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Delete 鍵"
       }
     },
@@ -9429,7 +9429,7 @@
         "he_IL": "",
         "it_IT": "Pag. Su",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Side opp",
         "pl_PL": "",
         "pt_BR": "",
@@ -9438,7 +9438,7 @@
         "th_TH": "ปุ่ม Page Up",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "向上捲頁鍵"
       }
     },
@@ -9454,7 +9454,7 @@
         "he_IL": "",
         "it_IT": "Pag. Giù",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Side ned",
         "pl_PL": "",
         "pt_BR": "",
@@ -9463,7 +9463,7 @@
         "th_TH": "ปุ่ม Page Down",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "向下捲頁鍵"
       }
     },
@@ -9479,7 +9479,7 @@
         "he_IL": "",
         "it_IT": "Inizio",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Hjem",
         "pl_PL": "",
         "pt_BR": "",
@@ -9488,7 +9488,7 @@
         "th_TH": "ปุ่ม Home",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Home 鍵"
       }
     },
@@ -9504,7 +9504,7 @@
         "he_IL": "",
         "it_IT": "Fine",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Avslutt",
         "pl_PL": "",
         "pt_BR": "",
@@ -9513,7 +9513,7 @@
         "th_TH": "ปุ่ม End",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "End 鍵"
       }
     },
@@ -9529,7 +9529,7 @@
         "he_IL": "",
         "it_IT": "Bloc Maiusc",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Skiftelås",
         "pl_PL": "",
         "pt_BR": "",
@@ -9538,7 +9538,7 @@
         "th_TH": "ปุ่ม Caps Lock",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Caps Lock 鍵"
       }
     },
@@ -9554,7 +9554,7 @@
         "he_IL": "",
         "it_IT": "Bloc Scorr",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Rullelås",
         "pl_PL": "",
         "pt_BR": "",
@@ -9563,7 +9563,7 @@
         "th_TH": "ปุ่ม Scroll Lock",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Scroll Lock 鍵"
       }
     },
@@ -9579,7 +9579,7 @@
         "he_IL": "",
         "it_IT": "Stamp",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Skjermbilde",
         "pl_PL": "",
         "pt_BR": "",
@@ -9588,7 +9588,7 @@
         "th_TH": "ปุ่ม Print Screen",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Print Screen 鍵"
       }
     },
@@ -9604,7 +9604,7 @@
         "he_IL": "",
         "it_IT": "Pausa",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Stans midlertidig",
         "pl_PL": "",
         "pt_BR": "",
@@ -9613,7 +9613,7 @@
         "th_TH": "ปุ่ม Pause",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Pause 鍵"
       }
     },
@@ -9629,7 +9629,7 @@
         "he_IL": "",
         "it_IT": "Bloc Num",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Numerisk Lås",
         "pl_PL": "",
         "pt_BR": "",
@@ -9638,7 +9638,7 @@
         "th_TH": "ปุ่ม Num Lock",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": "Num Lock 鍵"
       }
     },
@@ -9654,7 +9654,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "Tøm",
         "pl_PL": "",
         "pt_BR": "",
@@ -10079,7 +10079,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10088,7 +10088,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10104,7 +10104,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10113,7 +10113,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10129,7 +10129,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10138,7 +10138,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10154,7 +10154,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10163,7 +10163,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10179,7 +10179,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10188,7 +10188,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10204,7 +10204,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10213,7 +10213,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10229,7 +10229,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10238,7 +10238,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10254,7 +10254,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10263,7 +10263,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10279,7 +10279,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10288,7 +10288,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10304,7 +10304,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10313,7 +10313,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10329,7 +10329,7 @@
         "he_IL": "",
         "it_IT": "ò",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10338,7 +10338,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10354,7 +10354,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10363,7 +10363,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10379,7 +10379,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10388,7 +10388,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10404,7 +10404,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10413,7 +10413,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10429,7 +10429,7 @@
         "he_IL": "",
         "it_IT": "'",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10438,7 +10438,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10454,7 +10454,7 @@
         "he_IL": "",
         "it_IT": "ì",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10463,7 +10463,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10479,7 +10479,7 @@
         "he_IL": "",
         "it_IT": "è",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10488,7 +10488,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10504,7 +10504,7 @@
         "he_IL": "",
         "it_IT": "à",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10513,7 +10513,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10529,7 +10529,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10538,7 +10538,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10554,7 +10554,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10563,7 +10563,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10579,7 +10579,7 @@
         "he_IL": "",
         "it_IT": "ù",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10588,7 +10588,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10604,7 +10604,7 @@
         "he_IL": "",
         "it_IT": "<",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10613,7 +10613,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -10904,7 +10904,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -10929,7 +10929,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -13613,7 +13613,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -13679,7 +13679,7 @@
         "he_IL": "ממשק תכנות אמיבו",
         "it_IT": "API Amiibo",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "API Amiibo",
         "pt_BR": "API Amiibo",
@@ -13688,7 +13688,7 @@
         "th_TH": "อามิโบ้ API",
         "tr_TR": "",
         "uk_UA": "API Amiibo",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -15554,7 +15554,7 @@
         "he_IL": "",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": "이 게임에 호환되지 않는 Amiibo 표시",
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -15563,7 +15563,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "显示与此游戏不兼容的 Amiibo",
         "zh_TW": ""
       }
     },
@@ -17538,7 +17538,7 @@
         "th_TH": "ซีพียู",
         "tr_TR": "İşlemci",
         "uk_UA": "Процесор",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -19654,7 +19654,7 @@
         "he_IL": "אמיבו",
         "it_IT": "",
         "ja_JP": "",
-        "ko_KR": "",
+        "ko_KR": null,
         "no_NO": "",
         "pl_PL": "",
         "pt_BR": "",
@@ -19663,7 +19663,7 @@
         "th_TH": "อมิโบ้",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -20488,7 +20488,7 @@
         "th_TH": "{0:n0} เมกะไบต์",
         "tr_TR": "",
         "uk_UA": "{0:n0} Мб",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -22863,7 +22863,7 @@
         "th_TH": "(สาธารณะ)",
         "tr_TR": "",
         "uk_UA": "(публічний)",
-        "zh_CN": "（公开的）",
+        "zh_CN": "（公开）",
         "zh_TW": "(公開模式)"
       }
     },
@@ -23063,7 +23063,7 @@
         "th_TH": "เปลี่ยนโหมด",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": null,
         "zh_TW": null
       }
     },
@@ -23713,7 +23713,7 @@
         "th_TH": "",
         "tr_TR": "",
         "uk_UA": "",
-        "zh_CN": "",
+        "zh_CN": "状态",
         "zh_TW": ""
       }
     },
