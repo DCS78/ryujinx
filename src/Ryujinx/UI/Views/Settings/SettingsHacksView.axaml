@@ -60,13 +60,13 @@
                         Margin="0,10,0,0"
                         Orientation="Horizontal"
                         HorizontalAlignment="Center"
-                        ToolTip.Tip="{Binding DirtyHacks.TMNT_SRFixTooltip}">
+                        ToolTip.Tip="{Binding DirtyHacks.TmntSrCutsceneCrashFixTooltip}">
                     <CheckBox
                         Margin="0"
-                        IsChecked="{Binding DirtyHacks.TMNT_SRFix}"/>
+                        IsChecked="{Binding DirtyHacks.TmntSrCutsceneCrashFix}"/>
                     <TextBlock
                         VerticalAlignment="Center"
-                        Text="TMNT Shredder's Revenges Fix" />
+                        Text="TMNT Shredder's Revenge Fix" />
                 </StackPanel>
                 <Separator/>
             </StackPanel>

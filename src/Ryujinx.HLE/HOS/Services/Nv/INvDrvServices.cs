@@ -50,8 +50,8 @@ namespace Ryujinx.HLE.HOS.Services.Nv
         };
        
 
-        private const string TMNT_SRTitleId = "0100fe701475a000";
-        private static bool IsTMNT_SR => TitleIDs.CurrentApplication.Value.OrDefault() is TMNT_SRTitleId;
+        private const string TmntSrTitleId = "0100fe701475a000";
+        private static bool IsTmntSr => TitleIDs.CurrentApplication.Value.OrDefault() is TmntSrTitleId;
 
         public static IdDictionary DeviceFileIdRegistry = new();
 
@@ -254,15 +254,17 @@ namespace Ryujinx.HLE.HOS.Services.Nv
                 int fd = context.RequestData.ReadInt32();
                 NvIoctl ioctlCommand = context.RequestData.ReadStruct<NvIoctl>();
 
-                if (context.Device.DirtyHacks.IsEnabled(DirtyHack.TMNT_SRFix) && IsTMNT_SR)
+                if (context.Device.DirtyHacks.IsEnabled(DirtyHack.TmntSrCutsceneCrashFix) && IsTmntSr)
                 {
-                    // Fix emulator crash before splash screen for
-                    // TMNT Shredder's Revenges 
+                    // This fixes an emulator crash before the cutscene for
+                    // TMNT Shredder's Revenge.
+                    //
+                    //  NOTE: Delay of 50ms is a stable value. Trying to reduce latency will crash when going to intro cutscene
 
                     if ((ioctlCommand.Type == NvIoctl.NvGpuAsMagic && (ioctlCommand.Number == 0x05 || ioctlCommand.Number == 0x06)))
                     {
                         System.Threading.Thread.Sleep(50);
-                        Logger.Notice.Print(LogClass.ServiceNv, $"Type_{ioctlCommand.Type}, Command_{ioctlCommand.Number} Delay!");
+                        Logger.Debug?.Print(LogClass.ServiceNv, $"Type_{ioctlCommand.Type}, Command_{ioctlCommand.Number} Delay!");
                     }
                 }
 
