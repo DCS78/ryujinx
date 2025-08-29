@@ -2,12 +2,14 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using FluentAvalonia.UI.Windowing;
 using Gommon;
 using Ryujinx.Ava.Common.Locale;
+using Ryujinx.Ava.Common.Models;
 using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Views.Dialog;
@@ -16,7 +18,10 @@ using Ryujinx.Ava.Utilities;
 using Ryujinx.Common;
 using Ryujinx.Common.Logging;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace Ryujinx.Ava
 {
@@ -52,6 +57,8 @@ namespace Ryujinx.Ava
         {
             Name = FormatTitle();
 
+            RetrieveAvailableAppIcons();
+
             AvaloniaXamlLoader.Load(this);
 
             if (OperatingSystem.IsMacOS())
@@ -72,8 +79,10 @@ namespace Ryujinx.Ava
             if (Program.PreviewerDetached)
             {
                 ApplyConfiguredTheme(ConfigurationState.Instance.UI.BaseStyle);
-
                 ConfigurationState.Instance.UI.BaseStyle.Event += ThemeChanged_Event;
+
+                UpdateAppIcon(ConfigurationState.Instance.UI.SelectedWindowIcon);
+                ConfigurationState.Instance.UI.SelectedWindowIcon.Event += WindowIconChanged_Event;
             }
         }
 
@@ -151,5 +160,39 @@ namespace Ryujinx.Ava
         {
             await AboutView.Show();
         }
+
+        public static List<ApplicationIcon> AvailableApplicationIcons { get; set; } = [];
+        private static void RetrieveAvailableAppIcons()
+        {
+            AvailableApplicationIcons.Clear();
+            string resourceAssemblyPrefix = "Ryujinx.Assets.Icons.AppIcons.";
+
+            IEnumerable<string> availableAppIconResources = EmbeddedResources
+                .GetAllAvailableResources("Ryujinx/Assets")
+                .Where(x => x.StartsWith(resourceAssemblyPrefix));
+
+            foreach (string resource in availableAppIconResources)
+            {
+                string filename = resource.Remove(0, resourceAssemblyPrefix.Length);
+                string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filename);
+                AvailableApplicationIcons.Add(new ApplicationIcon()
+                {
+                    Name = fileNameWithoutExtension,
+                    Filename = filename
+                });
+            }
+        }
+
+        public static void UpdateAppIcon(string newIconName)
+        {
+            ApplicationIcon selectedIcon = AvailableApplicationIcons.First(x => x.Name == newIconName);
+            Stream activeIconStream = EmbeddedResources.GetStream(selectedIcon.FullPath);
+            if (activeIconStream != null)
+            {
+                MainWindow.Icon = new Bitmap(activeIconStream);
+            }
+        }
+
+        private void WindowIconChanged_Event(object _, ReactiveEventArgs<string> rArgs) => UpdateAppIcon(rArgs.NewValue);
     }
 }

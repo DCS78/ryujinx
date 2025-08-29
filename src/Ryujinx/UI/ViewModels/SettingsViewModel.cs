@@ -9,12 +9,14 @@ using Ryujinx.Audio.Backends.OpenAL;
 using Ryujinx.Audio.Backends.SDL2;
 using Ryujinx.Audio.Backends.SoundIo;
 using Ryujinx.Ava.Common.Locale;
+using Ryujinx.Ava.Common.Models;
 using Ryujinx.Ava.Systems.Configuration;
 using Ryujinx.Ava.Systems.Configuration.System;
 using Ryujinx.Ava.Systems.Configuration.UI;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Models.Input;
 using Ryujinx.Ava.UI.Windows;
+using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Configuration.Multiplayer;
 using Ryujinx.Common.GraphicsDriver;
@@ -496,6 +498,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             Task.Run(CheckSoundBackends);
             Task.Run(PopulateNetworkInterfaces);
+            ApplicationIcons = new(RyujinxApp.AvailableApplicationIcons);
 
             if (Program.PreviewerDetached)
             {
@@ -621,6 +624,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             HideCursor = (int)config.HideCursor.Value;
             UpdateCheckerType = (int)config.UpdateCheckerType.Value;
             FocusLostActionType = (int)config.FocusLostActionType.Value;
+            AppIconSelectedIndex = _appIcons.ToList().FindIndex(x => x.Name == config.UI.SelectedWindowIcon.Value);
 
             GameDirectories.Clear();
             GameDirectories.AddRange(config.UI.GameDirs.Value);
@@ -740,6 +744,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.FocusLostActionType.Value = (FocusLostType)FocusLostActionType;
             config.UI.GameDirs.Value = [.. GameDirectories];
             config.UI.AutoloadDirs.Value = [.. AutoloadDirectories];
+            config.UI.SelectedWindowIcon.Value = _appIcons[_appIconSelectedIndex].Name;
 
             config.UI.BaseStyle.Value = BaseStyleIndex switch
             {
@@ -934,6 +939,28 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             RevertIfNotSaved();
             CloseWindow?.Invoke();
+        }
+
+        private AvaloniaList<ApplicationIcon> _appIcons = [];
+        public AvaloniaList<ApplicationIcon> ApplicationIcons
+        {
+            get => _appIcons;
+            set
+            {
+                _appIcons = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _appIconSelectedIndex;
+        public int AppIconSelectedIndex
+        {
+            get => _appIconSelectedIndex;
+            set
+            {
+                _appIconSelectedIndex = value;
+                OnPropertyChanged();
+            }
         }
     }
 }
