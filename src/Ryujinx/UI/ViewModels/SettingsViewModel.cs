@@ -90,7 +90,6 @@ namespace Ryujinx.Ava.UI.ViewModels
         public bool IsGameTitleNotNull => !string.IsNullOrEmpty(GameTitle);
         public double PanelOpacity => IsGameTitleNotNull ? 0.5 : 1;
 
-
         public int ResolutionScale
         {
             get => _resolutionScale;
@@ -229,7 +228,6 @@ namespace Ryujinx.Ava.UI.ViewModels
         }
         public bool EnablePptc { get; set; }
         public bool EnableLowPowerPptc { get; set; }
-
 
         public long TurboMultiplier
         {

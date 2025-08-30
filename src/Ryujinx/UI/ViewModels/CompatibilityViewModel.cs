@@ -30,12 +30,11 @@ namespace Ryujinx.Ava.UI.ViewModels
         public string BootsInfoText { get; set; }
         public string NothingInfoText { get; set; }
 
-
         private IEnumerable<CompatibilityEntry> _currentEntries = CompatibilityDatabase.Entries;
 
         private string[] _ownedGameTitleIds = [];
 
-        private Func<CompatibilityEntry, object> _sortKeySelector = x => x.GameName; // Default sort by GameName
+        private readonly Func<CompatibilityEntry, object> _sortKeySelector = x => x.GameName; // Default sort by GameName
 
         public IEnumerable<CompatibilityEntry> CurrentEntries => OnlyShowOwnedGames
             ? _currentEntries.Where(x =>
@@ -86,7 +85,6 @@ namespace Ryujinx.Ava.UI.ViewModels
                 OnPropertyChanged(nameof(CurrentEntries));
             }
         }
-
 
         public void NameSorting(int nameSort = 0)
         {
@@ -162,6 +160,5 @@ namespace Ryujinx.Ava.UI.ViewModels
                 };
             }
         }
-
     }
 }

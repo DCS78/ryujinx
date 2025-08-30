@@ -1,4 +1,4 @@
-﻿using Gommon;
+using Gommon;
 using Ryujinx.Ava.Common.Locale;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Common;
@@ -85,7 +85,6 @@ namespace Ryujinx.Ava.Systems
 
                 return default;
             }
-
 
             if (!Version.TryParse(_versionResponse.Version, out Version newVersion))
             {

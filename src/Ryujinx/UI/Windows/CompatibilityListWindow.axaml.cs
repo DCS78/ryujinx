@@ -65,6 +65,5 @@ namespace Ryujinx.Ava.UI.Windows
                 cvm.StatusSorting(int.Parse(sortStrategy));
             }
         }
-
     }
 }
