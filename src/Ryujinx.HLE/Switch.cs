@@ -73,7 +73,7 @@ namespace Ryujinx.HLE
             DirtyHacks        = new DirtyHacks(Configuration.Hacks);
             AudioDeviceDriver = new CompatLayerHardwareDeviceDriver(Configuration.AudioDeviceDriver);
             Memory            = new MemoryBlock(Configuration.MemoryConfiguration.ToDramSize(), memoryAllocationFlags);
-            Gpu               = new GpuContext(Configuration.GpuRenderer, DirtyHacks);
+            Gpu               = new GpuContext(Configuration.GpuRenderer, DirtyHacks, Configuration.OverlayManager);
             Debugger          = Configuration.EnableGdbStub ? new Debugger.Debugger(this, Configuration.GdbStubPort) : null;
             System            = new HOS.Horizon(this);
             Statistics        = new PerformanceStatistics(this);

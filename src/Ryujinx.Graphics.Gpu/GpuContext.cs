@@ -40,6 +40,7 @@ namespace Ryujinx.Graphics.Gpu
         /// GPU synchronization manager.
         /// </summary>
         public SynchronizationManager Synchronization { get; }
+        public IOverlayManager OverlayManager { get; }
 
         /// <summary>
         /// Presentation window.
@@ -121,14 +122,18 @@ namespace Ryujinx.Graphics.Gpu
         /// Creates a new instance of the GPU emulation context.
         /// </summary>
         /// <param name="renderer">Host renderer</param>
-        public GpuContext(IRenderer renderer, DirtyHacks hacks)
+        /// <param name="hacks">Enabled dirty hacks</param>
+        /// <param name="overlayManager">Overlay manager for rendering overlays</param>
+        public GpuContext(IRenderer renderer, DirtyHacks hacks, IOverlayManager overlayManager)
         {
             Renderer = renderer;
 
             GPFifo = new GPFifoDevice(this);
 
             Synchronization = new SynchronizationManager();
-
+            
+            OverlayManager = overlayManager;
+            
             Window = new Window(this);
 
             HostInitalized = new ManualResetEvent(false);
@@ -462,6 +467,8 @@ namespace Ryujinx.Graphics.Gpu
             RunDeferredActions();
 
             Renderer.Dispose();
+
+            OverlayManager.Dispose();
         }
     }
 }

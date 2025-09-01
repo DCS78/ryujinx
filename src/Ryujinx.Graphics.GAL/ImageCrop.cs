@@ -4,8 +4,10 @@ namespace Ryujinx.Graphics.GAL
     {
         public int Left { get; }
         public int Right { get; }
+        public int Width => Right - Left;
         public int Top { get; }
         public int Bottom { get; }
+        public int Height => Bottom - Top;
         public bool FlipX { get; }
         public bool FlipY { get; }
         public bool IsStretched { get; }

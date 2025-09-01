@@ -1,3 +1,4 @@
+using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Projektanker.Icons.Avalonia;
 using Ryujinx.Ava.Common.Locale;
@@ -18,11 +19,19 @@ namespace Ryujinx.Ava.Common.Markup
 
     internal class LocaleExtension(LocaleKeys key) : BasicMarkupExtension<string>
     {
+        public IValueConverter Converter { get; set; }
+
         public override string Name => "Translation";
         protected override string Value => LocaleManager.Instance[key];
 
         protected override void ConfigureBindingExtension(CompiledBindingExtension bindingExtension)
-            => bindingExtension.Source = LocaleManager.Instance;
+        {
+            bindingExtension.Source = LocaleManager.Instance;
+            if (Converter != null)
+            {
+                bindingExtension.Converter = Converter;
+            }
+        }
     }
 
     internal class WindowTitleExtension(LocaleKeys key, bool includeVersion) : BasicMarkupExtension<string>

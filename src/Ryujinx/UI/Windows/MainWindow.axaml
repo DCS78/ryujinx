@@ -10,6 +10,7 @@
     xmlns:controls="clr-namespace:Ryujinx.Ava.UI.Controls"
     xmlns:main="clr-namespace:Ryujinx.Ava.UI.Views.Main"
     xmlns:viewsMisc="clr-namespace:Ryujinx.Ava.UI.Views.Misc"
+    xmlns:overlayControls="clr-namespace:Ryujinx.Ava.UI.Controls"
     Cursor="{Binding Cursor}"
     Title="{Binding Title}"
     WindowState="{Binding WindowState}"
@@ -178,5 +179,7 @@
                 Name="StatusBarView"
                 Grid.Row="2" />
         </Grid>
+        
+
     </Grid>
 </window:StyleableAppWindow>

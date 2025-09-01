@@ -525,18 +525,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             }
         }
 
-        private static string GetShortGamepadName(string str)
-        {
-            const string Ellipsis = "...";
-            const int MaxSize = 50;
 
-            if (str.Length > MaxSize)
-            {
-                return $"{str.AsSpan(0, MaxSize - Ellipsis.Length)}{Ellipsis}";
-            }
-
-            return str;
-        }
 
         private static string GetShortGamepadId(string str)
         {
@@ -550,7 +539,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             string GetGamepadName(IGamepad gamepad, int controllerNumber)
             {
-                return $"{GetShortGamepadName(gamepad.Name)} ({controllerNumber})";
+                return $"{DefaultInputConfigurationProvider.GetShortGamepadName(gamepad.Name)} ({controllerNumber})";
             }
 
             string GetUniqueGamepadName(IGamepad gamepad, ref int controllerNumber)
@@ -578,7 +567,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                     if (gamepad != null)
                     {
-                        Devices.Add((DeviceType.Keyboard, id, $"{GetShortGamepadName(gamepad.Name)}"));
+                        Devices.Add((DeviceType.Keyboard, id, $"{DefaultInputConfigurationProvider.GetShortGamepadName(gamepad.Name)}"));
                     }
                 }
 
@@ -651,137 +640,20 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
             InputConfig config;
             if (activeDevice.Type == DeviceType.Keyboard)
             {
-                string id = activeDevice.Id;
-                string name = activeDevice.Name;
-
-                config = new StandardKeyboardInputConfig
-                {
-                    Version = InputConfig.CurrentVersion,
-                    Backend = InputBackendType.WindowKeyboard,
-                    Id = id,
-                    Name = name,
-                    ControllerType = ControllerType.ProController,
-                    LeftJoycon = new LeftJoyconCommonConfig<Key>
-                    {
-                        DpadUp = Key.Up,
-                        DpadDown = Key.Down,
-                        DpadLeft = Key.Left,
-                        DpadRight = Key.Right,
-                        ButtonMinus = Key.Minus,
-                        ButtonL = Key.E,
-                        ButtonZl = Key.Q,
-                        ButtonSl = Key.Unbound,
-                        ButtonSr = Key.Unbound,
-                    },
-                    LeftJoyconStick =
-                        new JoyconConfigKeyboardStick<Key>
-                        {
-                            StickUp = Key.W,
-                            StickDown = Key.S,
-                            StickLeft = Key.A,
-                            StickRight = Key.D,
-                            StickButton = Key.F,
-                        },
-                    RightJoycon = new RightJoyconCommonConfig<Key>
-                    {
-                        ButtonA = Key.Z,
-                        ButtonB = Key.X,
-                        ButtonX = Key.C,
-                        ButtonY = Key.V,
-                        ButtonPlus = Key.Plus,
-                        ButtonR = Key.U,
-                        ButtonZr = Key.O,
-                        ButtonSl = Key.Unbound,
-                        ButtonSr = Key.Unbound,
-                    },
-                    RightJoyconStick = new JoyconConfigKeyboardStick<Key>
-                    {
-                        StickUp = Key.I,
-                        StickDown = Key.K,
-                        StickLeft = Key.J,
-                        StickRight = Key.L,
-                        StickButton = Key.H,
-                    },
-                };
+                config = DefaultInputConfigurationProvider.CreateDefaultKeyboardConfig(activeDevice.Id, activeDevice.Name, _playerId);
             }
             else if (activeDevice.Type == DeviceType.Controller)
             {
-                bool isNintendoStyle = Devices.ToList().FirstOrDefault(x => x.Id == activeDevice.Id).Name.Contains("Nintendo");
-
-                string id = activeDevice.Id.Split(" ")[0];
-                string name = activeDevice.Name;
-
-                config = new StandardControllerInputConfig
-                {
-                    Version = InputConfig.CurrentVersion,
-                    Backend = InputBackendType.GamepadSDL2,
-                    Id = id,
-                    Name = name,
-                    ControllerType = ControllerType.ProController,
-                    DeadzoneLeft = 0.1f,
-                    DeadzoneRight = 0.1f,
-                    RangeLeft = 1.0f,
-                    RangeRight = 1.0f,
-                    TriggerThreshold = 0.5f,
-                    LeftJoycon = new LeftJoyconCommonConfig<ConfigGamepadInputId>
-                    {
-                        DpadUp = ConfigGamepadInputId.DpadUp,
-                        DpadDown = ConfigGamepadInputId.DpadDown,
-                        DpadLeft = ConfigGamepadInputId.DpadLeft,
-                        DpadRight = ConfigGamepadInputId.DpadRight,
-                        ButtonMinus = ConfigGamepadInputId.Minus,
-                        ButtonL = ConfigGamepadInputId.LeftShoulder,
-                        ButtonZl = ConfigGamepadInputId.LeftTrigger,
-                        ButtonSl = ConfigGamepadInputId.Unbound,
-                        ButtonSr = ConfigGamepadInputId.Unbound,
-                    },
-                    LeftJoyconStick = new JoyconConfigControllerStick<ConfigGamepadInputId, ConfigStickInputId>
-                    {
-                        Joystick = ConfigStickInputId.Left,
-                        StickButton = ConfigGamepadInputId.LeftStick,
-                        InvertStickX = false,
-                        InvertStickY = false,
-                    },
-                    RightJoycon = new RightJoyconCommonConfig<ConfigGamepadInputId>
-                    {
-                        ButtonA = isNintendoStyle ? ConfigGamepadInputId.A : ConfigGamepadInputId.B,
-                        ButtonB = isNintendoStyle ? ConfigGamepadInputId.B : ConfigGamepadInputId.A,
-                        ButtonX = isNintendoStyle ? ConfigGamepadInputId.X : ConfigGamepadInputId.Y,
-                        ButtonY = isNintendoStyle ? ConfigGamepadInputId.Y : ConfigGamepadInputId.X,
-                        ButtonPlus = ConfigGamepadInputId.Plus,
-                        ButtonR = ConfigGamepadInputId.RightShoulder,
-                        ButtonZr = ConfigGamepadInputId.RightTrigger,
-                        ButtonSl = ConfigGamepadInputId.Unbound,
-                        ButtonSr = ConfigGamepadInputId.Unbound,
-                    },
-                    RightJoyconStick = new JoyconConfigControllerStick<ConfigGamepadInputId, ConfigStickInputId>
-                    {
-                        Joystick = ConfigStickInputId.Right,
-                        StickButton = ConfigGamepadInputId.RightStick,
-                        InvertStickX = false,
-                        InvertStickY = false,
-                    },
-                    Motion = new StandardMotionConfigController
-                    {
-                        MotionBackend = MotionInputBackendType.GamepadDriver,
-                        EnableMotion = true,
-                        Sensitivity = 100,
-                        GyroDeadzone = 1,
-                    },
-                    Rumble = new RumbleConfigController
-                    {
-                        StrongRumble = 1f,
-                        WeakRumble = 1f,
-                        EnableRumble = false,
-                    },
-                };
+                bool isNintendoStyle = DefaultInputConfigurationProvider.IsNintendoStyleController(activeDevice.Name);
+                config = DefaultInputConfigurationProvider.CreateDefaultControllerConfig(activeDevice.Id, activeDevice.Name, _playerId, isNintendoStyle);
             }
             else
             {
-                config = new InputConfig();
+                config = new InputConfig
+                {
+                    PlayerIndex = _playerId
+                };
             }
-
-            config.PlayerIndex = _playerId;
 
             return config;
         }

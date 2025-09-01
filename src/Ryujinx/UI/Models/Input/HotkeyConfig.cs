@@ -32,6 +32,24 @@ namespace Ryujinx.Ava.UI.Models.Input
 
         [ObservableProperty] private bool _turboModeWhileHeld;
 
+        [ObservableProperty] private Key _cycleInputDevicePlayer1;
+
+        [ObservableProperty] private Key _cycleInputDevicePlayer2;
+
+        [ObservableProperty] private Key _cycleInputDevicePlayer3;
+
+        [ObservableProperty] private Key _cycleInputDevicePlayer4;
+
+        [ObservableProperty] private Key _cycleInputDevicePlayer5;
+
+        [ObservableProperty] private Key _cycleInputDevicePlayer6;
+
+        [ObservableProperty] private Key _cycleInputDevicePlayer7;
+
+        [ObservableProperty] private Key _cycleInputDevicePlayer8;
+
+        [ObservableProperty] private Key _cycleInputDeviceHandheld;
+
         public HotkeyConfig(KeyboardHotkeys config)
         {
             if (config == null)
@@ -50,6 +68,15 @@ namespace Ryujinx.Ava.UI.Models.Input
             CustomVSyncIntervalDecrement = config.CustomVSyncIntervalDecrement;
             TurboMode = config.TurboMode;
             TurboModeWhileHeld = config.TurboModeWhileHeld;
+            CycleInputDevicePlayer1 = config.CycleInputDevicePlayer1;
+            CycleInputDevicePlayer2 = config.CycleInputDevicePlayer2;
+            CycleInputDevicePlayer3 = config.CycleInputDevicePlayer3;
+            CycleInputDevicePlayer4 = config.CycleInputDevicePlayer4;
+            CycleInputDevicePlayer5 = config.CycleInputDevicePlayer5;
+            CycleInputDevicePlayer6 = config.CycleInputDevicePlayer6;
+            CycleInputDevicePlayer7 = config.CycleInputDevicePlayer7;
+            CycleInputDevicePlayer8 = config.CycleInputDevicePlayer8;
+            CycleInputDeviceHandheld = config.CycleInputDeviceHandheld;
         }
 
         public KeyboardHotkeys GetConfig() =>
@@ -67,7 +94,16 @@ namespace Ryujinx.Ava.UI.Models.Input
                 CustomVSyncIntervalIncrement = CustomVSyncIntervalIncrement,
                 CustomVSyncIntervalDecrement = CustomVSyncIntervalDecrement,
                 TurboMode = TurboMode,
-                TurboModeWhileHeld = TurboModeWhileHeld
+                TurboModeWhileHeld = TurboModeWhileHeld,
+                CycleInputDevicePlayer1 = CycleInputDevicePlayer1,
+                CycleInputDevicePlayer2 = CycleInputDevicePlayer2,
+                CycleInputDevicePlayer3 = CycleInputDevicePlayer3,
+                CycleInputDevicePlayer4 = CycleInputDevicePlayer4,
+                CycleInputDevicePlayer5 = CycleInputDevicePlayer5,
+                CycleInputDevicePlayer6 = CycleInputDevicePlayer6,
+                CycleInputDevicePlayer7 = CycleInputDevicePlayer7,
+                CycleInputDevicePlayer8 = CycleInputDevicePlayer8,
+                CycleInputDeviceHandheld = CycleInputDeviceHandheld
             };
     }
 }

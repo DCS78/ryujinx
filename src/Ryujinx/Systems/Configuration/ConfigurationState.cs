@@ -65,6 +65,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 ShowTitleBar = ShowOldUI,
                 EnableHardwareAcceleration = EnableHardwareAcceleration,
                 HideCursor = HideCursor,
+                ControllerOverlayGameStartDuration = ControllerOverlayGameStartDuration,
+                ControllerOverlayInputCycleDuration = ControllerOverlayInputCycleDuration,
                 VSyncMode = Graphics.VSyncMode,
                 EnableCustomVSyncInterval = Graphics.EnableCustomVSyncInterval,
                 CustomVSyncInterval = Graphics.CustomVSyncInterval,
@@ -193,6 +195,8 @@ namespace Ryujinx.Ava.Systems.Configuration
             ShowOldUI.Value = !OperatingSystem.IsWindows();
             EnableHardwareAcceleration.Value = true;
             HideCursor.Value = HideCursorMode.OnIdle;
+            ControllerOverlayGameStartDuration.Value = 3;
+            ControllerOverlayInputCycleDuration.Value = 2;
             Graphics.VSyncMode.Value = VSyncMode.Switch;
             Graphics.CustomVSyncInterval.Value = 120;
             Graphics.EnableCustomVSyncInterval.Value = false;
@@ -272,7 +276,16 @@ namespace Ryujinx.Ava.Systems.Configuration
                 CustomVSyncIntervalIncrement = Key.Unbound,
                 CustomVSyncIntervalDecrement = Key.Unbound,
                 TurboMode = Key.Unbound,
-                TurboModeWhileHeld = false
+                TurboModeWhileHeld = false,
+                CycleInputDevicePlayer1 = Key.Unbound,
+                CycleInputDevicePlayer2 = Key.Unbound,
+                CycleInputDevicePlayer3 = Key.Unbound,
+                CycleInputDevicePlayer4 = Key.Unbound,
+                CycleInputDevicePlayer5 = Key.Unbound,
+                CycleInputDevicePlayer6 = Key.Unbound,
+                CycleInputDevicePlayer7 = Key.Unbound,
+                CycleInputDevicePlayer8 = Key.Unbound,
+                CycleInputDeviceHandheld = Key.Unbound
             };
             Hid.RainbowSpeed.Value = 1f;
             Hid.InputConfig.Value =

@@ -157,6 +157,32 @@
                             </ComboBox>
                             <TextBlock Classes="globalConfigMarker" IsVisible="{Binding IsGameTitleNotNull}" />
                         </StackPanel>
+                        <Separator Height="1" Margin="0,15,0,15" />
+                        <TextBlock Classes="h1" Text="{ext:Locale SettingsTabUIControllerOverlay}" />
+                        <StackPanel Margin="10,0,0,0" Orientation="Vertical" Spacing="10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{ext:Locale SettingsTabUIControllerOverlayGameStartDuration}"
+                                           Width="200" />
+                                <NumericUpDown Value="{Binding ControllerOverlayGameStartDuration}"
+                                               Minimum="0"
+                                               Maximum="30"
+                                               Increment="1"
+                                               FormatString="0"
+                                               ToolTip.Tip="{ext:Locale SettingsTabUIControllerOverlayGameStartDurationTooltip}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center"
+                                           Text="{ext:Locale SettingsTabUIControllerOverlayInputCycleDuration}"
+                                           Width="200" />
+                                <NumericUpDown Value="{Binding ControllerOverlayInputCycleDuration}"
+                                               Minimum="0"
+                                               Maximum="30"
+                                               Increment="1"
+                                               FormatString="0"
+                                               ToolTip.Tip="{ext:Locale SettingsTabUIControllerOverlayInputCycleDurationTooltip}" />
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
                 <Border Grid.Column="1"

@@ -15,5 +15,14 @@ namespace Ryujinx.Common.Configuration.Hid
         public Key CustomVSyncIntervalDecrement { get; set; }
         public Key TurboMode { get; set; }
         public bool TurboModeWhileHeld { get; set; }
+        public Key CycleInputDevicePlayer1 { get; set; }
+        public Key CycleInputDevicePlayer2 { get; set; }
+        public Key CycleInputDevicePlayer3 { get; set; }
+        public Key CycleInputDevicePlayer4 { get; set; }
+        public Key CycleInputDevicePlayer5 { get; set; }
+        public Key CycleInputDevicePlayer6 { get; set; }
+        public Key CycleInputDevicePlayer7 { get; set; }
+        public Key CycleInputDevicePlayer8 { get; set; }
+        public Key CycleInputDeviceHandheld { get; set; }
     }
 }
