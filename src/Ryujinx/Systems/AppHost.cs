@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Threading;
 using DiscordRPC;
-using Gommon;
 using LibHac.Common;
 using LibHac.Ns;
 using Ryujinx.Audio.Backends.Dummy;
