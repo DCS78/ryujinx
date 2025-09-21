@@ -1,10 +1,14 @@
+using Ryujinx.Common.Logging;
+using Ryujinx.Common.Memory;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.Gpu.Image;
 using Ryujinx.Graphics.Gpu.Memory;
 using Ryujinx.Graphics.Texture;
 using Ryujinx.Memory.Range;
+using SkiaSharp;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Ryujinx.Graphics.Gpu
@@ -15,6 +19,7 @@ namespace Ryujinx.Graphics.Gpu
     public class Window
     {
         private readonly GpuContext _context;
+        private DateTime? _lastUpdateTime = null;
 
         /// <summary>
         /// Texture presented on the window.
@@ -238,10 +243,109 @@ namespace Ryujinx.Graphics.Gpu
                     crop = new ImageCrop(left, right, top, bottom, crop.FlipX, crop.FlipY, crop.IsStretched, crop.AspectRatioX, crop.AspectRatioY);
                 }
 
+                DateTime currentTime = DateTime.UtcNow;
+                if (_lastUpdateTime != null)
+                {
+                    float deltaTime = (float)(currentTime - _lastUpdateTime.Value).TotalSeconds;
+                    _context.OverlayManager.Update(deltaTime);
+                }
+                _lastUpdateTime = currentTime;
+
+                // Apply overlay rendering directly to the host texture
+                if (_context.OverlayManager.HasVisibleOverlays)
+                {
+                    ApplyOverlaysToTexture(texture, crop);
+                }
+
                 _context.Renderer.Window.Present(texture.HostTexture, crop, swapBuffersCallback);
 
                 pt.ReleaseCallback(pt.UserObj);
             }
+        }
+
+        /// <summary>
+        /// Applies overlay rendering directly to the host texture for better performance
+        /// </summary>
+        /// <param name="texture">The texture to render overlays on</param>
+        /// <param name="crop">The crop information containing flip flags</param>
+        private void ApplyOverlaysToTexture(Image.Texture texture, ImageCrop crop)
+        {
+            try
+            {
+                var hostTexture = texture.HostTexture;
+
+                // Get the current texture data
+                using var currentData = hostTexture.GetData();
+                var textureDataSpan = currentData.Get();
+
+                // Create a bitmap from the existing texture data and render overlays directly on it
+                RenderOverlayOnTexture(textureDataSpan, hostTexture.Width, hostTexture.Height, crop, hostTexture);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error?.Print(LogClass.Gpu, $"Failed to apply overlays to texture: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Renders overlay directly onto the texture data
+        /// </summary>
+        /// <param name="textureData">Current texture data</param>
+        /// <param name="width">Texture width</param>
+        /// <param name="height">Texture height</param>
+        /// <param name="crop">Crop information</param>
+        /// <param name="hostTexture">Host texture to update</param>
+        private void RenderOverlayOnTexture(ReadOnlySpan<byte> textureData, int width, int height, ImageCrop crop, ITexture hostTexture)
+        {
+            try
+            {
+                // Create a bitmap from the existing texture data
+                var imageInfo = new SKImageInfo(
+                    width,
+                    height,
+                    SKColorType.Rgba8888,
+                    SKAlphaType.Premul
+                );
+
+                unsafe
+                {
+                    fixed (byte* ptr = textureData)
+                    {
+                        using var bitmap = new SKBitmap();
+                        bitmap.InstallPixels(imageInfo, (IntPtr)ptr, width * 4);
+                        using var canvas = new SKCanvas(bitmap);
+                        float scaleX = crop.Width / IOverlayManager.ReferenceWidth;
+                        float scaleY = crop.Height / IOverlayManager.ReferenceHeight;
+                        if (crop.FlipX)
+                        {
+                            canvas.Translate(crop.Width, 0);
+                        }
+                        if (crop.FlipY)
+                        {
+                            canvas.Translate(0, crop.Height);
+                        }
+                        canvas.Scale(
+                            crop.FlipX ? -scaleX : scaleX,
+                            crop.FlipY ? -scaleY : scaleY
+                        );
+                        _context.OverlayManager.Render(canvas);
+                    }
+                }
+
+                hostTexture.SetData(MemoryOwner<byte>.RentCopy(textureData));
+            }
+            catch (Exception ex)
+            {
+                Logger.Error?.Print(LogClass.Gpu, $"Direct overlay rendering failed: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Add overlay to the overlay manager
+        /// </summary>
+        public void AddOverlay(IOverlay overlay)
+        {
+            _context.OverlayManager.AddOverlay(overlay);
         }
 
         /// <summary>

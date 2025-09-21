@@ -3,6 +3,7 @@ using Ryujinx.Audio.Integration;
 using Ryujinx.Common.Configuration;
 using Ryujinx.Common.Configuration.Multiplayer;
 using Ryujinx.Graphics.GAL;
+using Ryujinx.Graphics.Gpu;
 using Ryujinx.HLE.FileSystem;
 using Ryujinx.HLE.HOS;
 using Ryujinx.HLE.HOS.Services.Account.Acc;
@@ -64,6 +65,12 @@ namespace Ryujinx.HLE
         /// </summary>
         /// <remarks>This cannot be changed after <see cref="Switch"/> instantiation.</remarks>
         internal IHostUIHandler HostUIHandler { get; private set; }
+
+        /// <summary>
+        /// The overlay manager to use for all overlay operations.
+        /// </summary>
+        /// <remarks>This cannot be changed after <see cref="Switch"/> instantiation.</remarks>
+        internal IOverlayManager OverlayManager { get; private set; }
 
         /// <summary>
         /// Control the memory configuration used by the emulation context.
@@ -283,7 +290,8 @@ namespace Ryujinx.HLE
             UserChannelPersistence userChannelPersistence,
             IRenderer gpuRenderer,
             IHardwareDeviceDriver audioDeviceDriver,
-            IHostUIHandler hostUIHandler
+            IHostUIHandler hostUIHandler,
+            IOverlayManager overlayManager
         )
         {
             VirtualFileSystem = virtualFileSystem;
@@ -294,6 +302,7 @@ namespace Ryujinx.HLE
             GpuRenderer = gpuRenderer;
             AudioDeviceDriver = audioDeviceDriver;
             HostUIHandler = hostUIHandler;
+            OverlayManager = overlayManager;
             return this;
         }
     }

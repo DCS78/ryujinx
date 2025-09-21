@@ -121,6 +121,60 @@
                         <TextBlock Text="{ext:Locale SettingsTabHotkeysOnlyWhilePressed}" />
                     </CheckBox>
                 </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsPlayer1, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDevicePlayer1">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDevicePlayer1, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsPlayer2, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDevicePlayer2">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDevicePlayer2, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsPlayer3, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDevicePlayer3">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDevicePlayer3, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsPlayer4, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDevicePlayer4">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDevicePlayer4, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsPlayer5, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDevicePlayer5">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDevicePlayer5, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsPlayer6, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDevicePlayer6">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDevicePlayer6, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsPlayer7, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDevicePlayer7">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDevicePlayer7, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsPlayer8, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDevicePlayer8">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDevicePlayer8, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="{ext:Locale ControllerSettingsHandheld, Converter={x:Static helpers:PlayerHotkeyLabelConverter.Instance}}" Classes="settingHeader" />
+                    <ToggleButton Name="CycleInputDeviceHandheld">
+                        <TextBlock Text="{Binding KeyboardHotkey.CycleInputDeviceHandheld, Converter={x:Static helpers:KeyValueConverter.Instance}}" />
+                    </ToggleButton>
+                </StackPanel>
             </StackPanel>
         </Border>
    </ScrollViewer>

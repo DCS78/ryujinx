@@ -15,5 +15,14 @@ namespace Ryujinx.Ava.Common
         CustomVSyncIntervalIncrement,
         CustomVSyncIntervalDecrement,
         TurboMode,
+        CycleInputDevicePlayer1,
+        CycleInputDevicePlayer2,
+        CycleInputDevicePlayer3,
+        CycleInputDevicePlayer4,
+        CycleInputDevicePlayer5,
+        CycleInputDevicePlayer6,
+        CycleInputDevicePlayer7,
+        CycleInputDevicePlayer8,
+        CycleInputDeviceHandheld,
     }
 }

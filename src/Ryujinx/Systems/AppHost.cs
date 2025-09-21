@@ -33,6 +33,7 @@ using Ryujinx.Common.Utilities;
 using Ryujinx.Graphics.GAL;
 using Ryujinx.Graphics.GAL.Multithreading;
 using Ryujinx.Graphics.Gpu;
+using Ryujinx.UI.Overlay;
 using Ryujinx.Graphics.OpenGL;
 using Ryujinx.Graphics.Vulkan;
 using Ryujinx.HLE.FileSystem;
@@ -40,6 +41,11 @@ using Ryujinx.HLE.HOS;
 using Ryujinx.HLE.HOS.Services.Account.Acc;
 using Ryujinx.Input;
 using Ryujinx.Input.HLE;
+using Ryujinx.Common.Configuration.Hid;
+using Ryujinx.Common.Configuration.Hid.Controller;
+using Ryujinx.Common.Configuration.Hid.Controller.Motion;
+using Ryujinx.Common.Configuration.Hid.Keyboard;
+using System.Linq;
 using SkiaSharp;
 using SPB.Graphics.Vulkan;
 using System;
@@ -124,6 +130,7 @@ namespace Ryujinx.Ava.Systems
         private readonly bool _isFirmwareTitle;
 
         private readonly Lock _lockObject = new();
+        private ControllerOverlay _controllerOverlay;
 
         public event EventHandler AppExit;
         public event EventHandler<StatusUpdatedEventArgs> StatusUpdatedEvent;
@@ -952,9 +959,13 @@ namespace Ryujinx.Ava.Systems
                     _userChannelPersistence,
                     renderer.TryMakeThreaded(ConfigurationState.Instance.Graphics.BackendThreading),
                     InitializeAudio(),
-                    _viewModel.UiHandler
+                    _viewModel.UiHandler,
+                    new OverlayManager()
                 )
             );
+
+            _controllerOverlay = new ControllerOverlay();
+            Device.Gpu.Window.AddOverlay(_controllerOverlay);
         }
 
         private static IHardwareDeviceDriver InitializeAudio()
@@ -1359,6 +1370,33 @@ namespace Ryujinx.Ava.Systems
 
                             _viewModel.Volume = Device.GetVolume();
                             break;
+                        case KeyboardHotkeyState.CycleInputDevicePlayer1:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Player1);
+                            break;
+                        case KeyboardHotkeyState.CycleInputDevicePlayer2:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Player2);
+                            break;
+                        case KeyboardHotkeyState.CycleInputDevicePlayer3:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Player3);
+                            break;
+                        case KeyboardHotkeyState.CycleInputDevicePlayer4:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Player4);
+                            break;
+                        case KeyboardHotkeyState.CycleInputDevicePlayer5:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Player5);
+                            break;
+                        case KeyboardHotkeyState.CycleInputDevicePlayer6:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Player6);
+                            break;
+                        case KeyboardHotkeyState.CycleInputDevicePlayer7:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Player7);
+                            break;
+                        case KeyboardHotkeyState.CycleInputDevicePlayer8:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Player8);
+                            break;
+                        case KeyboardHotkeyState.CycleInputDeviceHandheld:
+                            CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex.Handheld);
+                            break;
                         case KeyboardHotkeyState.None:
                             (_keyboardInterface as AvaloniaKeyboard).Clear();
                             break;
@@ -1390,6 +1428,118 @@ namespace Ryujinx.Ava.Systems
             Device.Hid.DebugPad.Update();
 
             return true;
+        }
+
+        private void CycleInputDevice(HLE.HOS.Services.Hid.PlayerIndex playerIndex)
+        {
+            // Get current input configuration
+            List<InputConfig> currentConfig = new(ConfigurationState.Instance.Hid.InputConfig.Value);
+            
+            // Find current configuration for this player
+            InputConfig playerConfig = currentConfig.FirstOrDefault(x => x.PlayerIndex == (PlayerIndex)playerIndex);
+            
+            // Get available devices from InputManager
+            List<(DeviceType Type, string Id, string Name)> availableDevices = [];
+            
+            // Add disabled option
+            availableDevices.Add((DeviceType.None, "disabled", "Disabled"));
+            
+            // Add keyboard devices
+            foreach (string id in _inputManager.KeyboardDriver.GamepadsIds)
+            {
+                using var gamepad = _inputManager.KeyboardDriver.GetGamepad(id);
+                if (gamepad != null)
+                {
+                    availableDevices.Add((DeviceType.Keyboard, id, gamepad.Name));
+                }
+            }
+            
+            // Add controller devices
+            int controllerNumber = 0;
+            foreach (string id in _inputManager.GamepadDriver.GamepadsIds)
+            {
+                using var gamepad = _inputManager.GamepadDriver.GetGamepad(id);
+                if (gamepad != null)
+                {
+                    string name = $"{DefaultInputConfigurationProvider.GetShortGamepadName(gamepad.Name)} ({controllerNumber++})";
+                    availableDevices.Add((DeviceType.Controller, id, name));
+                }
+            }
+            
+            // Find current device index
+            int currentIndex = 0;
+            if (playerConfig != null)
+            {
+                DeviceType currentType = DeviceType.None;
+                if (playerConfig is StandardKeyboardInputConfig)
+                    currentType = DeviceType.Keyboard;
+                else if (playerConfig is StandardControllerInputConfig)
+                    currentType = DeviceType.Controller;
+                    
+                currentIndex = availableDevices.FindIndex(x => x.Type == currentType && x.Id == playerConfig.Id);
+                if (currentIndex == -1) currentIndex = 0;
+            }
+            
+            // Cycle to next device
+            int nextIndex = (currentIndex + 1) % availableDevices.Count;
+            var nextDevice = availableDevices[nextIndex];
+            
+            // Remove existing configuration for this player
+            currentConfig.RemoveAll(x => x.PlayerIndex == (PlayerIndex)playerIndex);
+            
+            // Add new configuration if not disabled
+            if (nextDevice.Type != DeviceType.None)
+            {
+                InputConfig newConfig = CreateDefaultInputConfig(nextDevice, (PlayerIndex)playerIndex);
+                if (newConfig != null)
+                {
+                    currentConfig.Add(newConfig);
+                }
+            }
+            
+            // Apply the new configuration
+            ConfigurationState.Instance.Hid.InputConfig.Value = currentConfig;
+            ConfigurationState.Instance.ToFileFormat().SaveConfig(Program.ConfigurationPath);
+            
+            // Reload the input system
+            NpadManager.ReloadConfiguration(currentConfig, ConfigurationState.Instance.Hid.EnableKeyboard, ConfigurationState.Instance.Hid.EnableMouse);
+            
+            // Show controller overlay
+            ShowControllerOverlay(currentConfig, ConfigurationState.Instance.ControllerOverlayInputCycleDuration.Value);
+        }
+        
+        private InputConfig CreateDefaultInputConfig((DeviceType Type, string Id, string Name) device, PlayerIndex playerIndex)
+        {
+            if (device.Type == DeviceType.Keyboard)
+            {
+                return DefaultInputConfigurationProvider.CreateDefaultKeyboardConfig(device.Id, device.Name, playerIndex);
+            }
+            else if (device.Type == DeviceType.Controller)
+            {
+                bool isNintendoStyle = DefaultInputConfigurationProvider.IsNintendoStyleController(device.Name);
+                return DefaultInputConfigurationProvider.CreateDefaultControllerConfig(device.Id, device.Name, playerIndex, isNintendoStyle);
+            }
+            
+            return null;
+        }
+        
+        public void ShowControllerOverlay(List<InputConfig> inputConfigs, int duration)
+        {
+            try
+            {
+                if (_controllerOverlay != null)
+                {
+                    _controllerOverlay.ShowControllerBindings(inputConfigs, duration);
+                }
+                else
+                {
+                    Logger.Warning?.Print(LogClass.Application, "AppHost: Cannot show overlay - ControllerOverlay is null");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error?.Print(LogClass.Application, $"Failed to show controller overlay: {ex.Message}");
+            }
         }
 
         private KeyboardHotkeyState GetHotkeyState()
@@ -1443,6 +1593,42 @@ namespace Ryujinx.Ava.Systems
             else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.TurboMode))
             {
                 state = KeyboardHotkeyState.TurboMode;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDevicePlayer1))
+            {
+                state = KeyboardHotkeyState.CycleInputDevicePlayer1;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDevicePlayer2))
+            {
+                state = KeyboardHotkeyState.CycleInputDevicePlayer2;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDevicePlayer3))
+            {
+                state = KeyboardHotkeyState.CycleInputDevicePlayer3;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDevicePlayer4))
+            {
+                state = KeyboardHotkeyState.CycleInputDevicePlayer4;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDevicePlayer5))
+            {
+                state = KeyboardHotkeyState.CycleInputDevicePlayer5;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDevicePlayer6))
+            {
+                state = KeyboardHotkeyState.CycleInputDevicePlayer6;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDevicePlayer7))
+            {
+                state = KeyboardHotkeyState.CycleInputDevicePlayer7;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDevicePlayer8))
+            {
+                state = KeyboardHotkeyState.CycleInputDevicePlayer8;
+            }
+            else if (_keyboardInterface.IsPressed((Key)ConfigurationState.Instance.Hid.Hotkeys.Value.CycleInputDeviceHandheld))
+            {
+                state = KeyboardHotkeyState.CycleInputDeviceHandheld;
             }
 
             return state;

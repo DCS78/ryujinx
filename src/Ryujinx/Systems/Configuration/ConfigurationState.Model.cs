@@ -893,6 +893,16 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// </summary>
         public ReactiveObject<HideCursorMode> HideCursor { get; private set; }
 
+        /// <summary>
+        /// Duration to show controller overlay when game starts (seconds, 0 = disabled)
+        /// </summary>
+        public ReactiveObject<int> ControllerOverlayGameStartDuration { get; private set; }
+
+        /// <summary>
+        /// Duration to show controller overlay when input is cycled (seconds, 0 = disabled)
+        /// </summary>
+        public ReactiveObject<int> ControllerOverlayInputCycleDuration { get; private set; }
+
         private ConfigurationState()
         {
             UI = new UISection();
@@ -911,6 +921,8 @@ namespace Ryujinx.Ava.Systems.Configuration
             RememberWindowState = new ReactiveObject<bool>();
             ShowOldUI = new ReactiveObject<bool>();
             EnableHardwareAcceleration = new ReactiveObject<bool>();
+            ControllerOverlayGameStartDuration = new ReactiveObject<int>();
+            ControllerOverlayInputCycleDuration = new ReactiveObject<int>();
         }
 
         public HleConfiguration CreateHleConfiguration() =>

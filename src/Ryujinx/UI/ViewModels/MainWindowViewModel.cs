@@ -32,6 +32,7 @@ using Ryujinx.Ava.UI.Windows;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
+using Ryujinx.Common.Configuration.Hid;
 using Ryujinx.Common.Configuration.Multiplayer;
 using Ryujinx.Common.Helper;
 using Ryujinx.Common.Logging;
@@ -1589,9 +1590,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             // Code where conditions will be executed after loading user configuration
             if (ConfigurationState.Instance.Graphics.BackendThreading.Value.ToString() != backendThreadingInit)
             {
-                Rebooter.RebootAppWithGame(application.Path, 
+                Rebooter.RebootAppWithGame(application.Path,
                 [
-                    "--bt", 
+                    "--bt",
                     ConfigurationState.Instance.Graphics.BackendThreading.Value.ToString()
                 ]);
 
@@ -1673,10 +1674,33 @@ namespace Ryujinx.Ava.UI.ViewModels
                 SetMainContent(RendererHostControl);
 
                 RendererHostControl.Focus();
+
+                // Show controller overlay
+                ShowControllerOverlay();
             });
 
         public static void UpdateGameMetadata(string titleId, TimeSpan playTime)
             => ApplicationLibrary.LoadAndSaveMetaData(titleId, appMetadata => appMetadata.UpdatePostGame(playTime));
+
+        private void ShowControllerOverlay()
+        {
+            try
+            {
+                var inputConfigs = ConfigurationState.Instance.System.UseInputGlobalConfig.Value && Program.UseExtraConfig
+                    ? ConfigurationState.InstanceExtra.Hid.InputConfig.Value
+                    : ConfigurationState.Instance.Hid.InputConfig.Value;
+
+                // Always show overlay - if no configs, it will show test data
+                int duration = ConfigurationState.Instance.ControllerOverlayGameStartDuration.Value;
+                // Show overlay through the GPU context window directly
+                AppHost.ShowControllerOverlay(inputConfigs, duration);
+            }
+            catch (Exception ex)
+            {
+                // Log the error but don't let it crash the game launch
+                Logger.Error?.Print(LogClass.UI, $"Failed to show controller overlay: {ex.Message}");
+            }
+        }
 
         public void RefreshFirmwareStatus()
         {

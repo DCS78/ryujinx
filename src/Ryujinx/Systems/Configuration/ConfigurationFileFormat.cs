@@ -15,7 +15,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// <summary>
         /// The current version of the file format
         /// </summary>
-        public const int CurrentVersion = 70;
+        public const int CurrentVersion = 72;
 
         /// <summary>
         /// Version of the configuration file format
@@ -216,6 +216,16 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// Whether to hide cursor on idle, always or never
         /// </summary>
         public HideCursorMode HideCursor { get; set; }
+
+        /// <summary>
+        /// Duration to show controller overlay when game starts (seconds, 0 = disabled)
+        /// </summary>
+        public int ControllerOverlayGameStartDuration { get; set; }
+
+        /// <summary>
+        /// Duration to show controller overlay when input is cycled (seconds, 0 = disabled)
+        /// </summary>
+        public int ControllerOverlayInputCycleDuration { get; set; }
 
         /// <summary>
         /// Enables or disables Vertical Sync

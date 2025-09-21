@@ -17,6 +17,7 @@ using Ryujinx.Graphics.OpenGL;
 using Ryujinx.Graphics.Vulkan;
 using Ryujinx.HLE;
 using Ryujinx.Input;
+using Ryujinx.UI.Overlay;
 using Silk.NET.Vulkan;
 using System;
 using System.IO;
@@ -351,7 +352,8 @@ namespace Ryujinx.Headless
                         _userChannelPersistence,
                         renderer.TryMakeThreaded(options.BackendThreading),
                         new SDL2HardwareDeviceDriver(),
-                        window
+                        window,
+                        new OverlayManager()
                     )
             );
     }

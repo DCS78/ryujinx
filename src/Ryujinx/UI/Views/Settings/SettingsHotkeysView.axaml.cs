@@ -82,7 +82,16 @@ namespace Ryujinx.Ava.UI.Views.Settings
                     { "VolumeDown", () => viewModel.KeyboardHotkey.VolumeDown = Key.Unbound },
                     { "CustomVSyncIntervalIncrement", () => viewModel.KeyboardHotkey.CustomVSyncIntervalIncrement = Key.Unbound },
                     { "CustomVSyncIntervalDecrement", () => viewModel.KeyboardHotkey.CustomVSyncIntervalDecrement = Key.Unbound },
-                    { "TurboMode", () => viewModel.KeyboardHotkey.TurboMode = Key.Unbound }
+                    { "TurboMode", () => viewModel.KeyboardHotkey.TurboMode = Key.Unbound },
+                    { "CycleInputDevicePlayer1", () => viewModel.KeyboardHotkey.CycleInputDevicePlayer1 = Key.Unbound },
+                    { "CycleInputDevicePlayer2", () => viewModel.KeyboardHotkey.CycleInputDevicePlayer2 = Key.Unbound },
+                    { "CycleInputDevicePlayer3", () => viewModel.KeyboardHotkey.CycleInputDevicePlayer3 = Key.Unbound },
+                    { "CycleInputDevicePlayer4", () => viewModel.KeyboardHotkey.CycleInputDevicePlayer4 = Key.Unbound },
+                    { "CycleInputDevicePlayer5", () => viewModel.KeyboardHotkey.CycleInputDevicePlayer5 = Key.Unbound },
+                    { "CycleInputDevicePlayer6", () => viewModel.KeyboardHotkey.CycleInputDevicePlayer6 = Key.Unbound },
+                    { "CycleInputDevicePlayer7", () => viewModel.KeyboardHotkey.CycleInputDevicePlayer7 = Key.Unbound },
+                    { "CycleInputDevicePlayer8", () => viewModel.KeyboardHotkey.CycleInputDevicePlayer8 = Key.Unbound },
+                    { "CycleInputDeviceHandheld", () => viewModel.KeyboardHotkey.CycleInputDeviceHandheld = Key.Unbound }
                 };
 
                 if (buttonActions.TryGetValue(_currentAssigner.ToggledButton.Name, out Action action))
@@ -161,6 +170,33 @@ namespace Ryujinx.Ava.UI.Views.Settings
                                             break;
                                         case "TurboMode":
                                             ViewModel.KeyboardHotkey.TurboMode = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDevicePlayer1":
+                                            ViewModel.KeyboardHotkey.CycleInputDevicePlayer1 = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDevicePlayer2":
+                                            ViewModel.KeyboardHotkey.CycleInputDevicePlayer2 = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDevicePlayer3":
+                                            ViewModel.KeyboardHotkey.CycleInputDevicePlayer3 = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDevicePlayer4":
+                                            ViewModel.KeyboardHotkey.CycleInputDevicePlayer4 = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDevicePlayer5":
+                                            ViewModel.KeyboardHotkey.CycleInputDevicePlayer5 = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDevicePlayer6":
+                                            ViewModel.KeyboardHotkey.CycleInputDevicePlayer6 = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDevicePlayer7":
+                                            ViewModel.KeyboardHotkey.CycleInputDevicePlayer7 = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDevicePlayer8":
+                                            ViewModel.KeyboardHotkey.CycleInputDevicePlayer8 = buttonValue.AsHidType<Key>();
+                                            break;
+                                        case "CycleInputDeviceHandheld":
+                                            ViewModel.KeyboardHotkey.CycleInputDeviceHandheld = buttonValue.AsHidType<Key>();
                                             break;
                                     }
                                 });

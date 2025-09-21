@@ -53,6 +53,8 @@ namespace Ryujinx.Ava.Systems.Configuration
             ShowOldUI.Value = shouldLoadFromFile ? cff.ShowTitleBar : ShowOldUI.Value; // Get from global config only
             EnableHardwareAcceleration.Value = shouldLoadFromFile ? cff.EnableHardwareAcceleration : EnableHardwareAcceleration.Value; // Get from global config only
             HideCursor.Value = cff.HideCursor;
+            ControllerOverlayGameStartDuration.Value = cff.ControllerOverlayGameStartDuration;
+            ControllerOverlayInputCycleDuration.Value = cff.ControllerOverlayInputCycleDuration;
 
             Logger.EnableFileLog.Value = cff.EnableFileLog;
             Logger.EnableDebug.Value = cff.LoggingEnableDebug;
@@ -483,7 +485,40 @@ namespace Ryujinx.Ava.Systems.Configuration
                     };
                 }
         ),
-                (69, static cff => cff.SkipUserProfiles = false)
+                (69, static cff => cff.SkipUserProfiles = false),
+                (71, static cff =>
+                {
+                    cff.ControllerOverlayGameStartDuration = 3;
+                    cff.ControllerOverlayInputCycleDuration = 2;
+                }),
+                (72, static cff =>
+                {
+                    cff.Hotkeys = new KeyboardHotkeys
+                    {
+                        ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
+                        Screenshot = cff.Hotkeys.Screenshot,
+                        ShowUI = cff.Hotkeys.ShowUI,
+                        Pause = cff.Hotkeys.Pause,
+                        ToggleMute = cff.Hotkeys.ToggleMute,
+                        ResScaleUp = cff.Hotkeys.ResScaleUp,
+                        ResScaleDown = cff.Hotkeys.ResScaleDown,
+                        VolumeUp = cff.Hotkeys.VolumeUp,
+                        VolumeDown = cff.Hotkeys.VolumeDown,
+                        CustomVSyncIntervalIncrement = cff.Hotkeys.CustomVSyncIntervalIncrement,
+                        CustomVSyncIntervalDecrement = cff.Hotkeys.CustomVSyncIntervalDecrement,
+                        TurboMode = cff.Hotkeys.TurboMode,
+                        TurboModeWhileHeld = cff.Hotkeys.TurboModeWhileHeld,
+                        CycleInputDevicePlayer1 = Key.Unbound,
+                        CycleInputDevicePlayer2 = Key.Unbound,
+                        CycleInputDevicePlayer3 = Key.Unbound,
+                        CycleInputDevicePlayer4 = Key.Unbound,
+                        CycleInputDevicePlayer5 = Key.Unbound,
+                        CycleInputDevicePlayer6 = Key.Unbound,
+                        CycleInputDevicePlayer7 = Key.Unbound,
+                        CycleInputDevicePlayer8 = Key.Unbound,
+                        CycleInputDeviceHandheld = Key.Unbound
+                    };
+                })
             );
     }
 }
