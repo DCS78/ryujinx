@@ -135,7 +135,7 @@ namespace Ryujinx.Graphics.Gpu.Memory
                 {
                     if (item.Value._useGranular)
                     {
-                        baseHandles.AddRange((item.Value._memoryTrackingGranular.GetHandles()));
+                        baseHandles.AddRange(item.Value._memoryTrackingGranular.Handles);
                     }
                     else
                     {
