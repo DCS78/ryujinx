@@ -12,9 +12,6 @@ namespace Ryujinx.Memory.Range
     /// <typeparam name="T">Type of the range.</typeparam>
     public unsafe class NonOverlappingRangeList<T> : RangeListBase<T> where T : class, INonOverlappingRange
     {
-        private readonly Dictionary<ulong, RangeItem<T>> _quickAccess = new(AddressEqualityComparer.Comparer);
-        private readonly Dictionary<ulong, RangeItem<T>> _fastQuickAccess = new(AddressEqualityComparer.Comparer);
-        
         public readonly ReaderWriterLockSlim Lock = new();
         
         /// <summary>
@@ -44,8 +41,6 @@ namespace Ryujinx.Memory.Range
             RangeItem<T> rangeItem = new(item);
             
             Insert(index, rangeItem);
-            
-            _quickAccess.Add(item.Address, rangeItem);
         }
 
         /// <summary>
@@ -71,15 +66,7 @@ namespace Ryujinx.Memory.Range
                     Items[index + 1].Previous = rangeItem;
                 }
                 
-                foreach (ulong addr in Items[index].QuickAccessAddresses)
-                {
-                    _quickAccess.Remove(addr);
-                    _fastQuickAccess.Remove(addr);
-                }
-                
                 Items[index] = rangeItem;
-                
-                _quickAccess[item.Address] = rangeItem;
 
                 return true;
             }
@@ -108,18 +95,7 @@ namespace Ryujinx.Memory.Range
                 Items[index + 1].Previous = rangeItem;
             }
                 
-            foreach (ulong addr in item.QuickAccessAddresses)
-            {
-                _quickAccess.Remove(addr);
-                _fastQuickAccess.Remove(addr);
-            }
-                
             Items[index] = rangeItem;
-
-            if (item.Address != rangeItem.Address)
-                _quickAccess.Remove(item.Address);
-            
-            _quickAccess[rangeItem.Address] = rangeItem;
 
             return true;
         }
@@ -196,14 +172,6 @@ namespace Ryujinx.Memory.Range
 
             if (index >= 0 && Items[index].Value.Equals(item))
             {
-                _quickAccess.Remove(item.Address);
-                
-                foreach (ulong addr in Items[index].QuickAccessAddresses)
-                {
-                    _quickAccess.Remove(addr);
-                    _fastQuickAccess.Remove(addr);
-                }
-                
                 RemoveAt(index);
                 
                 return true;
@@ -231,16 +199,6 @@ namespace Ryujinx.Memory.Range
             }
             
             (int startIndex, int endIndex) = BinarySearchEdges(startItem.Address, endItem.EndAddress);
-            
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                _quickAccess.Remove(Items[i].Address);
-                foreach (ulong addr in Items[i].QuickAccessAddresses)
-                {
-                    _quickAccess.Remove(addr);
-                    _fastQuickAccess.Remove(addr);
-                }
-            }
             
             if (endIndex < Count)
             {
@@ -279,13 +237,6 @@ namespace Ryujinx.Memory.Range
             
             while (Items[endIndex] is not null && Items[endIndex].Address < address + size)
             {
-                _quickAccess.Remove(Items[endIndex].Address);
-                foreach (ulong addr in Items[endIndex].QuickAccessAddresses)
-                {
-                    _quickAccess.Remove(addr);
-                    _fastQuickAccess.Remove(addr);
-                }
-
                 if (endIndex == Count - 1)
                 {
                     break;
@@ -321,8 +272,6 @@ namespace Ryujinx.Memory.Range
         {
             Lock.EnterWriteLock();
             Count = 0;
-            _quickAccess.Clear();
-            _fastQuickAccess.Clear();
             Lock.ExitWriteLock();
         }
         
@@ -344,7 +293,7 @@ namespace Ryujinx.Memory.Range
             // So we need to return both the split 0-1 and 1-2 ranges.
             
             Lock.EnterWriteLock();
-            (RangeItem<T> first, RangeItem<T> last) = FindOverlaps(address, size);
+            (RangeItem<T> first, RangeItem<T> last) = FindOverlapsAsNodes(address, size);
             list = new List<T>();
             
             if (first is null)
@@ -436,22 +385,11 @@ namespace Ryujinx.Memory.Range
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RangeItem<T> FindOverlap(ulong address, ulong size)
         {
-            if (_quickAccess.TryGetValue(address, out RangeItem<T> overlap))
-            {
-                return overlap;
-            }
-            
             int index = BinarySearchLeftEdge(address, address + size);
 
             if (index < 0)
             {
                 return null;
-            }
-
-            if (Items[index].Address < address)
-            {
-                _quickAccess.TryAdd(address, Items[index]);
-                Items[index].QuickAccessAddresses.Add(address);
             }
 
             return Items[index];
@@ -466,28 +404,12 @@ namespace Ryujinx.Memory.Range
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override RangeItem<T> FindOverlapFast(ulong address, ulong size)
         {
-            if (_quickAccess.TryGetValue(address, out RangeItem<T> overlap) || _fastQuickAccess.TryGetValue(address, out overlap))
-            {
-                return overlap;
-            }
-
             int index = BinarySearch(address, address + size);
 
             if (index < 0)
             {
                 return null;
             }
-            
-            if (Items[index].Address < address)
-            {
-                _quickAccess.TryAdd(address, Items[index]);
-            }
-            else
-            {
-                _fastQuickAccess.TryAdd(address, Items[index]);
-            }
-
-            Items[index].QuickAccessAddresses.Add(address);
 
             return Items[index];
         }
@@ -499,18 +421,8 @@ namespace Ryujinx.Memory.Range
         /// <param name="size">Size in bytes of the range</param>
         /// <returns>The first and last overlapping items, or null if none are found</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public (RangeItem<T>, RangeItem<T>) FindOverlaps(ulong address, ulong size)
+        public (RangeItem<T>, RangeItem<T>) FindOverlapsAsNodes(ulong address, ulong size)
         {
-            if (_quickAccess.TryGetValue(address, out RangeItem<T> overlap))
-            {
-                if (overlap.Next is null || overlap.Next.Address >= address + size)
-                {
-                    return (overlap, overlap);
-                }
-                
-                return (overlap, Items[BinarySearchRightEdge(address, address + size)]);
-            }
-            
             (int index, int endIndex) = BinarySearchEdges(address, address + size);
 
             if (index < 0)
@@ -518,13 +430,45 @@ namespace Ryujinx.Memory.Range
                 return (null, null);
             }
             
-            if (Items[index].Address < address)
+            return (Items[index], Items[endIndex - 1]);
+        }
+        
+        public RangeItem<T>[] FindOverlapsAsArray(ulong address, ulong size)
+        {
+            (int index, int endIndex) = BinarySearchEdges(address, address + size);
+
+            RangeItem<T>[] result;
+            
+            if (index < 0)
             {
-                _quickAccess.TryAdd(address, Items[index]);
-                Items[index].QuickAccessAddresses.Add(address);
+                result = [];
+            }
+            else
+            {
+                result = new RangeItem<T>[endIndex - index];
+                
+                Array.Copy(Items, index, result, 0, endIndex - index);
             }
             
-            return (Items[index], Items[endIndex - 1]);
+            return result;
+        }
+        
+        public Span<RangeItem<T>> FindOverlapsAsSpan(ulong address, ulong size)
+        {
+            (int index, int endIndex) = BinarySearchEdges(address, address + size);
+
+            Span<RangeItem<T>> result;
+            
+            if (index < 0)
+            {
+                result = [];
+            }
+            else
+            {
+                result = Items.AsSpan().Slice(index, endIndex - index);
+            }
+            
+            return result;
         }
 
         public override IEnumerator<T> GetEnumerator()
