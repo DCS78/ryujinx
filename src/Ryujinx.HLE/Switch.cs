@@ -14,11 +14,24 @@ using Ryujinx.HLE.Loaders.Processes;
 using Ryujinx.HLE.UI;
 using Ryujinx.Memory;
 using System;
+using System.Threading;
 
 namespace Ryujinx.HLE
 {
     public class Switch : IDisposable
     {
+        /// <summary>
+        /// Currently running emulated Switch, if there is one.
+        /// <para>
+        /// Proper usage of this property null checks it before use, unless the caller is certain that the emulation is running.
+        /// </para>
+        /// <para>
+        /// In case the emulation is running, there might be a way to directly pass the <see cref="Switch" /> instance, which is preferred.
+        /// </para>
+        /// <para>
+        /// The instance is set to <c>this</c> on any <see cref="Switch" /> instantiation, and set to <c>null</c> on any <see cref="Switch" /> disposal.
+        /// </para>
+        /// </summary>
         public static Switch Shared { get; private set; }
 
         public HleConfiguration Configuration { get; }
@@ -41,6 +54,7 @@ namespace Ryujinx.HLE
         public Hid Hid { get; }
         public TamperMachine TamperMachine { get; }
         public IHostUIHandler UIHandler { get; }
+        public Debugger.Debugger Debugger { get; }
 
         public int CpuCoresCount = 4; // Switch has a quad-core Tegra X1 SoC
 
@@ -72,6 +86,7 @@ namespace Ryujinx.HLE
             AudioDeviceDriver = new CompatLayerHardwareDeviceDriver(Configuration.AudioDeviceDriver);
             Memory            = new MemoryBlock(Configuration.MemoryConfiguration.ToDramSize(), memoryAllocationFlags);
             Gpu               = new GpuContext(Configuration.GpuRenderer, DirtyHacks);
+            Debugger          = Configuration.EnableGdbStub ? new Debugger.Debugger(this, Configuration.GdbStubPort) : null;
             System            = new HOS.Horizon(this);
             Statistics        = new PerformanceStatistics(this);
             Hid               = new Hid(this, System.HidStorage);
@@ -173,6 +188,7 @@ namespace Ryujinx.HLE
                 AudioDeviceDriver.Dispose();
                 FileSystem.Dispose();
                 Memory.Dispose();
+                Debugger?.Dispose();
 
                 TitleIDs.CurrentApplication.Value = null;
                 Shared = null;

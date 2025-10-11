@@ -4,6 +4,7 @@ using Ryujinx.HLE.HOS.Kernel.Memory;
 using Ryujinx.HLE.HOS.Kernel.Threading;
 using Ryujinx.HLE.Loaders.Elf;
 using Ryujinx.Memory;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,8 +18,9 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
 
         private readonly KProcess _owner;
 
-        private class Image
+        public class Image
         {
+            public string Name { get; internal set; }
             public ulong BaseAddress { get; }
             public ulong Size { get; }
             public ulong EndAddress => BaseAddress + Size;
@@ -30,6 +32,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 BaseAddress = baseAddress;
                 Size = size;
                 Symbols = symbols;
+                Name = "(unknown)";
             }
         }
 
@@ -53,6 +56,17 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             StringBuilder trace = new();
 
             trace.AppendLine($"Process: {_owner.Name}, PID: {_owner.Pid}");
+
+            string ThreadName = thread.GetThreadName();
+
+            if (!String.IsNullOrEmpty(ThreadName))
+            {
+                trace.AppendLine($"Thread ID: {thread.ThreadUid} ({ThreadName})");
+            }
+            else
+            {
+                trace.AppendLine($"Thread ID: {thread.ThreadUid}");
+            }
 
             void AppendTrace(ulong address)
             {
@@ -244,9 +258,64 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 info.SubName = string.Empty;
             }
 
-            info.ImageName = GetGuessedNsoNameFromIndex(imageIndex);
+            info.ImageName = image.Name;
 
             return true;
+        }
+
+        private bool GetModuleName(out string moduleName, Image image)
+        {
+            moduleName = string.Empty;
+
+            var rodataStart = image.BaseAddress + image.Size;
+
+            KMemoryInfo roInfo = _owner.MemoryManager.QueryMemory(rodataStart);
+            if (roInfo.Permission != KMemoryPermission.Read)
+            {
+                return false;
+            }
+
+            var rwdataStart = roInfo.Address + roInfo.Size;
+
+            try
+            {
+                Span<byte> rodataBuf = stackalloc byte[0x208];
+                _owner.CpuMemory.Read(rodataStart, rodataBuf);
+
+                ulong deprecatedRwDataOffset = BitConverter.ToUInt64(rodataBuf);
+                // no name if using old format
+                if (image.BaseAddress + deprecatedRwDataOffset == rwdataStart)
+                {
+                    return false;
+                }
+
+                uint zero = BitConverter.ToUInt32(rodataBuf);
+                int pathLength = BitConverter.ToInt32(rodataBuf.Slice(4));
+                if (zero != 0 || pathLength <= 0)
+                {
+                    // try again with 12 byte offset, 20.0.0+
+                    _owner.CpuMemory.Read(rodataStart + 12, rodataBuf);
+                    zero = BitConverter.ToUInt32(rodataBuf);
+                    pathLength = BitConverter.ToInt32(rodataBuf.Slice(4));
+                }
+
+                if (zero != 0 || pathLength <= 0)
+                {
+                    return false;
+                }
+
+                pathLength = Math.Min(pathLength, rodataBuf.Length - 8);
+                var pathBuf = rodataBuf.Slice(8, pathLength);
+                int lastSlash = pathBuf.LastIndexOfAny(new byte[] { (byte)'\\', (byte)'/' });
+
+                moduleName = Encoding.ASCII.GetString(pathBuf.Slice(lastSlash + 1).TrimEnd((byte)0));
+
+                return true;
+            }
+            catch (InvalidMemoryRegionException)
+            {
+                return false;
+            }
         }
 
         private bool AnalyzePointerFromStack(out PointerInfo info, ulong address, KThread thread)
@@ -283,36 +352,21 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             return null;
         }
 
-        private string GetGuessedNsoNameFromIndex(int index)
-        {
-            if ((uint)index > 11)
-            {
-                return "???";
-            }
-
-            if (index == 0)
-            {
-                return "rtld";
-            }
-            else if (index == 1)
-            {
-                return "main";
-            }
-            else if (index == GetImagesCount() - 1)
-            {
-                return "sdk";
-            }
-            else
-            {
-                return "subsdk" + (index - 2);
-            }
-        }
-
         private int GetImagesCount()
         {
             lock (_images)
             {
                 return _images.Count;
+            }
+        }
+
+        public List<Image> GetLoadedImages()
+        {
+            EnsureLoaded();
+
+            lock (_images)
+            {
+                return [.. _images];
             }
         }
 
@@ -429,7 +483,17 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
 
             lock (_images)
             {
-                _images.Add(new Image(textOffset, textSize, symbols.OrderBy(x => x.Value).ToArray()));
+                var image = new Image(textOffset, textSize, symbols.OrderBy(x => x.Value).ToArray());
+
+                string moduleName;
+                if (!GetModuleName(out moduleName, image))
+                {
+                    var newIndex = _images.Count;
+                    moduleName = $"(unknown{newIndex})";
+                }
+                image.Name = moduleName;
+
+                _images.Add(image);
             }
         }
 

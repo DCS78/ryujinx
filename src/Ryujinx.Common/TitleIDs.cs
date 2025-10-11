@@ -83,6 +83,8 @@ namespace Ryujinx.Common
             "010049900F546002", // Super Mario Sunshine
             "0100a3900c3e2000", // Paper Mario: The Origami King
             "0100ecd018ebe000", // Paper Mario: The Thousand-Year Door
+            "01009cC022b96000", // Super Mario Galaxy
+            "0100fd8022daa000", // Super Mario Galaxy 2
 
                           //Pikmin Franchise
             "0100aa80194b0000", // Pikmin 1
@@ -93,6 +95,7 @@ namespace Ryujinx.Common
                           //The Pokémon Franchise
             "0100f4300bf2c000", // New Pokémon Snap
             "0100000011d90000", // Pokémon Brilliant Diamond
+            "010008c01e742000", // Pokémon Friends
             "01001f5010dfa000", // Pokémon Legends: Arceus
             "01003d200baa2000", // Pokémon Mystery Dungeon - Rescue Team DX
             "0100a3d008c5c000", // Pokémon Scarlet
@@ -157,6 +160,8 @@ namespace Ryujinx.Common
             "01009aa000faa000", // Sonic Mania
             "01005ea01c0fc000", // SONIC X SHADOW GENERATIONS
             "01005ea01c0fc001", // ^
+            "01006e001823c000", // Sonic Racing: CrossWorlds
+            "010064b0242be000", // Sonic Racing: CrossWorlds - Demo
 
                           //Xenoblade Franchise
             "0100ff500e34a000", // Xenoblade Chronicles - Definitive Edition
@@ -181,6 +186,7 @@ namespace Ryujinx.Common
             "01001cc01b2d4000", // Goat Simulator 3
             "01003620068ea000", // Hand of Fate 2
             "0100f7e00c70e000", // Hogwarts Legacy
+            "010013c00e930000", // Hollow Knight: Silksong
             "010085500130a000", // Lego City: Undercover
             "010073c01af34000", // LEGO Horizon Adventures
             "0100d71004694000", // Minecraft

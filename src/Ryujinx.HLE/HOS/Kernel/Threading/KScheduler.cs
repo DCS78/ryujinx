@@ -301,6 +301,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
 
             currentThread.SchedulerWaitEvent.Reset();
             currentThread.ThreadContext.Unlock();
+            currentThread.DebugHalt.Set();
 
             // Wake all the threads that might be waiting until this thread context is unlocked.
             for (int core = 0; core < CpuCoresCount; core++)
@@ -317,11 +318,12 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
                 if (nextThread == null)
                 {
                     ActivateIdleThread();
-                    currentThread.SchedulerWaitEvent.WaitOne();
+                    currentThread.SchedulerWaitEvent.Wait();
                 }
                 else
                 {
-                    WaitHandle.SignalAndWait(nextThread.SchedulerWaitEvent, currentThread.SchedulerWaitEvent);
+                    nextThread.SchedulerWaitEvent.Set();
+                    currentThread.SchedulerWaitEvent.Wait();
                 }
             }
             else
@@ -577,7 +579,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
                     {
                         KThread selectedSuggestedCore = context.Schedulers[suggestedCore]._state.SelectedThread;
 
-                        if (selectedSuggestedCore == suggested || (selectedSuggestedCore != null && selectedSuggestedCore.DynamicPriority < 2))
+                        if (selectedSuggestedCore == suggested || selectedSuggestedCore is { DynamicPriority: < 2 })
                         {
                             continue;
                         }

@@ -38,7 +38,7 @@ namespace Ryujinx.Ava.UI.Views.Main
             ChangeLanguageMenuItem.ItemsSource = GenerateLanguageMenuItems();
 
             MiiAppletMenuItem.Command = Commands.Create(OpenMiiApplet);
-            CloseRyujinxMenuItem.Command = Commands.Create(CloseWindow);
+            CloseRyujinxMenuItem.Command = Commands.Create(() => Window?.Close());
             OpenSettingsMenuItem.Command = Commands.Create(OpenSettings);
             PauseEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.Pause());
             ResumeEmulationMenuItem.Command = Commands.Create(() => ViewModel.AppHost?.Resume());
@@ -49,6 +49,7 @@ namespace Ryujinx.Ava.UI.Views.Main
             XciTrimmerMenuItem.Command = Commands.Create(XciTrimmerView.Show);
             AboutWindowMenuItem.Command = Commands.Create(AboutView.Show);
             CompatibilityListMenuItem.Command = Commands.Create(() => CompatibilityListWindow.Show());
+            LdnGameListMenuItem.Command = Commands.Create(() => LdnGamesListWindow.Show());
 
             UpdateMenuItem.Command = MainWindowViewModel.UpdateCommand;
 
@@ -60,6 +61,14 @@ namespace Ryujinx.Ava.UI.Views.Main
                 WindowSize1080PMenuItem.Command =
                     WindowSize1440PMenuItem.Command =
                         WindowSize2160PMenuItem.Command = Commands.Create<string>(ChangeWindowSize);
+
+            LocaleManager.Instance.LocaleChanged += OnLocaleChanged;
+        }
+
+        private void OnLocaleChanged()
+        {
+            ChangeLanguageMenuItem.ItemsSource = GenerateLanguageMenuItems();
+            Menu.Close();
         }
 
         private IEnumerable<CheckBox> GenerateToggleFileTypeItems() =>
@@ -79,6 +88,7 @@ namespace Ryujinx.Ava.UI.Views.Main
             const string LocalePath = "Ryujinx/Assets/Locale.json";
 
             string languageJson = EmbeddedResources.ReadAllText(LocalePath);
+            string currentLanguageCode = LocaleManager.Instance.CurrentLanguageCode;
 
             LocalesJson locales = JsonHelper.Deserialize(languageJson, LocalesJsonContext.Default.LocalesJson);
 
@@ -104,7 +114,7 @@ namespace Ryujinx.Ava.UI.Views.Main
                     Padding = new Thickness(15, 0, 0, 0),
                     Margin = new Thickness(3, 0, 3, 0),
                     HorizontalAlignment = HorizontalAlignment.Stretch,
-                    Header = languageName,
+                    Header = language == currentLanguageCode ? $"{languageName}  ✔" : languageName,
                     Command = Commands.Create(() => MainWindowViewModel.ChangeLanguage(language))
                 };
 
@@ -235,8 +245,5 @@ namespace Ryujinx.Ava.UI.Views.Main
                 Window.Arrange(new Rect(Window.Position.X, Window.Position.Y, windowWidthScaled, windowHeightScaled));
             });
         }
-
-        public void CloseWindow() => Window.Close();
-
     }
 }

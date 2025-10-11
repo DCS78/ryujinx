@@ -342,14 +342,24 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             _amiibos.Clear();
 
+            List<AmiiboApi> amiiboSortedList;
+
+            // If no series selected, just display all available amiibos
             if (_seriesSelectedIndex < 0)
             {
-                return;
+                amiiboSortedList = _amiiboList
+                    .OrderBy(amiibo => amiibo.AmiiboSeries)
+                    .ThenBy(x => x.Name)
+                    .ToList();
+            }
+            else
+            {
+                amiiboSortedList = _amiiboList
+                    .Where(amiibo => amiibo.AmiiboSeries == _amiiboSeries[SeriesSelectedIndex])
+                    .OrderBy(amiibo => amiibo.Name).ToList();
             }
 
-            List<AmiiboApi> amiiboSortedList = _amiiboList
-                .Where(amiibo => amiibo.AmiiboSeries == _amiiboSeries[SeriesSelectedIndex])
-                .OrderBy(amiibo => amiibo.Name).ToList();
+            
 
             for (int i = 0; i < amiiboSortedList.Count; i++)
             {
@@ -386,7 +396,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             Usage = string.Empty;
 
-            if (_amiiboSelectedIndex < 0)
+            if (_amiiboSelectedIndex < 0 || _amiibos.Count < 1)
             {
                 return;
             }
@@ -432,7 +442,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, "https://raw.githubusercontent.com/Ryubing/Nfc/refs/heads/main/tags.json"));
+                HttpResponseMessage response = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, SharedConstants.AmiiboTagsUrl));
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -451,7 +461,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync("https://raw.githubusercontent.com/Ryubing/Nfc/refs/heads/main/tags.json");
+                HttpResponseMessage response = await _httpClient.GetAsync(SharedConstants.AmiiboTagsUrl);
 
                 if (response.IsSuccessStatusCode)
                 {

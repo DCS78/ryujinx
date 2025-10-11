@@ -1,7 +1,6 @@
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Svg.Skia;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Gommon;
 using Ryujinx.Ava.Common.Locale;
@@ -733,8 +732,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                         ButtonMinus = ConfigGamepadInputId.Minus,
                         ButtonL = ConfigGamepadInputId.LeftShoulder,
                         ButtonZl = ConfigGamepadInputId.LeftTrigger,
-                        ButtonSl = ConfigGamepadInputId.Unbound,
-                        ButtonSr = ConfigGamepadInputId.Unbound,
+                        ButtonSl = ConfigGamepadInputId.SingleLeftTrigger0,
+                        ButtonSr = ConfigGamepadInputId.SingleRightTrigger0,
                     },
                     LeftJoyconStick = new JoyconConfigControllerStick<ConfigGamepadInputId, ConfigStickInputId>
                     {
@@ -752,8 +751,8 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
                         ButtonPlus = ConfigGamepadInputId.Plus,
                         ButtonR = ConfigGamepadInputId.RightShoulder,
                         ButtonZr = ConfigGamepadInputId.RightTrigger,
-                        ButtonSl = ConfigGamepadInputId.Unbound,
-                        ButtonSr = ConfigGamepadInputId.Unbound,
+                        ButtonSl = ConfigGamepadInputId.SingleLeftTrigger1,
+                        ButtonSr = ConfigGamepadInputId.SingleRightTrigger1,
                     },
                     RightJoyconStick = new JoyconConfigControllerStick<ConfigGamepadInputId, ConfigStickInputId>
                     {
