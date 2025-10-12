@@ -39,6 +39,13 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
 
         [CommandCmif(3)]
         // LoadIdTokenCache() -> (u32 id_token_cache_size, buffer<bytes, 6>)
+        public ResultCode LoadIdTokenCacheDeprecated(ServiceCtx context)
+        {
+            return _managerServer.LoadIdTokenCache(context);
+        }
+
+        [CommandCmif(4)]
+        // LoadIdTokenCache() -> (u32 id_token_cache_size, buffer<bytes, 6>)
         public ResultCode LoadIdTokenCache(ServiceCtx context)
         {
             return _managerServer.LoadIdTokenCache(context);
@@ -50,6 +57,17 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc.AccountService
         {
             return _managerServer.GetNintendoAccountUserResourceCacheForApplication(context);
         }
+
+        
+        [CommandCmif(150)]
+        // CreateAuthorizationRequest()
+        public ResultCode CreateAuthorizationRequest(ServiceCtx context)
+        {
+            MakeObject(context, new IAuthorizationRequest());
+
+            return ResultCode.Success;
+        }
+        
 
         [CommandCmif(160)] // 5.0.0+
         // StoreOpenContext()
