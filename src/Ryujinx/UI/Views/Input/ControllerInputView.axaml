@@ -551,7 +551,7 @@
                                 </Button>
                             </StackPanel>
                             <controls:MiniVerticalSeparator Height="64" IsVisible="{Binding ParentModel.HasLed}"/>
-                            <StackPanel Orientation="Vertical" Spacing="5">
+                            <StackPanel Orientation="Vertical" Spacing="5" IsVisible="{Binding ParentModel.HasLed}">
                                 <CheckBox
                                     Margin="10, 10, 10, 0"
                                     MinWidth="0"
