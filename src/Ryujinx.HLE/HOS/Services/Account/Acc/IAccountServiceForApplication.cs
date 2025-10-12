@@ -72,6 +72,14 @@ namespace Ryujinx.HLE.HOS.Services.Account.Acc
         }
 
         [CommandCmif(51)]
+        // TrySelectUserWithoutInteractionDeprecated (bool) -> nn::account::Uid
+        public ResultCode TrySelectUserWithoutInteractionDeprecated(ServiceCtx context)
+        {
+            return _applicationServiceServer.TrySelectUserWithoutInteraction(context);
+        }
+
+
+        [CommandCmif(52)]
         // TrySelectUserWithoutInteraction(bool) -> nn::account::Uid
         public ResultCode TrySelectUserWithoutInteraction(ServiceCtx context)
         {
