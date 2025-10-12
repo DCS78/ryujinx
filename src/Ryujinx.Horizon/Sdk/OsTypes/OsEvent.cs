@@ -125,5 +125,33 @@ namespace Ryujinx.Horizon.Sdk.OsTypes
                 evnt.Signaled = false;
             }
         }
+
+
+
+        // LIGHT EVENTS
+        public static void InitializeLightEvent(ref LightEventType ent, bool initiallySignaled, EventClearMode eventClearMode)
+        {
+
+        }
+        public static void FinalizeLightEvent(ref LightEventType ent)
+        {
+
+        }
+        public static void SignalLightEvent(ref LightEventType ent)
+        {
+
+        }
+        public static void WaitLightEvent(ref LightEventType ent)
+        {
+
+        }
+        public static bool TimedWaitLightEvent(ref LightEventType ent, TimeSpan timeout)
+        {
+            return true;
+        }
+        public static void ClearLightEvent(ref LightEventType ent)
+        {
+
+        }
     }
 }
