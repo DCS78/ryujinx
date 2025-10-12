@@ -45,7 +45,7 @@
                     BorderBrush="{DynamicResource ThemeControlBorderColor}"
                     BorderThickness="1"
                     IsVisible="{Binding IsLeft}"
-                    MinHeight="90"
+                    Height="90"
                     CornerRadius="5">
                     <Grid
                         Margin="10"
@@ -106,7 +106,8 @@
                     BorderThickness="1"
                     IsVisible="{Binding IsLeft}"
                     Margin="0,5,0,0"
-                    CornerRadius="5">
+                    CornerRadius="5"
+                    Height="375">
                     <StackPanel
                         Margin="10"
                         Orientation="Vertical">
@@ -185,7 +186,7 @@
                                         HorizontalAlignment="Center"
                                         Width="25"
                                         Text="{Binding Config.DeadzoneLeft, StringFormat=\{0:0.00\}}"
-                                        Margin="5,0" />
+                                        Margin="5,0,5,1" />
                                 </StackPanel>
                                 <TextBlock
                                     HorizontalAlignment="Center"
@@ -207,7 +208,7 @@
                                         HorizontalAlignment="Center"
                                         Width="25"
                                         Text="{Binding Config.RangeLeft, StringFormat=\{0:0.00\}}"
-                                        Margin="5,0" />
+                                        Margin="5,0,5,1" />
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>
@@ -220,7 +221,8 @@
                     VerticalAlignment="Top"
                     IsVisible="{Binding IsLeft}"
                     Margin="0,5,0,0"
-                    CornerRadius="5">
+                    CornerRadius="5"
+                    Height="170">
                     <StackPanel
                         Margin="10"
                         Orientation="Vertical">
@@ -312,7 +314,7 @@
                     BorderThickness="1"
                     CornerRadius="5"
                     Margin="0,0,0,5"
-                    MinHeight="90">
+                    Height="470">
                     <StackPanel Orientation="Vertical">
                         <Image
                             Margin="5,10,5,10"
@@ -399,9 +401,10 @@
                 <Border
                     BorderBrush="{DynamicResource ThemeControlBorderColor}"
                     BorderThickness="1"
-                    CornerRadius="5">
+                    CornerRadius="5"
+                    Height="80">
                     <StackPanel 
-                        Margin="10,10,10,7"
+                        Margin="10,10,10,0"
                         Spacing="50"
                         Orientation="Horizontal"
                         VerticalAlignment="Center"
@@ -424,6 +427,7 @@
                                         Minimum="0"
                                         Value="{Binding Config.TriggerThreshold, Mode=TwoWay}" />
                                     <TextBlock
+                                        Margin="5,0,5,1"
                                         Width="25"
                                         Text="{Binding Config.TriggerThreshold, StringFormat=\{0:0.00\}}" />
                                 </StackPanel>
@@ -451,7 +455,6 @@
                                     </ToggleButton>
                                 </StackPanel>
                             <StackPanel
-                                Margin="0,0,0,0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 IsVisible="{Binding IsLeft}"
@@ -489,7 +492,6 @@
                                 </ToggleButton>
                             </StackPanel>
                             <StackPanel
-                                Margin="0,0,0,0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 IsVisible="{Binding IsRight}"
@@ -521,7 +523,8 @@
                         BorderThickness="1"
                         CornerRadius="5"
                         VerticalAlignment="Bottom"
-                        HorizontalAlignment="Stretch">
+                        HorizontalAlignment="Stretch"
+                        Height="85">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <StackPanel Orientation="Vertical" Spacing="5">
                                 <CheckBox
@@ -551,7 +554,7 @@
                                 </Button>
                             </StackPanel>
                             <controls:MiniVerticalSeparator Height="64" IsVisible="{Binding ParentModel.HasLed}"/>
-                            <StackPanel Orientation="Vertical" Spacing="5" IsVisible="{Binding ParentModel.HasLed}">
+                            <StackPanel Orientation="Vertical" Spacing="5">
                                 <CheckBox
                                     Margin="10, 10, 10, 0"
                                     MinWidth="0"
@@ -578,7 +581,7 @@
                     BorderBrush="{DynamicResource ThemeControlBorderColor}"
                     BorderThickness="1"
                     IsVisible="{Binding IsRight}"
-                    MinHeight="90"
+                    Height="90"
                     CornerRadius="5">
                     <Grid
                         Margin="10"
@@ -643,7 +646,8 @@
                     BorderThickness="1"
                     IsVisible="{Binding IsRight}"
                     Margin="0,5,0,0"
-                    CornerRadius="5">
+                    CornerRadius="5"
+                    Height="170">
                     <StackPanel
                         Margin="10"
                         Orientation="Vertical">
@@ -731,7 +735,8 @@
                     BorderThickness="1"
                     CornerRadius="5"
                     IsVisible="{Binding IsRight}"
-                    Margin="0,5,0,0">
+                    Margin="0,5,0,0"
+                    Height="375">
                     <StackPanel Orientation="Vertical">
                         <TextBlock
                             Margin="0,0,0,10"
@@ -807,7 +812,7 @@
                                         HorizontalAlignment="Center"
                                         Width="25"
                                         Text="{Binding Config.DeadzoneRight, StringFormat=\{0:0.00\}}"
-                                        Margin="5,0" />
+                                        Margin="5,0,5,1" />
                                 </StackPanel>
                                 <TextBlock
                                     HorizontalAlignment="Center"
@@ -829,7 +834,7 @@
                                         HorizontalAlignment="Center"
                                         Width="25"
                                         Text="{Binding Config.RangeRight, StringFormat=\{0:0.00\}}"
-                                        Margin="5,0" />
+                                        Margin="5,0,5,1" />
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>
