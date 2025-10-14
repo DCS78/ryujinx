@@ -77,11 +77,13 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public SettingsHacksViewModel DirtyHacks { get; }
 
+        private readonly bool _isCustomConfig;
         private readonly bool _isGameRunning;
         private readonly Bitmap _gameIcon;
         private readonly string _gameTitle;
         private readonly string _gamePath;
         private readonly string _gameId;
+        public bool IsCustomConfig => _isCustomConfig;
         public bool IsGameRunning => _isGameRunning;
         public Bitmap GameIcon => _gameIcon;
         public string GamePath => _gamePath;
@@ -453,6 +455,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                 _gameIcon = new Bitmap(ms);
             }
 
+            _isCustomConfig = customConfig;
             _isGameRunning = gameRunning;
             _gamePath = gamePath;
             _gameTitle = gameName;
@@ -867,7 +870,7 @@ namespace Ryujinx.Ava.UI.ViewModels
             GameListNeedsRefresh = false;
         }
 
-        private static void RevertIfNotSaved()
+        private static void RevertIfNotSaved(bool IsCustomConfig = false, bool IsGameRunning = false)
         {
             /*
             maybe this is an unnecessary check(all options need to be tested)
@@ -876,7 +879,16 @@ namespace Ryujinx.Ava.UI.ViewModels
                 Program.ReloadConfig();
             }
             */
-            Program.ReloadConfig();
+
+            if (IsCustomConfig && IsGameRunning)
+            {
+                Program.ReloadConfig(true); // Restore settings for a custom configuration during a game
+
+            }
+            else
+            {
+                Program.ReloadConfig();
+            }
         }
 
         public void ApplyButton()
@@ -893,14 +905,14 @@ namespace Ryujinx.Ava.UI.ViewModels
                 File.Delete(gameDir);
             }
 
-            RevertIfNotSaved();
+            RevertIfNotSaved(IsCustomConfig, IsGameRunning);
             CloseWindow?.Invoke();
         }
 
         public void SaveUserConfig()
         {
             SaveSettings();
-            RevertIfNotSaved(); // Revert global configuration after saving user configuration
+            RevertIfNotSaved(IsCustomConfig, IsGameRunning); // Revert global or custom configuration after saving user configuration
             CloseWindow?.Invoke();
         }
 
@@ -932,7 +944,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public void CancelButton()
         {
-            RevertIfNotSaved();
+            RevertIfNotSaved(IsCustomConfig, IsGameRunning);
             CloseWindow?.Invoke();
         }
     }
