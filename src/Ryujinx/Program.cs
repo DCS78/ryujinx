@@ -63,7 +63,7 @@ namespace Ryujinx.Ava
                 return 0;
             }
 
-            Initialize(args);
+            Initialize(args, out var builder);
 
             LoggerAdapter.Register();
 
@@ -71,10 +71,10 @@ namespace Ryujinx.Ava
                 .Register<FontAwesomeIconProvider>()
                 .Register<MaterialDesignIconProvider>();
 
-            return BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+            return builder.StartWithClassicDesktopLifetime(args);
         }
 
-        public static AppBuilder BuildAvaloniaApp() =>
+        private static AppBuilder BuildAvaloniaApp() =>
             AppBuilder.Configure<RyujinxApp>()
                 .UsePlatformDetect()
                 .With(new X11PlatformOptions
@@ -94,8 +94,10 @@ namespace Ryujinx.Ava
                         : [Win32RenderingMode.Software]
                 });
 
-        private static void Initialize(string[] args)
+        private static void Initialize(string[] args, out AppBuilder builder)
         {
+            builder = BuildAvaloniaApp();
+
             // Ensure Discord presence timestamp begins at the absolute start of when Ryujinx is launched
             DiscordIntegrationModule.EmulatorStartedAt = Timestamps.Now;
 
@@ -137,7 +139,7 @@ namespace Ryujinx.Ava
 
             ReloadConfig();
 
-            WindowScaleFactor = ForceDpiAware.GetWindowScaleFactor();
+            WindowScaleFactor = ForceDpiAware.GetWindowScaleFactor(builder.GetWindowingSystemType());
 
             // Logging system information.
             PrintSystemInfo();
