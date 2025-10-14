@@ -442,8 +442,8 @@ namespace Ryujinx.Ava.UI.Windows
             if (!ConfigurationState.Instance.RememberWindowState)
             {
                 // Correctly size window when 'TitleBar' is enabled (Nov. 14, 2024)
-                ViewModel.WindowHeight = (720 + StatusBarHeight + MenuBarHeight + TitleBarHeight) * Program.WindowScaleFactor;
-                ViewModel.WindowWidth = 1280 * Program.WindowScaleFactor;
+                ViewModel.WindowHeight = 720 + StatusBarHeight + MenuBarHeight + TitleBarHeight;
+                ViewModel.WindowWidth = 1280;
 
                 WindowState = WindowState.Normal;
                 WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -454,8 +454,8 @@ namespace Ryujinx.Ava.UI.Windows
             PixelPoint savedPoint = new(ConfigurationState.Instance.UI.WindowStartup.WindowPositionX,
                                         ConfigurationState.Instance.UI.WindowStartup.WindowPositionY);
 
-            ViewModel.WindowHeight = ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight * Program.WindowScaleFactor;
-            ViewModel.WindowWidth = ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth * Program.WindowScaleFactor;
+            ViewModel.WindowHeight = ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight;
+            ViewModel.WindowWidth = ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth;
 
             ViewModel.WindowState = ConfigurationState.Instance.UI.WindowStartup.WindowMaximized.Value ? WindowState.Maximized : WindowState.Normal;
 
@@ -477,10 +477,8 @@ namespace Ryujinx.Ava.UI.Windows
             // Only save rectangle properties if the window is not in a maximized state.
             if (WindowState != WindowState.Maximized)
             {
-                // Since scaling is being applied to the loaded settings from disk (see SetWindowSizePosition() above), scaling should be removed from width/height before saving out to disk
-                // as well - otherwise anyone not using a 1.0 scale factor their window will increase in size with every subsequent launch of the program when scaling is applied (Nov. 14, 2024)
-                ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight.Value = (int)(Height / Program.WindowScaleFactor);
-                ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth.Value = (int)(Width / Program.WindowScaleFactor);
+                ConfigurationState.Instance.UI.WindowStartup.WindowSizeHeight.Value = (int)Height;
+                ConfigurationState.Instance.UI.WindowStartup.WindowSizeWidth.Value = (int)Width;
 
                 ConfigurationState.Instance.UI.WindowStartup.WindowPositionX.Value = Position.X;
                 ConfigurationState.Instance.UI.WindowStartup.WindowPositionY.Value = Position.Y;

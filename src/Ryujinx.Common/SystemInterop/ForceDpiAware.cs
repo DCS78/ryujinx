@@ -28,7 +28,7 @@ namespace Ryujinx.Common.SystemInterop
             }
         }
 
-        public static double GetActualScaleFactor(WindowingSystemType windowingSystem)
+        public static void ConfigureDPIScaling(WindowingSystemType windowingSystem)
         {
             double userDpiScale = 96.0;
 
@@ -91,15 +91,6 @@ namespace Ryujinx.Common.SystemInterop
             {
                 Logger.Warning?.Print(LogClass.Application, $"Couldn't determine monitor DPI: {e.Message}");
             }
-
-            return userDpiScale;
-        }
-
-        public static double GetWindowScaleFactor(WindowingSystemType windowingSystem)
-        {
-            double userDpiScale = GetActualScaleFactor(windowingSystem);
-
-            return Math.Min(userDpiScale / StandardDpiScale, MaxScaleFactor);
         }
     }
 }

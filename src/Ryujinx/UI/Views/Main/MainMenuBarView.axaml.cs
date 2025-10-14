@@ -232,11 +232,11 @@ namespace Ryujinx.Ava.UI.Views.Main
                 );
 
             // Correctly size window when 'TitleBar' is enabled (Nov. 14, 2024)
-            double barsHeight = ((Window.StatusBarHeight + Window.MenuBarHeight) +
-                (ConfigurationState.Instance.ShowOldUI ? (int)Window.TitleBar.Height : 0));
+            double barsHeight = Window.StatusBarHeight + Window.MenuBarHeight +
+                (ConfigurationState.Instance.ShowOldUI ? (int)Window.TitleBar.Height : 0);
 
-            double windowWidthScaled = (resolutionWidth * Program.WindowScaleFactor);
-            double windowHeightScaled = ((resolutionHeight + barsHeight) * Program.WindowScaleFactor);
+            double windowWidthScaled = resolutionWidth;
+            double windowHeightScaled = resolutionHeight + barsHeight;
 
             Dispatcher.UIThread.Post(() =>
             {

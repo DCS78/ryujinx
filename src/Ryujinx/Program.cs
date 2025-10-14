@@ -30,7 +30,6 @@ namespace Ryujinx.Ava
 {
     internal partial class Program
     {
-        public static double WindowScaleFactor { get; set; }
         public static double DesktopScaleFactor { get; set; } = 1.0;
         public static string Version { get; private set; }
         public static string ConfigurationPath { get; private set; }
@@ -139,7 +138,7 @@ namespace Ryujinx.Ava
 
             ReloadConfig();
 
-            WindowScaleFactor = ForceDpiAware.GetWindowScaleFactor(builder.GetWindowingSystemType());
+            ForceDpiAware.ConfigureDPIScaling(builder.GetWindowingSystemType());
 
             // Logging system information.
             PrintSystemInfo();
