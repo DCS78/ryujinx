@@ -24,6 +24,7 @@
             Grid.Row="0"
             HorizontalAlignment="Stretch" ColumnDefinitions="Auto,*">
             <StackPanel
+                Margin="0,0,0,10"
                 Spacing="10"
                 Orientation="Horizontal"
                 HorizontalAlignment="Left"
@@ -70,7 +71,7 @@
             <Grid
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
-                Margin="10,0,0,0" ColumnDefinitions="Auto,*">
+                Margin="20,0,0,10" ColumnDefinitions="Auto,*">
                 <TextBox
                     Margin="5,0,0,0"
                     Grid.Column="1"

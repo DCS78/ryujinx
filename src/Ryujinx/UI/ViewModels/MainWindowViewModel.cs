@@ -1964,6 +1964,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 }
             );
 
+        public string FavoriteStatusText => SelectedApplication?.Favorite == false ? LocaleManager.Instance[LocaleKeys.GameListContextMenuAddToFavorites] : LocaleManager.Instance[LocaleKeys.GameListContextMenuRemoveFromFavorites];
+
         public static RelayCommand<MainWindowViewModel> CreateApplicationShortcut { get; } =
             Commands.CreateConditional<MainWindowViewModel>(vm => vm?.SelectedApplication != null,
                 viewModel => ShortcutHelper.CreateAppShortcut(

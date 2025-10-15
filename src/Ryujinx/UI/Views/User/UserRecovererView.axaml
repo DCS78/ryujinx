@@ -17,13 +17,14 @@
     <Design.DataContext>
         <viewModels:UserProfileViewModel />
     </Design.DataContext>
-    <Grid HorizontalAlignment="Stretch"
+    <Grid Margin="10" HorizontalAlignment="Stretch"
           VerticalAlignment="Stretch" RowDefinitions="*,Auto">
         <Border
             CornerRadius="5"
             BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
             BorderThickness="1"
-            Grid.Row="0">
+            Grid.Row="0"
+            Padding="2.5">
             <Panel>
                 <ListBox
                     HorizontalAlignment="Stretch"
@@ -32,11 +33,10 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border
-                                Margin="2"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 ClipToBounds="True"
-                                CornerRadius="5">
+                                CornerRadius="4">
                                 <Grid Margin="0" ColumnDefinitions="*,Auto">
                                     <TextBlock
                                         HorizontalAlignment="Stretch"
@@ -61,7 +61,7 @@
         </Border>
         <StackPanel
             Grid.Row="1"
-            Margin="0 24 0 0"
+            Margin="0,30,0,0"
             Orientation="Horizontal">
             <Button
                 Width="50"

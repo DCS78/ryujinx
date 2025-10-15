@@ -13,7 +13,7 @@
     <MenuItem
         Command="{Binding ToggleFavorite}"
         CommandParameter="{Binding}"
-        Header="{ext:Locale GameListContextMenuToggleFavorite}"
+        Header="{Binding FavoriteStatusText}"
         Icon="{ext:Icon fa-solid fa-star}" />
     <MenuItem
         Command="{Binding CreateApplicationShortcut}"
