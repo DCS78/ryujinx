@@ -77,7 +77,6 @@
                     HorizontalAlignment="Stretch"
                     Text="{Binding Search}"
                     Watermark="{ext:Locale Search}" />
-                
             </Grid>
         </Grid>
         <Border

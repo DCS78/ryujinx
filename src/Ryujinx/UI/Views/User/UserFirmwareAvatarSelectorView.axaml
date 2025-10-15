@@ -62,7 +62,7 @@
             Grid.Row="3"
             Orientation="Horizontal"
             Spacing="10"
-            Margin="0 30 0 0"
+            Margin="0,30,0,0"
             HorizontalAlignment="Left">
             <Button
                 Width="50"
@@ -76,7 +76,7 @@
             Grid.Row="3"
             Orientation="Horizontal"
             Spacing="10"
-            Margin="0 30 0 0"
+            Margin="0,30,0,0"
             HorizontalAlignment="Right">
             <ui:ColorPickerButton
                 FlyoutPlacement="Top"

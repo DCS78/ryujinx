@@ -12,8 +12,6 @@
     d:DesignHeight="450"
     MinWidth="500"
     d:DesignWidth="800"
-    Margin="0"
-    Padding="0"
     mc:Ignorable="d"
     Focusable="True"
     x:DataType="viewModels:UserProfileViewModel">
@@ -39,7 +37,7 @@
                 </ListBox.ItemsPanel>
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
-                        <Setter Property="Margin" Value="5 0 0 0" />
+                        <Setter Property="Margin" Value="5,0,0,0" />
                         <Setter Property="CornerRadius" Value="5" />
                     </Style>
                     <Style Selector="Rectangle#SelectionIndicator">
@@ -57,7 +55,7 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 ClipToBounds="True"
-                                CornerRadius="6"
+                                CornerRadius="5"
                                 Background="{Binding BackgroundColor}">
                                 <StackPanel
                                     HorizontalAlignment="Stretch"
