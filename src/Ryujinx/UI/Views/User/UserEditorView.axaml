@@ -14,7 +14,7 @@
     mc:Ignorable="d"
     Focusable="True"
     x:DataType="models:TempProfile">
-    <Grid Margin="0" ColumnDefinitions="Auto,*" RowDefinitions="*,Auto">
+    <Grid Margin="10" ColumnDefinitions="Auto,*" RowDefinitions="*,Auto">
         <StackPanel
             Grid.Row="0"
             Grid.Column="0"
@@ -48,9 +48,9 @@
                 BorderThickness="1">
                 <Panel>
                     <ui:SymbolIcon
-                        FontSize="60"
-                        Width="96"
-                        Height="96"
+                        FontSize="70"
+                        Width="115"
+                        Height="115"
                         Margin="0"
                         Foreground="{DynamicResource AppListHoverBackgroundColor}"
                         HorizontalAlignment="Stretch"
@@ -58,8 +58,8 @@
                         Symbol="Camera" />
                     <Image
                         Name="ProfileImage"
-                        Width="96"
-                        Height="96"
+                        Width="115"
+                        Height="115"
                         Margin="0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
@@ -73,7 +73,7 @@
             Grid.ColumnSpan="2"
             HorizontalAlignment="Left"
             Orientation="Horizontal"
-            Margin="0 24 0 0"
+            Margin="0 30 0 0"
             Spacing="10">
             <Button
                 Width="50"
@@ -88,7 +88,7 @@
             Grid.ColumnSpan="2"
             HorizontalAlignment="Right"
             Orientation="Horizontal"
-            Margin="0 24 0 0"
+            Margin="0 30 0 0"
             Spacing="10">
             <Button
                 Name="DeleteButton"

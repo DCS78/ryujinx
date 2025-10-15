@@ -18,7 +18,7 @@
         <viewModels:UserFirmwareAvatarSelectorViewModel />
     </Design.DataContext>
     <Grid
-        Margin="0"
+        Margin="10"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch" RowDefinitions="Auto,*,Auto,Auto">
         <ListBox
@@ -62,7 +62,7 @@
             Grid.Row="3"
             Orientation="Horizontal"
             Spacing="10"
-            Margin="0 24 0 0"
+            Margin="0 30 0 0"
             HorizontalAlignment="Left">
             <Button
                 Width="50"
@@ -76,7 +76,7 @@
             Grid.Row="3"
             Orientation="Horizontal"
             Spacing="10"
-            Margin="0 24 0 0"
+            Margin="0 30 0 0"
             HorizontalAlignment="Right">
             <ui:ColorPickerButton
                 FlyoutPlacement="Top"
