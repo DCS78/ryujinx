@@ -81,7 +81,7 @@
         </Grid>
         <Border
             Grid.Row="1"
-            Margin="0,5"
+            Padding="2.5"
             BorderThickness="1"
             BorderBrush="{DynamicResource AppListHoverBackgroundColor}"
             CornerRadius="5"
@@ -95,7 +95,7 @@
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="Padding" Value="10" />
-                        <Setter Property="Margin" Value="5" />
+                        <Setter Property="Margin" Value="0" />
                         <Setter Property="CornerRadius" Value="4" />
                     </Style>
                     <Style Selector="ListBoxItem:selected /template/ Rectangle#SelectionIndicator">
@@ -179,7 +179,7 @@
         </Border>
         <StackPanel
             Grid.Row="2"
-            Margin="0 24 0 0"
+            Margin="0,30,0,0"
             Orientation="Horizontal">
             <Button
                 Width="50"
