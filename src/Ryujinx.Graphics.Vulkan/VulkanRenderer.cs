@@ -436,7 +436,7 @@ namespace Ryujinx.Graphics.Vulkan
                 features2.Features.MultiViewport && !(IsMoltenVk && Vendor == Vendor.Amd), // Workaround for AMD on MoltenVK issue
                 featuresRobustness2.NullDescriptor || IsMoltenVk,
                 supportsPushDescriptors,
-                IsMoltenVk ? 16 : propertiesPushDescriptor.MaxPushDescriptors, // In case an old version of MoltenVK is used, apply a limit to prevent vertex explosions.
+                IsMoltenVk ? 16 : propertiesPushDescriptor.MaxPushDescriptors, // Prevents vertex explosions on MoltenVK.
                 featuresPrimitiveTopologyListRestart.PrimitiveTopologyListRestart,
                 featuresPrimitiveTopologyListRestart.PrimitiveTopologyPatchListRestart,
                 supportsTransformFeedback,
@@ -775,7 +775,7 @@ namespace Ryujinx.Graphics.Vulkan
                 supportsShaderBallot: false,
                 supportsShaderBarrierDivergence: Vendor != Vendor.Intel,
                 supportsShaderFloat64: Capabilities.SupportsShaderFloat64,
-                supportsTextureGatherOffsets: features2.Features.ShaderImageGatherExtended && !IsMoltenVk, // MoltenVK 1.2.10 added support for it, but it doesn't work correctly.
+                supportsTextureGatherOffsets: features2.Features.ShaderImageGatherExtended,
                 supportsTextureShadowLod: false,
                 supportsVertexStoreAndAtomics: features2.Features.VertexPipelineStoresAndAtomics,
                 supportsViewportIndexVertexTessellation: featuresVk12.ShaderOutputViewportIndex,
