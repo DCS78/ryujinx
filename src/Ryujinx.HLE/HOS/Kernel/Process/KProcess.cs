@@ -124,6 +124,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             KPageList pageList,
             KResourceLimit resourceLimit,
             MemoryRegion memRegion,
+            MemoryConfiguration memConfig,
             IProcessContextFactory contextFactory,
             ThreadStart customThreadStart = null)
         {
@@ -153,6 +154,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 creationInfo.Flags,
                 !creationInfo.Flags.HasFlag(ProcessCreationFlags.EnableAslr),
                 memRegion,
+                memConfig,
                 codeAddress,
                 codeSize,
                 slabManager);
@@ -189,6 +191,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             ReadOnlySpan<uint> capabilities,
             KResourceLimit resourceLimit,
             MemoryRegion memRegion,
+            MemoryConfiguration memConfig,
             IProcessContextFactory contextFactory,
             ThreadStart customThreadStart = null)
         {
@@ -252,6 +255,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 creationInfo.Flags,
                 !creationInfo.Flags.HasFlag(ProcessCreationFlags.EnableAslr),
                 memRegion,
+                memConfig,
                 codeAddress,
                 codeSize,
                 slabManager);
@@ -1095,6 +1099,8 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
 
             Logger.Error?.Print(LogClass.Cpu, $"Invalid memory access at virtual address 0x{va:X16}.");
 
+            Logger.Flush();
+
             return false;
         }
 
@@ -1102,6 +1108,8 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
         {
             KernelStatic.GetCurrentThread().PrintGuestStackTrace();
             KernelStatic.GetCurrentThread()?.PrintGuestRegisterPrintout();
+
+            Logger.Flush();
 
             throw new UndefinedInstructionException(address, opCode);
         }

@@ -137,6 +137,7 @@ namespace Ryujinx.HLE.HOS.Kernel.SupervisorCall
                 capabilities,
                 resourceLimit,
                 memRegion,
+                _context.Device.Configuration.MemoryConfiguration,
                 contextFactory,
                 customThreadStart);
 
@@ -888,7 +889,7 @@ namespace Ryujinx.HLE.HOS.Kernel.SupervisorCall
         [Svc(1)]
         public Result SetHeapSize([PointerSized] out ulong address, [PointerSized] ulong size)
         {
-            if ((size & 0xfffffffe001fffff) != 0)
+            if ((size & 0xfffffffd001fffff) != 0)
             {
                 address = 0;
 
@@ -1892,6 +1893,9 @@ namespace Ryujinx.HLE.HOS.Kernel.SupervisorCall
                 {
                     return;
                 }
+
+                Logger.Error?.Print(LogClass.KernelSvc, "The guest program broke execution!");
+                Logger.Flush();
 
                 // TODO: Debug events.
                 currentThread.Owner.TerminateCurrentProcess();
