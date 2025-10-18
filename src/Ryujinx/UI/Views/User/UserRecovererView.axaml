@@ -40,12 +40,14 @@
                                 <Grid Margin="0" ColumnDefinitions="*,Auto">
                                     <TextBlock
                                         HorizontalAlignment="Stretch"
+                                        Margin="5"
                                         Text="{Binding UserId}"
                                         TextAlignment="Start"
                                         TextWrapping="Wrap" />
                                     <Button Grid.Column="1"
                                             HorizontalAlignment="Right"
                                             Click="Recover"
+                                            Margin="5"
                                             CommandParameter="{Binding}"
                                             Content="{ext:Locale Recover}"/>
                                 </Grid>
