@@ -73,7 +73,7 @@
                                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <TextBlock
                                                 Text="{Binding Name}"
-                                                MaxWidth="85"
+                                                MaxWidth="90"
                                                 TextAlignment="Center"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap"
