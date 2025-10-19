@@ -137,7 +137,7 @@ namespace Ryujinx.Ava.Utilities
                 argsList.Add(config);
             }
 
-            if (appFilePath.ToLower().EndsWith(".xci"))
+            if (appFilePath.EndsWith(".xci", StringComparison.OrdinalIgnoreCase))
             {
                 argsList.Add("--application-id");
                 argsList.Add($"\"{applicationId}\"");

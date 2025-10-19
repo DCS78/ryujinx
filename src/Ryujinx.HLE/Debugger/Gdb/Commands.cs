@@ -53,7 +53,7 @@ namespace Ryujinx.HLE.Debugger.Gdb
         {
             // GDB is performing initial contact. Stop everything.
             Debugger.DebugProcess.DebugStop();
-            Debugger.GThread = Debugger.CThread = Debugger.DebugProcess.ThreadUids.First();
+            Debugger.GThread = Debugger.CThread = Debugger.DebugProcess.ThreadUids[0];
             Processor.Reply($"T05thread:{Debugger.CThread:x};");
         }
 
@@ -63,7 +63,7 @@ namespace Ryujinx.HLE.Debugger.Gdb
             Debugger.DebugProcess.DebugStop();
             if (Debugger.GThread == null || Debugger.GetThreads().All(x => x.ThreadUid != Debugger.GThread.Value))
             {
-                Debugger.GThread = Debugger.CThread = Debugger.DebugProcess.ThreadUids.First();
+                Debugger.GThread = Debugger.CThread = Debugger.DebugProcess.ThreadUids[0];
             }
 
             Processor.Reply($"T02thread:{Debugger.GThread:x};");
@@ -165,7 +165,7 @@ namespace Ryujinx.HLE.Debugger.Gdb
                     return;
                 }
 
-                threadId = threads.First().ThreadUid;
+                threadId = threads[0].ThreadUid;
             }
 
             if (Debugger.DebugProcess.GetThread(threadId.Value) == null)

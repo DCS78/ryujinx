@@ -682,14 +682,7 @@ namespace Ryujinx.Audio.Renderer.Server.Voice
 
                         errorInfos[1] = adpcmLoopContextInfoError;
 
-                        if (!adpcmLoopContextMapped || BufferInfoUnmapped)
-                        {
-                            BufferInfoUnmapped = true;
-                        }
-                        else
-                        {
-                            BufferInfoUnmapped = false;
-                        }
+                        BufferInfoUnmapped = !adpcmLoopContextMapped || BufferInfoUnmapped;
                     }
                     else
                     {

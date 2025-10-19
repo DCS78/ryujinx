@@ -193,7 +193,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     }
                 }
 
-                if (parentDir == String.Empty)
+                if (string.IsNullOrEmpty(parentDir))
                 {
                     Dispatcher.UIThread.Post(async () =>
                     {

@@ -1404,7 +1404,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
             else if (ConsumeIf("fL"))
             {
                 string l1Number = ParseNumber();
-                if (l1Number == null || l1Number.Length == 0)
+                if (string.IsNullOrEmpty(l1Number))
                 {
                     return null;
                 }
@@ -2434,7 +2434,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
         private IntegerLiteral ParseIntegerLiteral(string literalName)
         {
             string number = ParseNumber(true);
-            if (number == null || number.Length == 0 || !ConsumeIf("E"))
+            if (string.IsNullOrEmpty(number) || !ConsumeIf("E"))
             {
                 return null;
             }
@@ -2538,7 +2538,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                     }
 
                     string number = ParseNumber();
-                    if (number == null || number.Length == 0 || !ConsumeIf("E"))
+                    if (string.IsNullOrEmpty(number) || !ConsumeIf("E"))
                     {
                         return null;
                     }

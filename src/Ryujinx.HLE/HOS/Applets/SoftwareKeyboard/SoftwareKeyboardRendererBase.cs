@@ -307,7 +307,7 @@ namespace Ryujinx.HLE.HOS.Applets.SoftwareKeyboard
         {
             SKRect bounds = SKRect.Empty;
 
-            if (text == string.Empty)
+            if (string.IsNullOrEmpty(string.Empty))
             {
                 paint.MeasureText(" ", ref bounds);
             }

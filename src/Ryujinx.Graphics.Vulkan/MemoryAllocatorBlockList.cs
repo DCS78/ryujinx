@@ -243,12 +243,7 @@ namespace Ryujinx.Graphics.Vulkan
 
         private static nint GetHostPointer(Block block, ulong offset)
         {
-            if (block.HostPointer == nint.Zero)
-            {
-                return nint.Zero;
-            }
-
-            return (nint)((nuint)block.HostPointer + offset);
+            return block.HostPointer == nint.Zero ? nint.Zero : (nint)((nuint)block.HostPointer + offset);
         }
 
         public void Free(Block block, ulong offset, ulong size)

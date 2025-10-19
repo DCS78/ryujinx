@@ -48,7 +48,7 @@ namespace Ryujinx.Ava.UI.Windows
         {
             Pages.Children.Clear();
             NavPanel.SelectionChanged += NavPanelOnSelectionChanged;
-            NavPanel.SelectedItem = NavPanel.MenuItems.ElementAt(0);
+            NavPanel.SelectedItem = NavPanel.MenuItems[0];
         }
 
         private void NavPanelOnSelectionChanged(object sender, NavigationViewSelectionChangedEventArgs e)
