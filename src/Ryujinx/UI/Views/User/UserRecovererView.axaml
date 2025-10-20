@@ -30,6 +30,15 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     ItemsSource="{Binding LostProfiles}">
+                    <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="Padding" Value="10" />
+                        <Setter Property="Margin" Value="0" />
+                    </Style>
+                    <Style Selector="ListBoxItem:selected /template/ Rectangle#SelectionIndicator">
+                        <Setter Property="IsVisible" Value="False" />
+                    </Style>
+                </ListBox.Styles>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border
