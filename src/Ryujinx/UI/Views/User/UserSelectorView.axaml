@@ -63,23 +63,21 @@
                                     <Image
                                         Width="96"
                                         Height="96"
+                                        Margin="0,0,0,10"
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Top"
                                         Source="{Binding Image, Converter={x:Static helpers:BitmapArrayValueConverter.Instance}}" />
-                                    <Panel
-                                        Height="40"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch">
-                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <StackPanel Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                             <TextBlock
                                                 Text="{Binding Name}"
                                                 MaxWidth="90"
                                                 TextAlignment="Center"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
                                                 TextTrimming="CharacterEllipsis"
                                                 TextWrapping="Wrap"
                                                 MaxLines="2" />
                                         </StackPanel>
-                                    </Panel>
                                 </StackPanel>
                             </Border>
                             <Border
