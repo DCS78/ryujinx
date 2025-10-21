@@ -42,10 +42,5 @@ namespace Ryujinx.Ava.UI.Views.User
         {
             _parent?.GoBack();
         }
-
-        private void Recover(object sender, RoutedEventArgs e)
-        {
-            _parent?.RecoverLostAccounts();
-        }
     }
 }
