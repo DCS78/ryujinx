@@ -1,3 +1,4 @@
+using Gommon;
 using Ryujinx.Common;
 using Ryujinx.Common.Configuration;
 using ShellLink;
@@ -137,7 +138,7 @@ namespace Ryujinx.Ava.Utilities
                 argsList.Add(config);
             }
 
-            if (appFilePath.EndsWith(".xci", StringComparison.OrdinalIgnoreCase))
+            if (appFilePath.EndsWithIgnoreCase(".xci"))
             {
                 argsList.Add("--application-id");
                 argsList.Add($"\"{applicationId}\"");
