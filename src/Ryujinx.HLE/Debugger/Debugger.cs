@@ -4,10 +4,8 @@ using Ryujinx.HLE.HOS.Kernel.Process;
 using Ryujinx.HLE.HOS.Kernel.Threading;
 using System;
 using System.Collections.Concurrent;
-using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using IExecutionContext = Ryujinx.Cpu.IExecutionContext;
 
@@ -20,7 +18,7 @@ namespace Ryujinx.HLE.Debugger
 
         public ushort GdbStubPort { get; private set; }
 
-        private readonly BlockingCollection<IMessage> _messages = new(1);
+        private readonly BlockingCollection<Message.IMarker> _messages = new(1);
         private readonly Thread _debuggerThread;
         private readonly Thread _messageHandlerThread;
 
@@ -59,8 +57,8 @@ namespace Ryujinx.HLE.Debugger
 
         internal KThread[] GetThreads() => DebugProcess.ThreadUids.Select(DebugProcess.GetThread).ToArray();
 
-        internal bool IsProcess32Bit => DebugProcess.GetThread(GThread.Value).Context.IsAarch32;
-        
+        internal bool IsProcess32Bit => DebugProcess.GetThread(GThread ?? DebugProcess.ThreadUids.First()).Context.IsAarch32;
+
         internal bool WriteRegister(IExecutionContext ctx, int registerId, StringStream ss) =>
             IsProcess32Bit
                 ? ctx.WriteRegister32(registerId, ss)
@@ -89,7 +87,7 @@ namespace Ryujinx.HLE.Debugger
                 _readStream?.Close();
                 _writeStream?.Close();
                 _debuggerThread.Join();
-                _messages.Add(StatelessMessage.Kill);
+                _messages.Add(Message.Kill);
                 _messageHandlerThread.Join();
                 _messages.Dispose();
                 _breakHandlerEvent.Dispose();
