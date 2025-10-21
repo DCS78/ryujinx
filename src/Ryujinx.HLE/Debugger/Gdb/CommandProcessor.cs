@@ -20,6 +20,9 @@ namespace Ryujinx.HLE.Debugger.Gdb
             Commands = commands;
         }
 
+        public void ReplyHex(string data) => Reply(Helpers.ToHex(data));
+        public void ReplyHex(byte[] data) => Reply(Helpers.ToHex(data));
+
         public void Reply(string cmd)
         {
             Logger.Debug?.Print(LogClass.GdbStub, $"Reply: {cmd}");
@@ -146,6 +149,12 @@ namespace Ryujinx.HLE.Debugger.Gdb
                         break;
                     }
 
+                    if (ss.ConsumeRemaining("Attached"))
+                    {
+                        Reply("1");
+                        break;
+                    }
+
                     if (ss.ConsumeRemaining("ProcessInfo"))
                     {
                         Reply(
@@ -191,11 +200,10 @@ namespace Ryujinx.HLE.Debugger.Gdb
                             break;
                         }
 
-                        Reply(Helpers.ToHex(
-                                DebugProcess.IsThreadPaused(DebugProcess.GetThread(threadId.Value))
-                                    ? "Paused"
-                                    : "Running"
-                            )
+                        ReplyHex(
+                            DebugProcess.IsThreadPaused(DebugProcess.GetThread(threadId.Value))
+                                ? "Paused"
+                                : "Running"
                         );
 
                         break;
