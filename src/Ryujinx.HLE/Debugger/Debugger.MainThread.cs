@@ -1,5 +1,6 @@
 using Ryujinx.Common.Logging;
 using Ryujinx.HLE.Debugger.Gdb;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -9,11 +10,22 @@ namespace Ryujinx.HLE.Debugger
 {
     public partial class Debugger
     {
-        private void DebuggerThreadMain()
+        private void MainLoop()
         {
             IPEndPoint endpoint = new(IPAddress.Any, GdbStubPort);
             _listenerSocket = new TcpListener(endpoint);
-            _listenerSocket.Start();
+            
+            try
+            {
+                _listenerSocket.Start();
+            }
+            catch (SocketException se)
+            {
+                Logger.Error?.Print(LogClass.GdbStub,
+                    $"Failed to create TCP server on {endpoint} for GDB client: {Enum.GetName(se.SocketErrorCode)}");
+                throw;
+            }
+
             Logger.Notice.Print(LogClass.GdbStub, $"Currently waiting on {endpoint} for GDB client");
 
             while (!_shuttingDown)
@@ -22,8 +34,10 @@ namespace Ryujinx.HLE.Debugger
                 {
                     _clientSocket = _listenerSocket.AcceptSocket();
                 }
-                catch (SocketException)
+                catch (SocketException se)
                 {
+                    Logger.Error?.Print(LogClass.GdbStub, 
+                        $"Failed to accept incoming GDB client connection: {Enum.GetName(se.SocketErrorCode)}");
                     return;
                 }
 
@@ -31,7 +45,7 @@ namespace Ryujinx.HLE.Debugger
                 int retries = 10;
                 while ((DebugProcess == null || GetThreads().Length == 0) && retries-- > 0)
                 {
-                    Thread.Sleep(200);
+                    Thread.Sleep(500);
                 }
 
                 if (DebugProcess == null || GetThreads().Length == 0)
