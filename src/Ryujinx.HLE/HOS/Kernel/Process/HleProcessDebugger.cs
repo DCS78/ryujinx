@@ -244,7 +244,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
 
                     try
                     {
-                        result.AppendLine(thread.GetGuestStackTrace());
+                        result.AppendLine(GetGuestStackTrace(thread));
                     }
                     catch (Exception e)
                     {
@@ -253,7 +253,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
 
                     try
                     {
-                        result.AppendLine(thread.GetGuestRegisterPrintout());
+                        result.AppendLine(GetCpuRegisterPrintout(thread));
                     }
                     catch (Exception e)
                     {
