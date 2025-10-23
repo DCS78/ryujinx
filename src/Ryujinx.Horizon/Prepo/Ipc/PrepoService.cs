@@ -1,3 +1,4 @@
+using Gommon;
 using MsgPack;
 using MsgPack.Serialization;
 using Ryujinx.Common.Logging;
@@ -179,7 +180,7 @@ namespace Ryujinx.Horizon.Prepo.Ipc
 
             string gameRoom = Encoding.UTF8.GetString(gameRoomBuffer).TrimEnd();
 
-            if (gameRoom == string.Empty)
+            if (string.IsNullOrEmpty(gameRoom))
             {
                 return PrepoResult.InvalidState;
             }

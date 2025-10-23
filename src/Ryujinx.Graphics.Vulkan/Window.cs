@@ -270,13 +270,11 @@ namespace Ryujinx.Graphics.Vulkan
             {
                 return CompositeAlphaFlagsKHR.OpaqueBitKhr;
             }
-            else if (supportedFlags.HasFlag(CompositeAlphaFlagsKHR.PreMultipliedBitKhr))
-            {
-                return CompositeAlphaFlagsKHR.PreMultipliedBitKhr;
-            }
             else
             {
-                return CompositeAlphaFlagsKHR.InheritBitKhr;
+                return supportedFlags.HasFlag(CompositeAlphaFlagsKHR.PreMultipliedBitKhr)
+                    ? CompositeAlphaFlagsKHR.PreMultipliedBitKhr
+                    : CompositeAlphaFlagsKHR.InheritBitKhr;
             }
         }
 
@@ -286,13 +284,9 @@ namespace Ryujinx.Graphics.Vulkan
             {
                 return PresentModeKHR.ImmediateKhr;
             }
-            else if (availablePresentModes.Contains(PresentModeKHR.MailboxKhr))
-            {
-                return PresentModeKHR.MailboxKhr;
-            }
             else
             {
-                return PresentModeKHR.FifoKhr;
+                return availablePresentModes.Contains(PresentModeKHR.MailboxKhr) ? PresentModeKHR.MailboxKhr : PresentModeKHR.FifoKhr;
             }
         }
 

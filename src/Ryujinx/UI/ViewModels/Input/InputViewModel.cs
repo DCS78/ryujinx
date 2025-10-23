@@ -936,7 +936,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
 
                 LoadProfiles();
 
-                ChosenProfile = ProfilesList[0].ToString(); // Show default profile
+                ChosenProfile = ProfilesList[0]; // Show default profile
             }
         }
 

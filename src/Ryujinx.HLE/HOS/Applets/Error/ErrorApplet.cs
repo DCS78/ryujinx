@@ -1,3 +1,4 @@
+using Gommon;
 using LibHac.Common;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
@@ -134,7 +135,7 @@ namespace Ryujinx.HLE.HOS.Applets.Error
         {
             string buttonsText = GetMessageText(module, description, key);
 
-            return (buttonsText == string.Empty) ? null : buttonsText.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
+            return (string.IsNullOrEmpty(buttonsText)) ? null : buttonsText.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
         }
 
         private void ParseErrorCommonArg()
@@ -151,7 +152,7 @@ namespace Ryujinx.HLE.HOS.Applets.Error
 
             string message = GetMessageText(module, description, "DlgMsg");
 
-            if (message == string.Empty)
+            if (string.IsNullOrEmpty(message))
             {
                 message = "An error has occured.\n\nPlease try again later.";
             }

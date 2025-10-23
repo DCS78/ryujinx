@@ -185,16 +185,13 @@ namespace Ryujinx.Graphics.Vulkan
 
             //Prevent the sum of descriptors from exceeding MaxPushDescriptors
             int totalDescriptors = 0;
-            foreach (ResourceDescriptor desc in layout.Sets.First().Descriptors)
+            foreach (ResourceDescriptor desc in layout.Sets[0].Descriptors)
             {
                 if (!reserved.Contains(desc.Binding))
                     totalDescriptors += desc.Count;
             }
 
-            if (totalDescriptors > gd.Capabilities.MaxPushDescriptors)
-                return false;
-
-            return true;
+            return totalDescriptors <= gd.Capabilities.MaxPushDescriptors;
         }
 
         private static ReadOnlyCollection<ResourceDescriptorCollection> BuildPushDescriptorSets(
@@ -528,12 +525,7 @@ namespace Ryujinx.Graphics.Vulkan
 
         protected DisposableRenderPass CreateDummyRenderPass()
         {
-            if (_dummyRenderPass.Value.Handle != 0)
-            {
-                return _dummyRenderPass;
-            }
-
-            return _dummyRenderPass = _state.ToRenderPass(_gd, _device);
+            return _dummyRenderPass.Value.Handle != 0 ? _dummyRenderPass : (_dummyRenderPass = _state.ToRenderPass(_gd, _device));
         }
 
         public void CreateBackgroundComputePipeline()
@@ -656,12 +648,7 @@ namespace Ryujinx.Graphics.Vulkan
                 return false;
             }
 
-            if (_computePipelineCache.TryGetValue(ref key, out pipeline))
-            {
-                return true;
-            }
-
-            return false;
+            return _computePipelineCache.TryGetValue(ref key, out pipeline);
         }
 
         public bool TryGetGraphicsPipeline(ref PipelineUid key, out Auto<DisposablePipeline> pipeline)

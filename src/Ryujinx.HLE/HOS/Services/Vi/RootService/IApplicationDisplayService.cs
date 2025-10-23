@@ -1,3 +1,4 @@
+using Gommon;
 using Ryujinx.Common;
 using Ryujinx.Common.Logging;
 using Ryujinx.Common.Memory;
@@ -166,7 +167,7 @@ namespace Ryujinx.HLE.HOS.Services.Vi.RootService
 
         private ResultCode OpenDisplayImpl(ServiceCtx context, string name)
         {
-            if (name == string.Empty)
+            if (string.IsNullOrEmpty(name))
             {
                 return ResultCode.InvalidValue;
             }

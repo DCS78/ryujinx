@@ -31,12 +31,12 @@ namespace Ryujinx.HLE.Generators
                 if (!constructors.Any(x => x.ParameterList.Parameters.Count >= 1))
                     continue;
 
-                if (constructors.Where(x => x.ParameterList.Parameters.Count >= 1).FirstOrDefault().ParameterList.Parameters[0].Type.ToString() == "ServiceCtx")
+                if (constructors.FirstOrDefault(x => x.ParameterList.Parameters.Count >= 1).ParameterList.Parameters[0].Type.ToString() == "ServiceCtx")
                 {
                     generator.EnterScope($"if (type == typeof({GetFullName(className, context)}))");
                     if (constructors.Any(x => x.ParameterList.Parameters.Count == 2))
                     {
-                        TypeSyntax type = constructors.Where(x => x.ParameterList.Parameters.Count == 2).FirstOrDefault().ParameterList.Parameters[1].Type;
+                        TypeSyntax type = constructors.FirstOrDefault(x => x.ParameterList.Parameters.Count == 2).ParameterList.Parameters[1].Type;
                         SemanticModel model = context.Compilation.GetSemanticModel(type.SyntaxTree);
                         INamedTypeSymbol typeSymbol = model.GetSymbolInfo(type).Symbol as INamedTypeSymbol;
                         string fullName = typeSymbol.ToString();
