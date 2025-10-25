@@ -124,6 +124,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             KPageList pageList,
             KResourceLimit resourceLimit,
             MemoryRegion memRegion,
+            MemoryConfiguration memConfig,
             IProcessContextFactory contextFactory,
             ThreadStart customThreadStart = null)
         {
@@ -153,6 +154,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 creationInfo.Flags,
                 !creationInfo.Flags.HasFlag(ProcessCreationFlags.EnableAslr),
                 memRegion,
+                memConfig,
                 codeAddress,
                 codeSize,
                 slabManager);
@@ -189,6 +191,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             ReadOnlySpan<uint> capabilities,
             KResourceLimit resourceLimit,
             MemoryRegion memRegion,
+            MemoryConfiguration memConfig,
             IProcessContextFactory contextFactory,
             ThreadStart customThreadStart = null)
         {
@@ -252,6 +255,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 creationInfo.Flags,
                 !creationInfo.Flags.HasFlag(ProcessCreationFlags.EnableAslr),
                 memRegion,
+                memConfig,
                 codeAddress,
                 codeSize,
                 slabManager);
@@ -1088,7 +1092,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             MemoryManager = new KPageTable(KernelContext, CpuMemory, Context.AddressSpaceSize);
         }
 
-        private bool InvalidAccessHandler(ulong va)
+        private static bool InvalidAccessHandler(ulong va)
         {
             KernelStatic.GetCurrentThread()?.PrintGuestStackTrace();
             KernelStatic.GetCurrentThread()?.PrintGuestRegisterPrintout();
@@ -1100,7 +1104,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             return false;
         }
 
-        private void UndefinedInstructionHandler(IExecutionContext context, ulong address, int opCode)
+        private static void UndefinedInstructionHandler(IExecutionContext context, ulong address, int opCode)
         {
             KernelStatic.GetCurrentThread().PrintGuestStackTrace();
             KernelStatic.GetCurrentThread()?.PrintGuestRegisterPrintout();
@@ -1204,16 +1208,16 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
 
         private class DebuggerInterface : IDebuggableProcess
         {
-            private Barrier StepBarrier;
+            private readonly Barrier _stepBarrier;
             private readonly KProcess _parent;
             private readonly KernelContext _kernelContext;
-            private KThread steppingThread;
+            private KThread _steppingThread;
 
             public DebuggerInterface(KProcess p)
             {
                 _parent = p;
                 _kernelContext = p.KernelContext;
-                StepBarrier = new(2);
+                _stepBarrier = new(2);
             }
 
             public void DebugStop()
@@ -1281,7 +1285,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 }
                 
                 _kernelContext.CriticalSection.Enter();
-                steppingThread = target;
+                _steppingThread = target;
                 bool waiting = target.MutexOwner != null || target.WaitingSync || target.WaitingInArbitration;
                 target.Context.RequestDebugStep();
                 if (waiting)
@@ -1301,14 +1305,14 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 _kernelContext.CriticalSection.Leave();
 
                 bool stepTimedOut = false;
-                if (!StepBarrier.SignalAndWait(TimeSpan.FromMilliseconds(2000)))
+                if (!_stepBarrier.SignalAndWait(TimeSpan.FromMilliseconds(2000)))
                 {
                     Logger.Warning?.Print(LogClass.Kernel, $"Failed to step thread {target.ThreadUid} in time.");
                     stepTimedOut = true;
                 }
 
                 _kernelContext.CriticalSection.Enter();
-                steppingThread = null;
+                _steppingThread = null;
                 if (waiting)
                 {
                     lock (_parent._threadingLock)
@@ -1330,26 +1334,28 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                     return false;
                 }
 
-                StepBarrier.SignalAndWait();
+                _stepBarrier.SignalAndWait();
                 return true;
             }
 
-            public DebugState GetDebugState()
-            {
-                return (DebugState)_parent.debugState;
-            }
+            public DebugState DebugState => (DebugState)_parent.debugState;
 
             public bool IsThreadPaused(KThread target)
             {
                 return (target.SchedFlags & ThreadSchedState.ThreadPauseFlag) != 0;
             }
 
-            public ulong[] GetThreadUids()
+            public ulong[] ThreadUids
             {
-                lock (_parent._threadingLock)
+                get
                 {
-                    var threads = _parent._threads.Where(x => !x.TerminationRequested).ToArray();
-                    return threads.Select(x => x.ThreadUid).ToArray();
+                    lock (_parent._threadingLock)
+                    {
+                        return _parent._threads
+                            .Where(x => !x.TerminationRequested)
+                            .Select(x => x.ThreadUid)
+                            .ToArray();
+                    }
                 }
             }
 
@@ -1357,25 +1363,25 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             {
                 lock (_parent._threadingLock)
                 {
-                    var threads = _parent._threads.Where(x => !x.TerminationRequested).ToArray();
-                    return threads.FirstOrDefault(x => x.ThreadUid == threadUid);
+                    return _parent._threads.Where(x => !x.TerminationRequested)
+                        .FirstOrDefault(x => x.ThreadUid == threadUid);
                 }
             }
 
             public void DebugInterruptHandler(IExecutionContext ctx)
             {
                 _kernelContext.CriticalSection.Enter();
-                bool stepping = steppingThread != null;
+                bool stepping = _steppingThread != null;
                 _kernelContext.CriticalSection.Leave();
                 if (stepping)
                 {
-                    StepBarrier.SignalAndWait();
-                    StepBarrier.SignalAndWait();
+                    _stepBarrier.SignalAndWait();
+                    _stepBarrier.SignalAndWait();
                 }
                 _parent.InterruptHandler(ctx);
             }
 
-            public IVirtualMemoryManager CpuMemory { get { return _parent.CpuMemory; } }
+            public IVirtualMemoryManager CpuMemory => _parent.CpuMemory;
 
             public void InvalidateCacheRegion(ulong address, ulong size)
             {

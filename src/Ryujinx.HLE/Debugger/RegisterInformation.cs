@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Ryujinx.HLE.Debugger
 {
-    class RegisterInformation
+    static class RegisterInformation
     {
         public static readonly Dictionary<string, string> Features = new()
         {
@@ -17,12 +17,9 @@ namespace Ryujinx.HLE.Debugger
 
         private static string GetEmbeddedResourceContent(string resourceName)
         {
-            Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Ryujinx.HLE.Debugger.GdbXml." + resourceName);
-            StreamReader reader = new StreamReader(stream);
-            string result = reader.ReadToEnd();
-            reader.Dispose();
-            stream.Dispose();
-            return result;
+            using Stream stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("Ryujinx.HLE.Debugger.Gdb.Xml." + resourceName);
+            using StreamReader reader = new(stream);
+            return reader.ReadToEnd();
         }
     }
 }

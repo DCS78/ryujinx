@@ -1,9 +1,7 @@
-using Ryujinx.Common;
 using Ryujinx.Common.Logging;
-using Ryujinx.HLE.HOS.Kernel.Threading;
 using Ryujinx.Memory;
 using System.Collections.Concurrent;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Ryujinx.HLE.Debugger
 {
@@ -11,12 +9,9 @@ namespace Ryujinx.HLE.Debugger
     {
         public byte[] OriginalData { get; }
 
-        public bool IsStep { get; }
-
-        public Breakpoint(byte[] originalData, bool isStep)
+        public Breakpoint(byte[] originalData)
         {
             OriginalData = originalData;
-            IsStep = isStep;
         }
     }
 
@@ -28,9 +23,9 @@ namespace Ryujinx.HLE.Debugger
         private readonly Debugger _debugger;
         private readonly ConcurrentDictionary<ulong, Breakpoint> _breakpoints = new();
 
-        private static readonly byte[] _aarch64BreakInstruction = { 0x00, 0x00, 0x20, 0xD4 }; // BRK #0
-        private static readonly byte[] _aarch32BreakInstruction = { 0xFE, 0xDE, 0xFF, 0xE7 }; // TRAP
-        private static readonly byte[] _aarch32ThumbBreakInstruction = { 0x80, 0xB6 };
+        private static readonly byte[] _aarch64BreakInstruction = [0x00, 0x00, 0x20, 0xD4]; // BRK #0
+        private static readonly byte[] _aarch32BreakInstruction = [0xFE, 0xDE, 0xFF, 0xE7]; // TRAP
+        private static readonly byte[] _aarch32ThumbBreakInstruction = [0x80, 0xB6];
 
         public BreakpointManager(Debugger debugger)
         {
@@ -44,7 +39,7 @@ namespace Ryujinx.HLE.Debugger
         /// <param name="length">The length of the instruction to replace.</param>
         /// <param name="isStep">Indicates if this is a single-step breakpoint.</param>
         /// <returns>True if the breakpoint was set successfully; otherwise, false.</returns>
-        public bool SetBreakPoint(ulong address, ulong length, bool isStep = false)
+        public bool SetBreakPoint(ulong address, ulong length)
         {
             if (_breakpoints.ContainsKey(address))
             {
@@ -58,7 +53,7 @@ namespace Ryujinx.HLE.Debugger
                 return false;
             }
 
-            var originalInstruction = new byte[length];
+            byte[] originalInstruction = new byte[length];
             if (!ReadMemory(address, originalInstruction))
             {
                 Logger.Error?.Print(LogClass.GdbStub, $"Failed to read memory at 0x{address:X16} to set breakpoint.");
@@ -71,7 +66,7 @@ namespace Ryujinx.HLE.Debugger
                 return false;
             }
 
-            var breakpoint = new Breakpoint(originalInstruction, isStep);
+            Breakpoint breakpoint = new(originalInstruction);
             if (_breakpoints.TryAdd(address, breakpoint))
             {
                 Logger.Debug?.Print(LogClass.GdbStub, $"Breakpoint set at 0x{address:X16}");
@@ -112,7 +107,7 @@ namespace Ryujinx.HLE.Debugger
         /// </summary>
         public void ClearAll()
         {
-            foreach (var bp in _breakpoints)
+            foreach (KeyValuePair<ulong, Breakpoint> bp in _breakpoints)
             {
                 if (!WriteMemory(bp.Key, bp.Value.OriginalData))
                 {
@@ -124,33 +119,9 @@ namespace Ryujinx.HLE.Debugger
             Logger.Debug?.Print(LogClass.GdbStub, "All breakpoints cleared.");
         }
 
-        /// <summary>
-        /// Clears all currently set single-step software breakpoints.
-        /// </summary>
-        public void ClearAllStepBreakpoints()
-        {
-            var stepBreakpoints = _breakpoints.Where(p => p.Value.IsStep).ToList();
-
-            if (stepBreakpoints.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var bp in stepBreakpoints)
-            {
-                if (_breakpoints.TryRemove(bp.Key, out Breakpoint removedBreakpoint))
-                {
-                    WriteMemory(bp.Key, removedBreakpoint.OriginalData);
-                }
-            }
-
-            Logger.Debug?.Print(LogClass.GdbStub, "All step breakpoints cleared.");
-        }
-
-        
         private byte[] GetBreakInstruction(ulong length)
         {
-            if (_debugger.IsProcessAarch32)
+            if (_debugger.IsProcess32Bit)
             {
                 if (length == 2)
                 {

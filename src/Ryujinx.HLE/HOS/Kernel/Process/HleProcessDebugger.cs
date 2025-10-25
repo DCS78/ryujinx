@@ -161,6 +161,116 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
             return sb.ToString();
         }
 
+        public string GetProcessInfoPrintout()
+        {
+            StringBuilder sb = new();
+
+            sb.AppendLine($"Process: {_owner.Name}, PID: {_owner.Pid}");
+            sb.AppendLine($"Program Id:  0x{_owner.TitleId:x16}");
+            sb.AppendLine($"Application: {(_owner.IsApplication ? 1 : 0)}");
+
+            sb.AppendLine("Layout:");
+            sb.AppendLine(
+                $"  Alias: 0x{_owner.MemoryManager.AliasRegionStart:x10} - 0x{_owner.MemoryManager.AliasRegionEnd - 1:x10}");
+            sb.AppendLine(
+                $"  Heap:  0x{_owner.MemoryManager.HeapRegionStart:x10} - 0x{_owner.MemoryManager.HeapRegionEnd - 1:x10}");
+            sb.AppendLine(
+                $"  Aslr:  0x{_owner.MemoryManager.AslrRegionStart:x10} - 0x{_owner.MemoryManager.AslrRegionEnd - 1:x10}");
+            sb.AppendLine(
+                $"  Stack: 0x{_owner.MemoryManager.StackRegionStart:x10} - 0x{_owner.MemoryManager.StackRegionEnd - 1:x10}");
+
+            sb.AppendLine("Modules:");
+
+            foreach (Image image in GetLoadedImages())
+            {
+                ulong endAddress = image.BaseAddress + image.Size - 1;
+                sb.AppendLine($"  0x{image.BaseAddress:x10} - 0x{endAddress:x10} {image.Name}");
+            }
+
+            return sb.ToString();
+        }
+
+        public string GetMinidump()
+        {
+            var result = new StringBuilder();
+
+            result.AppendLine("=== Begin Minidump ===\n");
+            try
+            {
+                result.AppendLine(GetProcessInfoPrintout());
+            }
+            catch (Exception e)
+            {
+                result.AppendLine($"[Error getting process info: {e.Message}]");
+            }
+
+            var debugInterface = _owner?.DebugInterface;
+
+            if (debugInterface != null)
+            {
+                ulong[] threadUids;
+
+                try
+                {
+                    threadUids = debugInterface.ThreadUids ?? [];
+                }
+                catch (Exception e)
+                {
+                    result.AppendLine($"[Error getting thread uids: {e.Message}]");
+                    threadUids = [];
+                }
+
+                foreach (ulong threadUid in threadUids)
+                {
+                    result.AppendLine($"=== Thread {threadUid} ===");
+
+                    KThread thread;
+
+                    try
+                    {
+                        thread = debugInterface.GetThread(threadUid);
+                    }
+                    catch (Exception e)
+                    {
+                        result.AppendLine($"[Error getting thread: {e.Message}]");
+                        continue;
+                    }
+
+                    if (thread == null)
+                    {
+                        result.AppendLine("[Thread not found]");
+                        continue;
+                    }
+
+                    try
+                    {
+                        result.AppendLine(GetGuestStackTrace(thread));
+                    }
+                    catch (Exception e)
+                    {
+                        result.AppendLine($"[Error getting stack trace: {e.Message}]");
+                    }
+
+                    try
+                    {
+                        result.AppendLine(GetCpuRegisterPrintout(thread));
+                    }
+                    catch (Exception e)
+                    {
+                        result.AppendLine($"[Error getting registers: {e.Message}]");
+                    }
+                }
+            }
+            else
+            {
+                result.AppendLine("[Error generating minidump: debugInterface is null]");
+            }
+
+            result.AppendLine("=== End Minidump ===");
+
+            return result.ToString();
+        }
+
         private static bool TryGetSubName(Image image, ulong address, out ElfSymbol symbol)
         {
             address -= image.BaseAddress;
@@ -267,7 +377,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
         {
             moduleName = string.Empty;
 
-            var rodataStart = image.BaseAddress + image.Size;
+            ulong rodataStart = image.BaseAddress + image.Size;
 
             KMemoryInfo roInfo = _owner.MemoryManager.QueryMemory(rodataStart);
             if (roInfo.Permission != KMemoryPermission.Read)
@@ -275,7 +385,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 return false;
             }
 
-            var rwdataStart = roInfo.Address + roInfo.Size;
+            ulong rwdataStart = roInfo.Address + roInfo.Size;
 
             try
             {
@@ -305,7 +415,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 }
 
                 pathLength = Math.Min(pathLength, rodataBuf.Length - 8);
-                var pathBuf = rodataBuf.Slice(8, pathLength);
+                Span<byte> pathBuf = rodataBuf.Slice(8, pathLength);
                 int lastSlash = pathBuf.LastIndexOfAny(new byte[] { (byte)'\\', (byte)'/' });
 
                 moduleName = Encoding.ASCII.GetString(pathBuf.Slice(lastSlash + 1).TrimEnd((byte)0));
@@ -483,12 +593,11 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
 
             lock (_images)
             {
-                var image = new Image(textOffset, textSize, symbols.OrderBy(x => x.Value).ToArray());
+                Image image = new(textOffset, textSize, symbols.OrderBy(x => x.Value).ToArray());
 
-                string moduleName;
-                if (!GetModuleName(out moduleName, image))
+                if (!GetModuleName(out string moduleName, image))
                 {
-                    var newIndex = _images.Count;
+                    int newIndex = _images.Count;
                     moduleName = $"(unknown{newIndex})";
                 }
                 image.Name = moduleName;
