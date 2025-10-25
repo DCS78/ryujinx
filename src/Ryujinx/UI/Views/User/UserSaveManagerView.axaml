@@ -22,6 +22,7 @@
     <Grid Margin="10" RowDefinitions="Auto,*,Auto">
         <Grid
             Grid.Row="0"
+            Margin="0,0,0,5"
             HorizontalAlignment="Stretch" ColumnDefinitions="Auto,*">
             <StackPanel
                 Margin="0,0,0,10"
