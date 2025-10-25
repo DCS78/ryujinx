@@ -19,7 +19,7 @@
     <Design.DataContext>
         <viewModels:UserSaveManagerViewModel />
     </Design.DataContext>
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid Margin="10" RowDefinitions="Auto,*,Auto">
         <Grid
             Grid.Row="0"
             Margin="0,0,0,5"
@@ -59,13 +59,13 @@
             <Grid
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
-                Margin="10,0, 0, 0" ColumnDefinitions="Auto,*">
-                <TextBlock Text="{ext:Locale Search}" VerticalAlignment="Center" />
+                Margin="10,0,0,0" ColumnDefinitions="Auto,*">
                 <TextBox
                     Margin="10,0,0,0"
                     Grid.Column="1"
                     HorizontalAlignment="Stretch"
-                    Text="{Binding Search}" />
+                    Text="{Binding Search}"
+                    Watermark="{ext:Locale Search}" />
             </Grid>
         </Grid>
         <Border
