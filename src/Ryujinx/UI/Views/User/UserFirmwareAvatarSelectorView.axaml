@@ -67,7 +67,7 @@
             <Button
                 Width="50"
                 MinWidth="50"
-                Height="35"
+                Height="37"
                 Click="GoBack">
                 <ui:SymbolIcon Symbol="Back" />
             </Button>
@@ -96,9 +96,10 @@
             </ui:ColorPickerButton>
             <Button
                 Content="{ext:Locale AvatarChoose}"
-                Height="35"
-                Name="ChooseButton"
-                Click="ChooseButton_OnClick" />
+                Height="37"
+                Click="ChooseButton_OnClick">
+                <TextBlock Text="{ext:Locale AvatarChoose}" /> 
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>

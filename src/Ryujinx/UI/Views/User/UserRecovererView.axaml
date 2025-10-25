@@ -57,8 +57,9 @@
                                             HorizontalAlignment="Right"
                                             Margin="5"
                                             Command="{Binding Recover}"
-                                            CommandParameter="{Binding}"
-                                            Content="{ext:Locale Recover}"/>
+                                            CommandParameter="{Binding}">
+                                            <TextBlock Text="{ext:Locale Recover}" />
+                                    </Button>
                                 </Grid>
                             </Border>
                         </DataTemplate>
