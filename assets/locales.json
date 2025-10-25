@@ -19069,6 +19069,31 @@
       }
     },
     {
+      "ID": "LoadSupportedImageFormatDialogTitle",
+      "Translations": {
+        "ar_SA": "اختر تنسيق صورة مدعوم",
+        "de_DE": "Wählen Sie ein unterstütztes Bildformat",
+        "el_GR": "Επιλέξτε μια υποστηριζόμενη μορφή εικόνας",
+        "en_US": "Choose a supported image format",
+        "es_ES": "Elige un formato de imagen compatible",
+        "fr_FR": "Choisissez un format d'image pris en charge",
+        "he_IL": "בחר פורמט תמונה נתמך",
+        "it_IT": "Scegli un formato immagine supportato",
+        "ja_JP": "サポートされている画像フォーマットを選択",
+        "ko_KR": "지원되는 이미지 형식을 선택하세요",
+        "no_NO": "Velg et støttet bildeformat",
+        "pl_PL": "Wybierz obsługiwany format obrazu",
+        "pt_BR": "Escolha um formato de imagem compatível",
+        "ru_RU": "Выберите поддерживаемый формат изображения",
+        "sv_SE": "Välj ett stödjat bildformat",
+        "th_TH": "เลือกฟอร์แมตรูปภาพที่รองรับ",
+        "tr_TR": "Desteklenen bir resim formatı seçin",
+        "uk_UA": "Виберіть підтримуваний формат зображення",
+        "zh_CN": "选择一个支持的图片格式",
+        "zh_TW": "選擇一個支持的圖片格式"
+      }
+    },
+    {
       "ID": "AllSupportedFormats",
       "Translations": {
         "ar_SA": "كل التنسيقات المدعومة",
