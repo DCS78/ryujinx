@@ -81,6 +81,82 @@ namespace ARMeilleure.Translation.PTC
         private volatile int _translateTotalCount;
         public event Action<PtcLoadingState, int, int> PtcStateChanged;
 
+        // Batch write buffering to reduce lock contention when translating in parallel.
+        private volatile bool _isBatchWriting;
+
+        // Collects references to each thread's buffer so main thread can flush them.
+        private ConcurrentBag<List<BufferedEntry>> _allThreadEntryBuffers = new();
+
+        [ThreadStatic]
+        private static List<BufferedEntry> _threadLocalBuffer;
+
+        // Tunable limits to avoid excessive memory usage while buffering.
+        private const int MaxBufferedEntriesPerThread =128; // Flush a thread buffer when it grows beyond this.
+
+        private struct BufferedEntry
+        {
+            public InfoEntry Info;
+            public byte[] Code;
+            public RelocEntry[] RelocEntries;
+            public UnwindInfo UnwindInfo;
+        }
+
+        // Flush the current thread's local buffer to the main carriers.
+        // This is safe because only the owning thread accesses its thread-local buffer,
+        // and the method swaps the thread-local reference before writing under the global lock.
+        private void FlushThreadLocalBuffer()
+        {
+            var localList = _threadLocalBuffer;
+
+            if (localList == null || localList.Count ==0)
+            {
+                return;
+            }
+
+            // Replace thread-local buffer with a fresh list and register it for later flushing as well.
+            _threadLocalBuffer = new List<BufferedEntry>();
+            _allThreadEntryBuffers.Add(_threadLocalBuffer);
+
+            lock (_lock)
+            {
+                foreach (var entry in localList)
+                {
+                    SerializeStructure(_infosStream, entry.Info);
+
+                    // Write code.
+                    _codesList.Add(entry.Code);
+
+                    // Write reloc entries.
+                    using BinaryWriter relocInfoWriter = new(_relocsStream, EncodingCache.UTF8NoBOM, true);
+
+                    foreach (RelocEntry relocEntry in entry.RelocEntries)
+                    {
+                        relocInfoWriter.Write(relocEntry.Position);
+                        relocInfoWriter.Write((byte)relocEntry.Symbol.Type);
+                        relocInfoWriter.Write(relocEntry.Symbol.Value);
+                    }
+
+                    // Write unwind info.
+                    using BinaryWriter unwindInfoWriter = new(_unwindInfosStream, EncodingCache.UTF8NoBOM, true);
+
+                    unwindInfoWriter.Write(entry.UnwindInfo.PushEntries.Length);
+
+                    foreach (UnwindPushEntry unwindPushEntry in entry.UnwindInfo.PushEntries)
+                    {
+                        unwindInfoWriter.Write((int)unwindPushEntry.PseudoOp);
+                        unwindInfoWriter.Write(unwindPushEntry.PrologOffset);
+                        unwindInfoWriter.Write(unwindPushEntry.RegIndex);
+                        unwindInfoWriter.Write(unwindPushEntry.StackOffsetOrAllocSize);
+                    }
+
+                    unwindInfoWriter.Write(entry.UnwindInfo.PrologSize);
+                }
+
+                // Clear the processed list to free memory.
+                localList.Clear();
+            }
+        }
+
         public Ptc()
         {
             Profiler = new PtcProfiler(this);
@@ -869,6 +945,9 @@ namespace ARMeilleure.Translation.PTC
 
             progressReportThread.Start(progressReportEvent);
 
+            // Enable batch buffering of PTC writes while parallel translation runs.
+            _isBatchWriting = true;
+
             void TranslateFuncs()
             {
                 while (profiledFuncsToTranslate.TryDequeue(out (ulong address, PtcProfiler.FuncProfile funcProfile) item))
@@ -889,7 +968,7 @@ namespace ARMeilleure.Translation.PTC
 
                     bool isAddressUnique = translator.Functions.TryAdd(address, func.GuestSize, func);
 
-                    Debug.Assert(isAddressUnique, $"The address 0x{address:X16} is not unique.");
+                    Debug.Assert(isAddressUnique, $"The address0x{address:X16} is not unique.");
 
                     Interlocked.Increment(ref _translateCount);
 
@@ -925,6 +1004,10 @@ namespace ARMeilleure.Translation.PTC
 
             threads.Clear();
 
+            // Disable batch buffering and flush all thread-local buffers to carriers.
+            _isBatchWriting = false;
+            FlushBufferedEntries();
+
             progressReportEvent.Set();
             progressReportThread.Join();
 
@@ -943,6 +1026,64 @@ namespace ARMeilleure.Translation.PTC
                 Name = "Ptc.DiskWriter"
             };
             preSaveThread.Start();
+        }
+
+        private void FlushBufferedEntries()
+        {
+            // Swap the bag to avoid interfering with writers that may create new buffers after this call.
+            var bag = Interlocked.Exchange(ref _allThreadEntryBuffers, new ConcurrentBag<List<BufferedEntry>>());
+
+            if (bag == null)
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                foreach (var threadList in bag)
+                {
+                    if (threadList == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var entry in threadList)
+                    {
+                        SerializeStructure(_infosStream, entry.Info);
+
+                        // Write code.
+                        _codesList.Add(entry.Code);
+
+                        // Write reloc entries.
+                        using BinaryWriter relocInfoWriter = new(_relocsStream, EncodingCache.UTF8NoBOM, true);
+
+                        foreach (RelocEntry relocEntry in entry.RelocEntries)
+                        {
+                            relocInfoWriter.Write(relocEntry.Position);
+                            relocInfoWriter.Write((byte)relocEntry.Symbol.Type);
+                            relocInfoWriter.Write(relocEntry.Symbol.Value);
+                        }
+
+                        // Write unwind info.
+                        using BinaryWriter unwindInfoWriter = new(_unwindInfosStream, EncodingCache.UTF8NoBOM, true);
+
+                        unwindInfoWriter.Write(entry.UnwindInfo.PushEntries.Length);
+
+                        foreach (UnwindPushEntry unwindPushEntry in entry.UnwindInfo.PushEntries)
+                        {
+                            unwindInfoWriter.Write((int)unwindPushEntry.PseudoOp);
+                            unwindInfoWriter.Write(unwindPushEntry.PrologOffset);
+                            unwindInfoWriter.Write(unwindPushEntry.RegIndex);
+                            unwindInfoWriter.Write(unwindPushEntry.StackOffsetOrAllocSize);
+                        }
+
+                        unwindInfoWriter.Write(entry.UnwindInfo.PrologSize);
+                    }
+
+                    // Clear the thread-local list to free memory.
+                    threadList.Clear();
+                }
+            }
         }
 
         private void ReportProgress(object state)
@@ -973,6 +1114,43 @@ namespace ARMeilleure.Translation.PTC
 
         public void WriteCompiledFunction(ulong address, ulong guestSize, Hash128 hash, bool highCq, CompiledFunction compiledFunc)
         {
+            // When running batch translation we buffer writes per-thread to avoid heavy lock contention.
+            if (_isBatchWriting)
+            {
+                if (_threadLocalBuffer == null)
+                {
+                    _threadLocalBuffer = new List<BufferedEntry>();
+                    _allThreadEntryBuffers.Add(_threadLocalBuffer);
+                }
+
+                BufferedEntry buffered = new()
+                {
+                    Info = new InfoEntry()
+                    {
+                        Address = address,
+                        GuestSize = guestSize,
+                        Hash = hash,
+                        HighCq = highCq,
+                        Stubbed = false,
+                        CodeLength = compiledFunc.Code.Length,
+                        RelocEntriesCount = compiledFunc.RelocInfo.Entries.Length,
+                    },
+                    Code = compiledFunc.Code,
+                    RelocEntries = compiledFunc.RelocInfo.Entries.ToArray(),
+                    UnwindInfo = compiledFunc.UnwindInfo,
+                };
+
+                _threadLocalBuffer.Add(buffered);
+
+                // If this thread's buffer grows too large, flush it to free memory and reduce peak usage.
+                if (_threadLocalBuffer.Count >= MaxBufferedEntriesPerThread)
+                {
+                    FlushThreadLocalBuffer();
+                }
+
+                return;
+            }
+
             lock (_lock)
             {
                 byte[] code = compiledFunc.Code;

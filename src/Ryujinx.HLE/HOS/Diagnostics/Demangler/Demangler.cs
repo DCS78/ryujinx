@@ -2,7 +2,6 @@ using Ryujinx.HLE.HOS.Diagnostics.Demangler.Ast;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
 {
@@ -46,9 +45,9 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
 
         private ReadOnlySpan<char> PeekString(int offset = 0, int length = 1)
         {
-            if (_position + offset >= length)
+            if (_position + offset >= _length)
             {
-                return null;
+                return ReadOnlySpan<char>.Empty;
             }
 
             return Mangled.AsSpan(_position + offset, length);
@@ -81,7 +80,8 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
 
         private static int FromBase36(string encoded)
         {
-            char[] reversedEncoded = encoded.ToLower().ToCharArray().Reverse().ToArray();
+            char[] reversedEncoded = encoded.ToLower().ToCharArray();
+            Array.Reverse(reversedEncoded);
 
             int result = 0;
 
@@ -891,10 +891,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                 result = new NestedName(name, prev);
             }
 
-            if (context != null)
-            {
-                context.FinishWithTemplateArguments = false;
-            }
+            _ = (context?.FinishWithTemplateArguments = false);
 
             return result;
         }
@@ -1074,10 +1071,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                                 return null;
                             }
 
-                            if (context != null)
-                            {
-                                context.CtorDtorConversion = true;
-                            }
+                            _ = (context?.CtorDtorConversion = true);
 
                             return new ConversionOperatorType(type);
                         default:
@@ -1349,10 +1343,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
 
                 _position++;
 
-                if (context != null)
-                {
-                    context.CtorDtorConversion = true;
-                }
+                context?.CtorDtorConversion = true;
 
                 if (isInherited && ParseName(context) == null)
                 {
@@ -1372,10 +1363,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
 
                 _position++;
 
-                if (context != null)
-                {
-                    context.CtorDtorConversion = true;
-                }
+                _ = (context?.CtorDtorConversion = true);
 
                 return new CtorDtorNameType(prev, true);
             }
@@ -2083,33 +2071,42 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                         case 'e':
                             _position += 2;
                             return ParseBinaryExpression("<=");
+                        case 'i':
+                            _position += 2;
+                            BaseNode sourceName = ParseSourceName();
+                            if (sourceName == null)
+                            {
+                                return null;
+                            }
+
+                            return new LiteralOperator(sourceName);
                         case 's':
                             _position += 2;
-                            return ParseBinaryExpression("<<");
+                            return new NameType("operator<<");
                         case 'S':
                             _position += 2;
-                            return ParseBinaryExpression("<<=");
+                            return new NameType("operator<<=");
                         case 't':
                             _position += 2;
-                            return ParseBinaryExpression("<");
+                            return new NameType("operator<");
+                        default:
+                            return null;
                     }
-
-                    return null;
                 case 'm':
                     switch (Peek(1))
                     {
                         case 'i':
                             _position += 2;
-                            return ParseBinaryExpression("-");
+                            return new NameType("operator-");
                         case 'I':
                             _position += 2;
-                            return ParseBinaryExpression("-=");
+                            return new NameType("operator-=");
                         case 'l':
                             _position += 2;
-                            return ParseBinaryExpression("*");
+                            return new NameType("operator*");
                         case 'L':
                             _position += 2;
-                            return ParseBinaryExpression("*=");
+                            return new NameType("operator*=");
                         case 'm':
                             _position += 2;
                             if (ConsumeIf("_"))
@@ -2139,10 +2136,10 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                             return ParseBinaryExpression("!=");
                         case 'g':
                             _position += 2;
-                            return ParsePrefixExpression("-");
+                            return new NameType("operator-");
                         case 't':
                             _position += 2;
-                            return ParsePrefixExpression("!");
+                            return new NameType("operator!");
                         case 'x':
                             _position += 2;
                             expression = ParseExpression();
@@ -2178,8 +2175,8 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                         case 'm':
                             _position += 2;
                             return ParseBinaryExpression("->*");
-                        case 'l':
                         case 's':
+                        case 'l':
                             _position += 2;
                             return ParseBinaryExpression("+");
                         case 'L':
@@ -2201,22 +2198,10 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                             return new PostfixExpression(expression, "++");
                         case 't':
                             _position += 2;
-                            leftNode = ParseExpression();
-                            if (leftNode == null)
-                            {
-                                return null;
-                            }
-
-                            rightNode = ParseExpression();
-                            if (rightNode == null)
-                            {
-                                return null;
-                            }
-
-                            return new MemberExpression(leftNode, "->", rightNode);
+                            return new NameType("operator->");
+                        default:
+                            return null;
                     }
-
-                    return null;
                 case 'q':
                     if (Peek(1) == 'u')
                     {
@@ -3005,16 +2990,10 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
 
             BaseNode result = null;
             CvType cv = new(ParseCvQualifiers(), null);
-            if (context != null)
-            {
-                context.Cv = cv;
-            }
+            _ = (context?.Cv = cv);
 
             SimpleReferenceType Ref = ParseRefQualifiers();
-            if (context != null)
-            {
-                context.Ref = Ref;
-            }
+            context?.Ref = Ref;
 
             if (ConsumeIf("St"))
             {
@@ -3060,10 +3039,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                     }
 
                     result = new NameTypeWithTemplateArguments(result, templateArgument);
-                    if (context != null)
-                    {
-                        context.FinishWithTemplateArguments = true;
-                    }
+                    context?.FinishWithTemplateArguments = true;
 
                     _substitutionList.Add(result);
                     continue;
@@ -3256,10 +3232,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                     return null;
                 }
 
-                if (context != null)
-                {
-                    context.FinishWithTemplateArguments = true;
-                }
+                _ = (context?.FinishWithTemplateArguments = true);
 
                 return new NameTypeWithTemplateArguments(substitution, templateArguments);
             }
@@ -3279,10 +3252,7 @@ namespace Ryujinx.HLE.HOS.Diagnostics.Demangler
                     return null;
                 }
 
-                if (context != null)
-                {
-                    context.FinishWithTemplateArguments = true;
-                }
+                _ = (context?.FinishWithTemplateArguments = true);
 
                 return new NameTypeWithTemplateArguments(result, templateArguments);
             }
