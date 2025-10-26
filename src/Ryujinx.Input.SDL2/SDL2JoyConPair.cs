@@ -1,6 +1,4 @@
 using Ryujinx.Common.Configuration.Hid;
-using Ryujinx.Common.Configuration.Hid.Controller;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -105,7 +103,7 @@ namespace Ryujinx.Input.SDL2
 
         private static (int leftIndex, int rightIndex) DetectJoyConPair(List<string> gamepadsIds)
         {
-            var gamepadNames = gamepadsIds.Where(gamepadId => gamepadId != Id)
+            List<string> gamepadNames = gamepadsIds.Where(gamepadId => gamepadId != Id)
                 .Select((_, index) => SDL_GameControllerNameForIndex(index)).ToList();
             int leftIndex = gamepadNames.IndexOf(SDL2JoyCon.LeftName);
             int rightIndex = gamepadNames.IndexOf(SDL2JoyCon.RightName);

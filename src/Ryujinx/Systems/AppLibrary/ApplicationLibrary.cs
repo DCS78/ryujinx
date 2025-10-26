@@ -1,7 +1,6 @@
 using DynamicData;
 using DynamicData.Kernel;
 using Gommon;
-using LibHac;
 using LibHac.Common;
 using LibHac.Fs;
 using LibHac.Fs.Fsa;
@@ -318,9 +317,9 @@ namespace Ryujinx.Ava.Systems.AppLibrary
                 }
                 catch (HorizonResultException)
                 {
-                    foreach (DirectoryEntryEx entry in controlFs.EnumerateEntries("/", "*"))
+                    foreach (DirectoryEntryEx entry in controlFs.EnumerateEntries("/", "*", SearchOptions.Default))
                     {
-                        if (entry.Name == "control.nacp")
+                        if (entry.Name == "control.nacp" || entry.Type == DirectoryEntryType.Directory)
                         {
                             continue;
                         }
@@ -469,7 +468,7 @@ namespace Ryujinx.Ava.Systems.AppLibrary
 
                             Nca nca = new(_virtualFileSystem.KeySet, new FileStream(applicationPath, FileMode.Open, FileAccess.Read).AsStorage());
 
-                            if (!nca.IsProgram() || nca.IsPatch())
+                            if (!nca.IsProgram || nca.IsPatch)
                             {
                                 return false;
                             }
@@ -848,7 +847,7 @@ namespace Ryujinx.Ava.Systems.AppLibrary
 
             TimeSpan temporary = TimeSpan.Zero;
 
-            foreach (var installedApplication in Applications.Items)
+            foreach (ApplicationData installedApplication in Applications.Items)
             {
                 temporary += LoadAndSaveMetaData(installedApplication.IdString).TimePlayed;
             }

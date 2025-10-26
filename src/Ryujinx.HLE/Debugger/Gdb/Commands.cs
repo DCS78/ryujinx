@@ -1,166 +1,152 @@
 using Ryujinx.Common.Logging;
+using Ryujinx.Cpu;
+using Ryujinx.HLE.HOS.Kernel.Threading;
 using Ryujinx.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 
 namespace Ryujinx.HLE.Debugger.Gdb
 {
     class GdbCommands
     {
-        const int GdbRegisterCount64 = 68;
-        const int GdbRegisterCount32 = 66;
-
         public readonly Debugger Debugger;
 
-        private readonly TcpListener _listenerSocket;
-        private readonly Socket _clientSocket;
-        private readonly NetworkStream _readStream;
-        private readonly NetworkStream _writeStream;
-        
+        private GdbCommandProcessor _processor;
+
+        public GdbCommandProcessor Processor
+            => _processor ??= new GdbCommandProcessor(this);
+
+        internal readonly TcpListener ListenerSocket;
+        internal readonly Socket ClientSocket;
+        internal readonly NetworkStream ReadStream;
+        internal readonly NetworkStream WriteStream;
 
         public GdbCommands(TcpListener listenerSocket, Socket clientSocket, NetworkStream readStream,
             NetworkStream writeStream, Debugger debugger)
         {
-            _listenerSocket = listenerSocket;
-            _clientSocket = clientSocket;
-            _readStream = readStream;
-            _writeStream = writeStream;
+            ListenerSocket = listenerSocket;
+            ClientSocket = clientSocket;
+            ReadStream = readStream;
+            WriteStream = writeStream;
             Debugger = debugger;
         }
 
-        public void Reply(string cmd)
-        {
-            Logger.Debug?.Print(LogClass.GdbStub, $"Reply: {cmd}");
-            _writeStream.Write(Encoding.ASCII.GetBytes($"${cmd}#{Helpers.CalculateChecksum(cmd):x2}"));
-        }
-
-        public void ReplyOK() => Reply("OK");
-
-        public void ReplyError() => Reply("E01");
-
-        internal void CommandQuery()
+        internal void Query()
         {
             // GDB is performing initial contact. Stop everything.
             Debugger.DebugProcess.DebugStop();
-            Debugger.GThread = Debugger.CThread = Debugger.DebugProcess.GetThreadUids().First();
-            Reply($"T05thread:{Debugger.CThread:x};");
+            Debugger.GThreadId = Debugger.CThreadId = Debugger.DebugProcess.ThreadUids.First();
+            Processor.Reply($"T05thread:{Debugger.CThreadId:x};");
         }
 
-        internal void CommandInterrupt()
+        internal void Interrupt()
         {
             // GDB is requesting an interrupt. Stop everything.
             Debugger.DebugProcess.DebugStop();
-            if (Debugger.GThread == null || Debugger.GetThreads().All(x => x.ThreadUid != Debugger.GThread.Value))
+            if (Debugger.GThreadId == null || Debugger.GetThreads().All(x => x.ThreadUid != Debugger.GThreadId.Value))
             {
-                Debugger.GThread = Debugger.CThread = Debugger.DebugProcess.GetThreadUids().First();
+                Debugger.GThreadId = Debugger.CThreadId = Debugger.DebugProcess.ThreadUids.First();
             }
 
-            Reply($"T02thread:{Debugger.GThread:x};");
+            Processor.Reply($"T02thread:{Debugger.GThreadId:x};");
         }
 
-        internal void CommandContinue(ulong? newPc)
+        internal void Continue(ulong? newPc)
         {
             if (newPc.HasValue)
             {
-                if (Debugger.CThread == null)
+                if (Debugger.CThreadId == null)
                 {
-                    ReplyError();
+                    Processor.ReplyError();
                     return;
                 }
 
-                Debugger.DebugProcess.GetThread(Debugger.CThread.Value).Context.DebugPc = newPc.Value;
+                Debugger.CThread.Context.DebugPc = newPc.Value;
             }
 
             Debugger.DebugProcess.DebugContinue();
+            Processor.ReplyOK();
         }
 
-        internal void CommandDetach()
+        internal void Detach()
         {
             Debugger.BreakpointManager.ClearAll();
-            CommandContinue(null);
+            Continue(null); // Continue() will call ReplyError/ReplyOK for us.
         }
 
-        internal void CommandReadRegisters()
+        internal void ReadRegisters()
         {
-            if (Debugger.GThread == null)
+            if (Debugger.GThreadId == null)
             {
-                ReplyError();
+                Processor.ReplyError();
                 return;
             }
 
-            var ctx = Debugger.DebugProcess.GetThread(Debugger.GThread.Value).Context;
-            string registers = "";
-            if (Debugger.IsProcessAarch32)
+            IExecutionContext ctx = Debugger.GThread.Context;
+            string registers = string.Empty;
+            if (Debugger.IsProcess32Bit)
             {
-                for (int i = 0; i < GdbRegisterCount32; i++)
+                for (int i = 0; i < GdbRegisters.Count32; i++)
                 {
-                    registers += GdbRegisters.Read32(ctx, i);
+                    registers += ctx.ReadRegister32(i);
                 }
             }
             else
             {
-                for (int i = 0; i < GdbRegisterCount64; i++)
+                for (int i = 0; i < GdbRegisters.Count64; i++)
                 {
-                    registers += GdbRegisters.Read64(ctx, i);
+                    registers += ctx.ReadRegister64(i);
                 }
             }
 
-            Reply(registers);
+            Processor.Reply(registers);
         }
 
-        internal void CommandWriteRegisters(StringStream ss)
+        internal void WriteRegisters(StringStream ss)
         {
-            if (Debugger.GThread == null)
+            if (Debugger.GThreadId == null)
             {
-                ReplyError();
+                Processor.ReplyError();
                 return;
             }
 
-            var ctx = Debugger.DebugProcess.GetThread(Debugger.GThread.Value).Context;
-            if (Debugger.IsProcessAarch32)
+            IExecutionContext ctx = Debugger.GThread.Context;
+            if (Debugger.IsProcess32Bit)
             {
-                for (int i = 0; i < GdbRegisterCount32; i++)
+                for (int i = 0; i < GdbRegisters.Count32; i++)
                 {
-                    if (!GdbRegisters.Write32(ctx, i, ss))
+                    if (!ctx.WriteRegister32(i, ss))
                     {
-                        ReplyError();
+                        Processor.ReplyError();
                         return;
                     }
                 }
             }
             else
             {
-                for (int i = 0; i < GdbRegisterCount64; i++)
+                for (int i = 0; i < GdbRegisters.Count64; i++)
                 {
-                    if (!GdbRegisters.Write64(ctx, i, ss))
+                    if (!ctx.WriteRegister64(i, ss))
                     {
-                        ReplyError();
+                        Processor.ReplyError();
                         return;
                     }
                 }
             }
 
-            if (ss.IsEmpty())
-            {
-                ReplyOK();
-            }
-            else
-            {
-                ReplyError();
-            }
+            Processor.Reply(ss.IsEmpty);
         }
 
-        internal void CommandSetThread(char op, ulong? threadId)
+        internal void SetThread(char op, ulong? threadId)
         {
             if (threadId is 0 or null)
             {
-                var threads = Debugger.GetThreads();
+                KThread[] threads = Debugger.GetThreads();
                 if (threads.Length == 0)
                 {
-                    ReplyError();
+                    Processor.ReplyError();
                     return;
                 }
 
@@ -169,48 +155,48 @@ namespace Ryujinx.HLE.Debugger.Gdb
 
             if (Debugger.DebugProcess.GetThread(threadId.Value) == null)
             {
-                ReplyError();
+                Processor.ReplyError();
                 return;
             }
 
             switch (op)
             {
                 case 'c':
-                    Debugger.CThread = threadId;
-                    ReplyOK();
+                    Debugger.CThreadId = threadId;
+                    Processor.ReplyOK();
                     return;
                 case 'g':
-                    Debugger.GThread = threadId;
-                    ReplyOK();
+                    Debugger.GThreadId = threadId;
+                    Processor.ReplyOK();
                     return;
                 default:
-                    ReplyError();
+                    Processor.ReplyError();
                     return;
             }
         }
 
-        internal void CommandReadMemory(ulong addr, ulong len)
+        internal void ReadMemory(ulong addr, ulong len)
         {
             try
             {
-                var data = new byte[len];
+                byte[] data = new byte[len];
                 Debugger.DebugProcess.CpuMemory.Read(addr, data);
-                Reply(Helpers.ToHex(data));
+                Processor.ReplyHex(data);
             }
             catch (InvalidMemoryRegionException)
             {
                 // InvalidAccessHandler will show an error message, we log it again to tell user the error is from GDB (which can be ignored)
                 // TODO: Do not let InvalidAccessHandler show the error message
                 Logger.Notice.Print(LogClass.GdbStub, $"GDB failed to read memory at 0x{addr:X16}");
-                ReplyError();
+                Processor.ReplyError();
             }
         }
 
-        internal void CommandWriteMemory(ulong addr, ulong len, StringStream ss)
+        internal void WriteMemory(ulong addr, ulong len, StringStream ss)
         {
             try
             {
-                var data = new byte[len];
+                byte[] data = new byte[len];
                 for (ulong i = 0; i < len; i++)
                 {
                     data[i] = (byte)ss.ReadLengthAsHex(2);
@@ -218,92 +204,50 @@ namespace Ryujinx.HLE.Debugger.Gdb
 
                 Debugger.DebugProcess.CpuMemory.Write(addr, data);
                 Debugger.DebugProcess.InvalidateCacheRegion(addr, len);
-                ReplyOK();
+                Processor.ReplyOK();
             }
             catch (InvalidMemoryRegionException)
             {
-                ReplyError();
+                Processor.ReplyError();
             }
         }
 
-        internal void CommandReadRegister(int gdbRegId)
+        internal void ReadRegister(int gdbRegId)
         {
-            if (Debugger.GThread == null)
+            if (Debugger.GThreadId == null)
             {
-                ReplyError();
+                Processor.ReplyError();
                 return;
             }
 
-            var ctx = Debugger.DebugProcess.GetThread(Debugger.GThread.Value).Context;
-            string result;
-            if (Debugger.IsProcessAarch32)
-            {
-                result = GdbRegisters.Read32(ctx, gdbRegId);
-                if (result != null)
-                {
-                    Reply(result);
-                }
-                else
-                {
-                    ReplyError();
-                }
-            }
-            else
-            {
-                result = GdbRegisters.Read64(ctx, gdbRegId);
-                if (result != null)
-                {
-                    Reply(result);
-                }
-                else
-                {
-                    ReplyError();
-                }
-            }
+            IExecutionContext ctx = Debugger.GThread.Context;
+            string result = Debugger.ReadRegister(ctx, gdbRegId);
+
+            Processor.Reply(result != null, result);
         }
 
-        internal void CommandWriteRegister(int gdbRegId, StringStream ss)
+        internal void WriteRegister(int gdbRegId, StringStream ss)
         {
-            if (Debugger.GThread == null)
+            if (Debugger.GThreadId == null)
             {
-                ReplyError();
+                Processor.ReplyError();
                 return;
             }
 
-            var ctx = Debugger.DebugProcess.GetThread(Debugger.GThread.Value).Context;
-            if (Debugger.IsProcessAarch32)
-            {
-                if (GdbRegisters.Write32(ctx, gdbRegId, ss) && ss.IsEmpty())
-                {
-                    ReplyOK();
-                }
-                else
-                {
-                    ReplyError();
-                }
-            }
-            else
-            {
-                if (GdbRegisters.Write64(ctx, gdbRegId, ss) && ss.IsEmpty())
-                {
-                    ReplyOK();
-                }
-                else
-                {
-                    ReplyError();
-                }
-            }
+            Processor.Reply(
+                success: Debugger.WriteRegister(Debugger.GThread.Context, gdbRegId, ss) && ss.IsEmpty
+            );
         }
 
-        internal void CommandStep(ulong? newPc)
+        internal void Step(ulong? newPc)
         {
-            if (Debugger.CThread == null)
+            if (Debugger.CThreadId == null)
             {
-                ReplyError();
+                Processor.ReplyError();
                 return;
             }
 
-            var thread = Debugger.DebugProcess.GetThread(Debugger.CThread.Value);
+            KThread thread = Debugger.CThread;
 
             if (newPc.HasValue)
             {
@@ -312,24 +256,24 @@ namespace Ryujinx.HLE.Debugger.Gdb
 
             if (!Debugger.DebugProcess.DebugStep(thread))
             {
-                ReplyError();
+                Processor.ReplyError();
             }
             else
             {
-                Debugger.GThread = Debugger.CThread = thread.ThreadUid;
-                Reply($"T05thread:{thread.ThreadUid:x};");
+                Debugger.GThreadId = Debugger.CThreadId = thread.ThreadUid;
+                Processor.Reply($"T05thread:{thread.ThreadUid:x};");
             }
         }
 
-        internal void CommandIsAlive(ulong? threadId)
+        internal void IsAlive(ulong? threadId)
         {
             if (Debugger.GetThreads().Any(x => x.ThreadUid == threadId))
             {
-                ReplyOK();
+                Processor.ReplyOK();
             }
             else
             {
-                Reply("E00");
+                Processor.Reply("E00");
             }
         }
 
@@ -341,14 +285,14 @@ namespace Ryujinx.HLE.Debugger.Gdb
             Step
         }
 
-        record VContPendingAction(VContAction Action, ushort? Signal = null);
+        record VContPendingAction(VContAction Action/*, ushort? Signal = null*/);
 
-        internal void HandleVContCommand(StringStream ss)
+        internal void VCont(StringStream ss)
         {
             string[] rawActions = ss.ReadRemaining().Split(';', StringSplitOptions.RemoveEmptyEntries);
 
-            var threadActionMap = new Dictionary<ulong, VContPendingAction>();
-            foreach (var thread in Debugger.GetThreads())
+            Dictionary<ulong, VContPendingAction> threadActionMap = new();
+            foreach (KThread thread in Debugger.GetThreads())
             {
                 threadActionMap[thread.ThreadUid] = new VContPendingAction(VContAction.None);
             }
@@ -358,8 +302,8 @@ namespace Ryujinx.HLE.Debugger.Gdb
             // For each inferior thread, the *leftmost* action with a matching thread-id is applied.
             for (int i = rawActions.Length - 1; i >= 0; i--)
             {
-                var rawAction = rawActions[i];
-                var stream = new StringStream(rawAction);
+                string rawAction = rawActions[i];
+                StringStream stream = new(rawAction);
 
                 char cmd = stream.ReadChar();
                 VContAction action = cmd switch
@@ -370,31 +314,31 @@ namespace Ryujinx.HLE.Debugger.Gdb
                     _ => VContAction.None
                 };
 
-                // Note: We don't support signals yet.
-                ushort? signal = null;
+                // TODO: Note: We don't support signals yet.
+                //ushort? signal = null;
                 if (cmd is 'C' or 'S')
                 {
-                    signal = (ushort)stream.ReadLengthAsHex(2);
+                    /*signal = (ushort)*/stream.ReadLengthAsHex(2);
+                    // we still call the read length method even if we have signals commented
+                    // since that method advances the underlying string position
                 }
 
-                ulong? threadId = null;
-                if (stream.ConsumePrefix(":"))
-                {
-                    threadId = stream.ReadRemainingAsThreadUid();
-                }
+                ulong? threadId = stream.ConsumePrefix(":") 
+                    ? stream.ReadRemainingAsThreadUid()
+                    : null;
 
                 if (threadId.HasValue)
                 {
                     if (threadActionMap.ContainsKey(threadId.Value))
                     {
-                        threadActionMap[threadId.Value] = new VContPendingAction(action, signal);
+                        threadActionMap[threadId.Value] = new VContPendingAction(action /*, signal*/);
                     }
                 }
                 else
                 {
-                    foreach (var row in threadActionMap.ToList())
+                    foreach (ulong thread in threadActionMap.Keys)
                     {
-                        threadActionMap[row.Key] = new VContPendingAction(action, signal);
+                        threadActionMap[thread] = new VContPendingAction(action /*, signal*/);
                     }
 
                     if (action == VContAction.Continue)
@@ -411,11 +355,11 @@ namespace Ryujinx.HLE.Debugger.Gdb
 
             bool hasError = false;
 
-            foreach (var (threadUid, action) in threadActionMap)
+            foreach ((ulong threadUid, VContPendingAction action) in threadActionMap)
             {
                 if (action.Action == VContAction.Step)
                 {
-                    var thread = Debugger.DebugProcess.GetThread(threadUid);
+                    KThread thread = Debugger.DebugProcess.GetThread(threadUid);
                     if (!Debugger.DebugProcess.DebugStep(thread))
                     {
                         hasError = true;
@@ -432,7 +376,7 @@ namespace Ryujinx.HLE.Debugger.Gdb
             }
             else if (defaultAction == VContAction.None)
             {
-                foreach (var (threadUid, action) in threadActionMap)
+                foreach ((ulong threadUid, VContPendingAction action) in threadActionMap)
                 {
                     if (action.Action == VContAction.Continue)
                     {
@@ -441,48 +385,33 @@ namespace Ryujinx.HLE.Debugger.Gdb
                 }
             }
 
-            if (hasError)
-            {
-                ReplyError();
-            }
-            else
-            {
-                ReplyOK();
-            }
+            Processor.Reply(!hasError);
 
-            foreach (var (threadUid, action) in threadActionMap)
+            foreach ((ulong threadUid, VContPendingAction action) in threadActionMap)
             {
                 if (action.Action == VContAction.Step)
                 {
-                    Debugger.GThread = Debugger.CThread = threadUid;
-                    Reply($"T05thread:{threadUid:x};");
+                    Debugger.GThreadId = Debugger.CThreadId = threadUid;
+                    Processor.Reply($"T05thread:{threadUid:x};");
                 }
             }
         }
-        
-        internal void HandleQRcmdCommand(string hexCommand)
+
+        internal void Q_Rcmd(string hexCommand)
         {
             try
             {
                 string command = Helpers.FromHex(hexCommand);
                 Logger.Debug?.Print(LogClass.GdbStub, $"Received Rcmd: {command}");
 
-                string response = command.Trim().ToLowerInvariant() switch
-                {
-                    "help" => "backtrace\nbt\nregisters\nreg\nget info\nminidump\n",
-                    "get info" => Debugger.GetProcessInfo(),
-                    "backtrace" or "bt" => Debugger.GetStackTrace(),
-                    "registers" or "reg" => Debugger.GetRegisters(),
-                    "minidump" => Debugger.GetMinidump(),
-                    _ => $"Unknown command: {command}\n"
-                };
+                Func<Debugger, string> rcmd = Debugger.FindRcmdDelegate(command);
 
-                Reply(Helpers.ToHex(response));
+                Processor.ReplyHex(rcmd(Debugger));
             }
             catch (Exception e)
             {
                 Logger.Error?.Print(LogClass.GdbStub, $"Error processing Rcmd: {e.Message}");
-                ReplyError();
+                Processor.ReplyError();
             }
         }
     }

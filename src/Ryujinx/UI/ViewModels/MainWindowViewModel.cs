@@ -176,7 +176,8 @@ namespace Ryujinx.Ava.UI.ViewModels
                 .Sort(GetComparer())
                 .OnItemAdded(_ => OnPropertyChanged(nameof(AppsObservableList)))
                 .OnItemRemoved(_ => OnPropertyChanged(nameof(AppsObservableList)))
-                .Bind(out _appsObservableList);
+                .Bind(out _appsObservableList)
+                .Subscribe();
 
             _rendererWaitEvent = new AutoResetEvent(false);
 
@@ -348,7 +349,7 @@ namespace Ryujinx.Ava.UI.ViewModels
         {
             if (ts.HasValue)
             {
-                var formattedPlayTime = ValueFormatUtils.FormatTimeSpan(ts.Value);
+                string formattedPlayTime = ValueFormatUtils.FormatTimeSpan(ts.Value);
                 LocaleManager.Associate(LocaleKeys.GameListLabelTotalTimePlayed, formattedPlayTime);
                 ShowTotalTimePlayed = formattedPlayTime != string.Empty;
                 return;
@@ -827,10 +828,10 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         private void RefreshGrid()
         {
-            var appsList = Applications.ToObservableChangeSet()
+            IObservableList<ApplicationData> appsList = Applications.ToObservableChangeSet()
                 .Filter(Filter)
                 .Sort(GetComparer())
-                .Bind(out var apps)
+                .Bind(out ReadOnlyObservableCollection<ApplicationData> apps)
                 .AsObservableList();
 
             AppsObservableList = apps;
@@ -1621,6 +1622,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 #if RELEASE
             await PerformanceCheck();
 #endif
+            PreLaunchNotification();
 
             Logger.RestartTime();
 
@@ -1851,6 +1853,48 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                     SaveConfig();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Show non-intrusive notifications for options that may cause side effects.
+        /// </summary>
+        public static void PreLaunchNotification()
+        {
+            if (ConfigurationState.Instance.Debug.DebuggerSuspendOnStart)
+            {
+                NotificationHelper.ShowInformation(
+                    LocaleManager.Instance[LocaleKeys.NotificationLaunchCheckSuspendOnStartTitle],
+                    LocaleManager.Instance[LocaleKeys.NotificationLaunchCheckSuspendOnStartMessage]);
+            }
+
+            if (ConfigurationState.Instance.Debug.EnableGdbStub)
+            {
+                NotificationHelper.ShowInformation(
+                    LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.NotificationLaunchCheckGdbStubTitle, ConfigurationState.Instance.Debug.GdbStubPort.Value),
+                    LocaleManager.Instance[LocaleKeys.NotificationLaunchCheckGdbStubMessage]);
+            }
+
+            if (ConfigurationState.Instance.System.DramSize.Value != MemoryConfiguration.MemoryConfiguration4GiB)
+            {
+                var memoryConfigurationLocaleKey = ConfigurationState.Instance.System.DramSize.Value switch
+                {
+                    MemoryConfiguration.MemoryConfiguration4GiB or
+                    MemoryConfiguration.MemoryConfiguration4GiBAppletDev or
+                    MemoryConfiguration.MemoryConfiguration4GiBSystemDev => LocaleKeys.SettingsTabSystemDramSize4GiB,
+                    MemoryConfiguration.MemoryConfiguration6GiB or
+                    MemoryConfiguration.MemoryConfiguration6GiBAppletDev => LocaleKeys.SettingsTabSystemDramSize6GiB,
+                    MemoryConfiguration.MemoryConfiguration8GiB => LocaleKeys.SettingsTabSystemDramSize8GiB,
+                    MemoryConfiguration.MemoryConfiguration12GiB => LocaleKeys.SettingsTabSystemDramSize12GiB,
+                    _ => LocaleKeys.SettingsTabSystemDramSize4GiB,
+                };
+
+                NotificationHelper.ShowWarning(
+                    LocaleManager.Instance.UpdateAndGetDynamicValue(
+                        LocaleKeys.NotificationLaunchCheckDramSizeTitle, 
+                        LocaleManager.Instance[memoryConfigurationLocaleKey]
+                        ),
+                    LocaleManager.Instance[LocaleKeys.NotificationLaunchCheckDramSizeMessage]);
             }
         }
 
@@ -2305,24 +2349,23 @@ namespace Ryujinx.Ava.UI.ViewModels
             Commands.CreateConditional<MainWindowViewModel>(vm => vm?.SelectedApplication != null,
                 async viewModel =>
                 {
-                    IReadOnlyList<IStorageFolder> result = await viewModel.StorageProvider.OpenFolderPickerAsync(
+                    Optional<IStorageFolder> resOpt = await viewModel.StorageProvider.OpenSingleFolderPickerAsync(
                         new FolderPickerOpenOptions
                         {
-                            Title = LocaleManager.Instance[LocaleKeys.FolderDialogExtractTitle],
-                            AllowMultiple = false,
+                            Title = LocaleManager.Instance[LocaleKeys.FolderDialogExtractTitle]
                         });
 
-                    if (result.Count == 0)
+                    if (!resOpt.TryGet(out IStorageFolder result))
                         return;
 
                     ApplicationHelper.ExtractSection(
-                        result[0].Path.LocalPath,
+                        result.Path.LocalPath,
                         NcaSectionType.Logo,
                         viewModel.SelectedApplication.Path,
                         viewModel.SelectedApplication.Name);
 
                     IStorageFile iconFile =
-                        await result[0].CreateFileAsync($"{viewModel.SelectedApplication.IdString}.png");
+                        await result.CreateFileAsync($"{viewModel.SelectedApplication.IdString}.png");
                     await using Stream fileStream = await iconFile.OpenWriteAsync();
 
                     using SKBitmap bitmap = SKBitmap.Decode(viewModel.SelectedApplication.Icon)

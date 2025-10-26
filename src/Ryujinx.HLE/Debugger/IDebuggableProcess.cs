@@ -6,16 +6,17 @@ namespace Ryujinx.HLE.Debugger
 {
     internal interface IDebuggableProcess
     {
+        IVirtualMemoryManager CpuMemory { get; }
+        ulong[] ThreadUids { get; }
+        DebugState DebugState { get; }
+
         void DebugStop();
         void DebugContinue();
         void DebugContinue(KThread thread);
         bool DebugStep(KThread thread);
         KThread GetThread(ulong threadUid);
-        DebugState GetDebugState();
         bool IsThreadPaused(KThread thread);
-        ulong[] GetThreadUids();
         public void DebugInterruptHandler(IExecutionContext ctx);
-        IVirtualMemoryManager CpuMemory { get; }
         void InvalidateCacheRegion(ulong address, ulong size);
     }
 }

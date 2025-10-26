@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Threading;
 using DiscordRPC;
-using Gommon;
 using LibHac.Common;
 using LibHac.Ns;
 using Ryujinx.Audio.Backends.Dummy;
@@ -199,8 +198,6 @@ namespace Ryujinx.Ava.Systems
 
             ConfigurationState.Instance.System.IgnoreMissingServices.Event += UpdateIgnoreMissingServicesState;
             ConfigurationState.Instance.Graphics.AspectRatio.Event += UpdateAspectRatioState;
-            ConfigurationState.Instance.System.EnableDockedMode.Event += UpdateDockedModeState;
-            ConfigurationState.Instance.System.AudioVolume.Event += UpdateAudioVolumeState;
             ConfigurationState.Instance.System.EnableDockedMode.Event += UpdateDockedModeState;
             ConfigurationState.Instance.System.AudioVolume.Event += UpdateAudioVolumeState;
             ConfigurationState.Instance.Graphics.AntiAliasing.Event += UpdateAntiAliasing;
@@ -482,10 +479,7 @@ namespace Ryujinx.Ava.Systems
 
             Dispatcher.UIThread.InvokeAsync(() =>
             {
-                if (ConfigurationState.Instance.ShowOldUI)
-                {
-                    _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
-                }
+                _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
             });
 
             _viewModel.SetUiProgressHandlers(Device);
@@ -905,10 +899,7 @@ namespace Ryujinx.Ava.Systems
 
             _viewModel.IsPaused = false;
             _playTimer.Start();
-            if (ConfigurationState.Instance.ShowOldUI)
-            {
-                _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
-            }
+            _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI);
             Logger.Info?.Print(LogClass.Emulation, "Emulation was resumed");
         }
 
@@ -918,10 +909,7 @@ namespace Ryujinx.Ava.Systems
 
             _viewModel.IsPaused = true;
             _playTimer.Stop();
-            if (ConfigurationState.Instance.ShowOldUI)
-            {
-                _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI, LocaleManager.Instance[LocaleKeys.Paused]);
-            }
+            _viewModel.Title = TitleHelper.ActiveApplicationTitle(Device?.Processes.ActiveApplication, Program.Version, !ConfigurationState.Instance.ShowOldUI, LocaleManager.Instance[LocaleKeys.Paused]);
             Logger.Info?.Print(LogClass.Emulation, "Emulation was paused");
         }
 

@@ -6,7 +6,6 @@ using Ryujinx.Cpu;
 using Ryujinx.HLE.HOS.SystemState;
 using Ryujinx.HLE.Loaders.Processes.Extensions;
 using Ryujinx.Horizon.Common;
-using System;
 
 namespace Ryujinx.HLE.Loaders.Processes
 {
@@ -53,7 +52,7 @@ namespace Ryujinx.HLE.Loaders.Processes
 
             if (metaLoader is not null)
             {
-                ulong programId = metaLoader.GetProgramId();
+                ulong programId = metaLoader.ProgramId;
 
                 Name = ApplicationControlProperties.Title[(int)titleLanguage].NameString.ToString();
 
@@ -71,7 +70,7 @@ namespace Ryujinx.HLE.Loaders.Processes
                 DisplayVersion = ApplicationControlProperties.DisplayVersionString.ToString();
                 ProgramId = programId;
                 ProgramIdText = $"{programId:x16}";
-                Is64Bit = metaLoader.IsProgram64Bit();
+                Is64Bit = metaLoader.IsProgram64Bit;
             }
 
             DiskCacheEnabled = diskCacheEnabled;

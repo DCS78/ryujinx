@@ -1,6 +1,5 @@
 using ARMeilleure.State;
 using System;
-using System.Threading;
 
 namespace Ryujinx.Cpu
 {
@@ -41,6 +40,11 @@ namespace Ryujinx.Cpu
         /// Floating-point Status Register.
         /// </summary>
         uint Fpsr { get; set; }
+
+        /// <summary>
+        /// Floating-point Status and Control Register.
+        /// </summary>
+        uint Fpscr => Fpsr | Fpcr;
 
         /// <summary>
         /// Indicates whenever the CPU is running 64-bit (AArch64 mode) or 32-bit (AArch32 mode) code.
