@@ -295,7 +295,7 @@
     {
       "ID": "MenuBarFileOpenFromFile",
       "Translations": {
-       "ar_SA": "_تحميل التطبيق...",
+        "ar_SA": "_تحميل التطبيق...",
         "de_DE": "_Anwendung laden...",
         "el_GR": "_Φόρτωση εφαρμογής...",
         "en_US": "_Load Application...",
@@ -6465,7 +6465,6 @@
         "uk_UA": "Я хочу скинути налаштування.",
         "zh_CN": "我要重置我的设置。",
         "zh_TW": "我想重設我的設定。"
-
       }
     },
     {
@@ -13716,6 +13715,56 @@
         "uk_UA": "Увага",
         "zh_CN": "警告",
         "zh_TW": "警告"
+      }
+    },
+    {
+      "ID": "DialogDeleteAllCaches",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "You are about to clear all caches for all games.\n\nAre you sure you want to proceed?",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
+      }
+    },
+    {
+      "ID": "DialogDeleteAllCachesErrorMessage",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Failed to purge some caches, check log file.",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
       }
     },
     {
@@ -24216,6 +24265,31 @@
         "uk_UA": "",
         "zh_CN": "在执行首条指令前挂起应用程序,这样就可以从最早的点开始调试。",
         "zh_TW": "在執行首項指令前暫停應用程式，以便從最早的點開始除錯。"
+      }
+    },
+    {
+      "ID": "SettingsTabDebugPurgeAllCaches",
+      "Translations": {
+        "ar_SA": "",
+        "de_DE": "",
+        "el_GR": "",
+        "en_US": "Purge All Caches",
+        "es_ES": "",
+        "fr_FR": "",
+        "he_IL": "",
+        "it_IT": "",
+        "ja_JP": "",
+        "ko_KR": "",
+        "no_NO": "",
+        "pl_PL": "",
+        "pt_BR": "",
+        "ru_RU": "",
+        "sv_SE": "",
+        "th_TH": "",
+        "tr_TR": "",
+        "uk_UA": "",
+        "zh_CN": "",
+        "zh_TW": ""
       }
     },
     {
