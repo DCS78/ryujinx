@@ -106,7 +106,7 @@
                                                 </StackPanel>
                                             </ToolTip.Tip>
                                             <TextBlock
-                                                Margin="1.5"
+                                                Padding="1.5"
                                                 Tag="{Binding IdString}"
                                                 Text="{Binding LocalizedStatus}"
                                                 Foreground="{Binding PlayabilityStatus, Converter={x:Static helpers:PlayabilityStatusConverter.Shared}}"
