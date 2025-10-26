@@ -11,25 +11,10 @@ namespace Ryujinx.Common.SystemInterop
         [return: MarshalAs(UnmanagedType.Bool)]
         private static partial bool SetProcessDPIAware();
 
-        private const string X11LibraryName = "libX11.so.6";
-
-        [LibraryImport(X11LibraryName)]
-        private static partial nint XOpenDisplay([MarshalAs(UnmanagedType.LPStr)] string display);
-
-        [LibraryImport(X11LibraryName)]
-        private static partial nint XGetDefault(nint display, [MarshalAs(UnmanagedType.LPStr)] string program, [MarshalAs(UnmanagedType.LPStr)] string option);
-
-        [LibraryImport(X11LibraryName)]
-        private static partial int XDisplayWidth(nint display, int screenNumber);
-
-        [LibraryImport(X11LibraryName)]
-        private static partial int XDisplayWidthMM(nint display, int screenNumber);
-
-        [LibraryImport(X11LibraryName)]
-        private static partial int XCloseDisplay(nint display);
-
         private const double StandardDpiScale = 96.0;
-        private const double MaxScaleFactor = 1.25;
+        private const double MaxScaleFactor = 3.0;
+
+        private static X11Helper.XSettingsListener xSettingsHelper = null;
 
         /// <summary>
         /// Marks the application as DPI-Aware when running on the Windows operating system.
@@ -43,7 +28,7 @@ namespace Ryujinx.Common.SystemInterop
             }
         }
 
-        public static double GetActualScaleFactor()
+        public static void ConfigureDPIScaling(WindowingSystemType windowingSystem)
         {
             double userDpiScale = 96.0;
 
@@ -55,27 +40,50 @@ namespace Ryujinx.Common.SystemInterop
                 }
                 else if (OperatingSystem.IsLinux())
                 {
-                    string xdgSessionType = Environment.GetEnvironmentVariable("XDG_SESSION_TYPE")?.ToLower();
-
-                    if (xdgSessionType is null or "x11")
+                    if (windowingSystem == WindowingSystemType.X11)
                     {
-                        nint display = XOpenDisplay(null);
-                        string dpiString = Marshal.PtrToStringAnsi(XGetDefault(display, "Xft", "dpi"));
-                        if (dpiString == null || !double.TryParse(dpiString, NumberStyles.Any, CultureInfo.InvariantCulture, out userDpiScale))
+                        var avaScaleFactor = Environment.GetEnvironmentVariable("AVALONIA_GLOBAL_SCALE_FACTOR");
+                        if (avaScaleFactor is string avaScaleStr &&
+                            double.TryParse(avaScaleStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double avaScale) &&
+                            avaScale > 0)
                         {
-                            userDpiScale = XDisplayWidth(display, 0) * 25.4 / XDisplayWidthMM(display, 0);
+                            // userDpiScale = avaScale * 96.0; // TODO: avalonia uses logical size?
+                            return userDpiScale;
                         }
 
-                        _ = XCloseDisplay(display);
-                    }
-                    else if (xdgSessionType == "wayland")
-                    {
-                        // TODO
-                        Logger.Warning?.Print(LogClass.Application, "Couldn't determine monitor DPI: Wayland not yet supported");
-                    }
-                    else
-                    {
-                        Logger.Warning?.Print(LogClass.Application, $"Couldn't determine monitor DPI: Unrecognised XDG_SESSION_TYPE: {xdgSessionType}");
+                        if (xSettingsHelper == null)
+                        {
+                            var display = X11Helper.XDisplay.Open(null);
+                            xSettingsHelper = new X11Helper.XSettingsListener(display);
+                        }
+
+                        xSettingsHelper.CurrentSettings.TryGetValue("Gdk/UnscaledDPI", out var gdkUnscaledDPI);
+                        xSettingsHelper.CurrentSettings.TryGetValue("Gdk/WindowScalingFactor", out var gdkWindowScalingFactor);
+                        xSettingsHelper.CurrentSettings.TryGetValue("Xft/DPI", out var xftDpiSetting);
+
+                        double scaleFactor = 1.0;
+
+                        if (gdkUnscaledDPI?.Type == X11Helper.XSettingType.Integer && gdkWindowScalingFactor?.Type == X11Helper.XSettingType.Integer)
+                        {
+                            var unscaledDPI = (int)gdkUnscaledDPI.Value / (96d * 1024);
+                            var windowScalingFactor = (double)(int)gdkWindowScalingFactor.Value;
+
+                            scaleFactor = unscaledDPI * windowScalingFactor;
+                        }
+                        else
+                        {
+                            var display = xSettingsHelper.Display;
+                            string dpiString = Marshal.PtrToStringAnsi(display.GetDefault("Xft", "dpi"));
+                            if (dpiString == null || !double.TryParse(dpiString, NumberStyles.Any, CultureInfo.InvariantCulture, out userDpiScale))
+                            {
+                                userDpiScale = display.GetWidth(0) * 25.4 / display.GetWidthMM(0);
+                            }
+                        }
+
+                        scaleFactor = Math.Max(scaleFactor, 1.0);
+                        // userDpiScale = 96.0 * scaleFactor; // TODO: avalonia uses logical size?
+
+                        Environment.SetEnvironmentVariable("AVALONIA_GLOBAL_SCALE_FACTOR", scaleFactor.ToString(CultureInfo.InvariantCulture));
                     }
                 }
             }
@@ -83,15 +91,6 @@ namespace Ryujinx.Common.SystemInterop
             {
                 Logger.Warning?.Print(LogClass.Application, $"Couldn't determine monitor DPI: {e.Message}");
             }
-
-            return userDpiScale;
-        }
-
-        public static double GetWindowScaleFactor()
-        {
-            double userDpiScale = GetActualScaleFactor();
-
-            return Math.Min(userDpiScale / StandardDpiScale, MaxScaleFactor);
         }
     }
 }
