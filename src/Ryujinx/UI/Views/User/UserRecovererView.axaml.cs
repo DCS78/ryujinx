@@ -27,6 +27,7 @@ namespace Ryujinx.Ava.UI.Views.User
                 switch (arg.NavigationMode)
                 {
                     case NavigationMode.New:
+                    case NavigationMode.Back:
                         NavigationDialogHost parent = (NavigationDialogHost)arg.Parameter;
 
                         _parent = parent;
@@ -41,11 +42,6 @@ namespace Ryujinx.Ava.UI.Views.User
         private void GoBack(object sender, RoutedEventArgs e)
         {
             _parent?.GoBack();
-        }
-
-        private void Recover(object sender, RoutedEventArgs e)
-        {
-            _parent?.RecoverLostAccounts();
         }
     }
 }

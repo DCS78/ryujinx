@@ -15,7 +15,7 @@
     <Design.DataContext>
         <viewModles:UserProfileImageSelectorViewModel />
     </Design.DataContext>
-    <Grid
+    <Grid Margin="10"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Center" RowDefinitions="Auto,70,Auto">
         <TextBlock

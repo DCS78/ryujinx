@@ -18,7 +18,7 @@
         <viewModels:UserFirmwareAvatarSelectorViewModel />
     </Design.DataContext>
     <Grid
-        Margin="0"
+        Margin="10"
         HorizontalAlignment="Stretch"
         VerticalAlignment="Stretch" RowDefinitions="Auto,*,Auto,Auto">
         <ListBox
@@ -62,12 +62,12 @@
             Grid.Row="3"
             Orientation="Horizontal"
             Spacing="10"
-            Margin="0 24 0 0"
+            Margin="0,30,0,0"
             HorizontalAlignment="Left">
             <Button
                 Width="50"
                 MinWidth="50"
-                Height="35"
+                Height="37"
                 Click="GoBack">
                 <ui:SymbolIcon Symbol="Back" />
             </Button>
@@ -76,7 +76,7 @@
             Grid.Row="3"
             Orientation="Horizontal"
             Spacing="10"
-            Margin="0 24 0 0"
+            Margin="0,30,0,0"
             HorizontalAlignment="Right">
             <ui:ColorPickerButton
                 FlyoutPlacement="Top"
@@ -96,9 +96,10 @@
             </ui:ColorPickerButton>
             <Button
                 Content="{ext:Locale AvatarChoose}"
-                Height="35"
-                Name="ChooseButton"
-                Click="ChooseButton_OnClick" />
+                Height="37"
+                Click="ChooseButton_OnClick">
+                <TextBlock Text="{ext:Locale AvatarChoose}" /> 
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>

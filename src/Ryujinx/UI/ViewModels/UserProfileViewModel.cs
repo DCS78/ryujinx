@@ -9,20 +9,26 @@ namespace Ryujinx.Ava.UI.ViewModels
     {
         public UserProfileViewModel()
         {
-            Profiles = [];
-            LostProfiles = [];
-            IsEmpty = !LostProfiles.Any();
+            Profiles = new ObservableCollection<BaseModel>();
+            LostProfiles = new ObservableCollection<UserProfile>();
         }
 
         public ObservableCollection<BaseModel> Profiles { get; set; }
 
         public ObservableCollection<UserProfile> LostProfiles { get; set; }
 
-        public bool IsEmpty { get; set; }
+        public bool IsEmpty => !LostProfiles.Any();
 
         public void Dispose()
         {
             GC.SuppressFinalize(this);
+        }
+
+        public void UpdateLostProfiles(ObservableCollection<UserProfile> newProfiles)
+        {
+            LostProfiles = newProfiles;
+            OnPropertyChanged(nameof(LostProfiles));
+            OnPropertyChanged(nameof(IsEmpty));
         }
     }
 }
