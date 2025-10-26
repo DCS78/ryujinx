@@ -13,7 +13,10 @@ namespace Ryujinx.BuildValidationTasks
         {
             WriteIndented = true,
             NewLine = "\n",
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            // Allow parsing of files that contain comments or trailing commas
+            AllowTrailingCommas = true,
+            ReadCommentHandling = JsonCommentHandling.Skip
         };
 
         public LocalesValidationTask() { }
@@ -37,7 +40,7 @@ namespace Ryujinx.BuildValidationTasks
 
             try
             {
-                json = JsonSerializer.Deserialize<LocalesJson>(data);
+                json = JsonSerializer.Deserialize<LocalesJson>(data, _jsonOptions);
 
             }
             catch (JsonException e)

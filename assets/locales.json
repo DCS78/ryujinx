@@ -20,26 +20,26 @@
     "Format18": "will never be missing translations)."
   },
   "Languages": [
-    "ar_SA", //Arabic (Saudi Arabia)
-    "de_DE", //German (Germany)
-    "el_GR", //Greek (Greece)
-    "en_US", //English (United States)
-    "es_ES", //Spanish (Spain)
-    "fr_FR", //French (France)
-    "he_IL", //Hebrew
-    "it_IT", //Italian (Italy)
-    "ja_JP", //Japanese (Japan)
-    "ko_KR", //Korean (South Korea)
-    "no_NO", //Norwegian (Norway)
-    "pl_PL", //Polish (Poland)
-    "pt_BR", //Portuguese (Brazil)
-    "ru_RU", //Russian (Russia)
-    "sv_SE", //Swedish (Sweden)
-    "th_TH", //Thai (Thailand)
-    "tr_TR", //Turkish (Turkey)
-    "uk_UA", //Ukrainian (Ukraine)
-    "zh_CN", //Chinese (Simplified)
-    "zh_TW" //Chinese (Traditional, Taiwan)
+    "ar_SA",
+    "de_DE",
+    "el_GR",
+    "en_US",
+    "es_ES",
+    "fr_FR",
+    "he_IL",
+    "it_IT",
+    "ja_JP",
+    "ko_KR",
+    "no_NO",
+    "pl_PL",
+    "pt_BR",
+    "ru_RU",
+    "sv_SE",
+    "th_TH",
+    "tr_TR",
+    "uk_UA",
+    "zh_CN",
+    "zh_TW"
   ],
   "Locales": [
     {
