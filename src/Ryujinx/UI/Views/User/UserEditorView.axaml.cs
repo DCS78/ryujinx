@@ -17,10 +17,10 @@ namespace Ryujinx.Ava.UI.Views.User
         private NavigationDialogHost _parent;
         private UserProfile _profile;
         private bool _isNewUser;
-
+        private readonly AccountManager _accountManager;
         public static uint MaxProfileNameLength => 0x20;
         public bool IsDeletable => _profile.UserId != AccountManager.DefaultUserId;
-
+        public string UserEditorTitle => LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.UserEditorTitle, _profile.Name);
         public UserEditorView()
         {
             InitializeComponent();
@@ -47,7 +47,7 @@ namespace Ryujinx.Ava.UI.Views.User
                 }
 
                 ((ContentDialog)_parent.Parent).Title = $"{LocaleManager.Instance[LocaleKeys.UserProfileWindowTitle]} - " +
-                                                        $"{(_isNewUser ? LocaleManager.Instance[LocaleKeys.UserEditorTitleCreate] : LocaleManager.Instance[LocaleKeys.UserEditorTitle])}";
+                                                        $"{(_isNewUser ? LocaleManager.Instance[LocaleKeys.UserEditorTitleNewUser] : UserEditorTitle)}";
 
                 AddPictureButton.IsVisible = _isNewUser;
                 ChangePictureButton.IsVisible = !_isNewUser;
