@@ -16,7 +16,7 @@ namespace Ryujinx.Cpu.LightningJit.CodeGen.Arm64
 
         public TailMerger()
         {
-            _branchPointers = [];
+            _branchPointers = new List<(BranchType, int)>();
         }
 
         public void AddConditionalReturn(CodeWriter writer, in Assembler asm, ArmCondition returnCondition)

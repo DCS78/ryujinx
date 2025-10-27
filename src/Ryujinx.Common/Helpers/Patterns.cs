@@ -47,7 +47,7 @@ namespace Ryujinx.Common.Helper
             "Radeon (((HD|R(5|7|9|X)) )?((M?[2-6]\\d{2}(\\D|$))|([7-8]\\d{3}(\\D|$))|Fury|Nano))|(Pro Duo)")]
         internal static partial Regex AmdGcnRegex();
 
-        [GeneratedRegex("Radeon ([7-8](\\d{2}\\d?)[MS]|PRO [VW]7(\\d{2}\\d?)|RX 7\\d{3}([MS]?| XTX?| GRE)?)")]
+        [GeneratedRegex("Radeon ([7-8](\\d{2}\\d?)[MS]|PRO [VW]7(\\d{2}\\d?)|RX7\\d{3}([MS]?| XTX?| GRE)?)")]
         public static partial Regex AmdRdna3Regex();
 
         [GeneratedRegex("NVIDIA GeForce (R|G)?TX? (\\d{3}\\d?)M?")]
@@ -57,15 +57,15 @@ namespace Ryujinx.Common.Helper
 
         #region DNS blocking
 
-        public static readonly Regex[] BlockedHosts =
-        [
+        public static readonly Regex[] BlockedHosts = new[]
+        {
             DomainLp1Ns,
             DomainLp1Lp1Npln,
             DomainLp1Znc,
             DomainSbApi,
             DomainSbAccounts,
             DomainAccounts
-        ];
+        };
 
         const RegexOptions DnsRegexOpts =
             RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture;
