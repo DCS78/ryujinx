@@ -19,6 +19,7 @@ using Ryujinx.Ava.UI.Applet;
 using Ryujinx.Ava.UI.Helpers;
 using Ryujinx.Ava.UI.Models;
 using Ryujinx.Ava.UI.ViewModels;
+using Ryujinx.Ava.UI.Views.Dialog;
 using Ryujinx.Ava.Utilities;
 using Ryujinx.Common;
 using Ryujinx.Common.Helper;
@@ -37,9 +38,6 @@ using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
-using Ryujinx.Ava.UI.Views.Dialog;
-using Ryujinx.Ava.Systems.AppLibrary;
-using Ryujinx.Common;
 
 namespace Ryujinx.Ava.UI.Windows
 {
