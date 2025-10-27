@@ -4,15 +4,15 @@ using System.Linq;
 
 namespace Ryujinx.Common
 {
- public static class TitleIDs
- {
- public static ReactiveObject<Optional<string>> CurrentApplication { get; } = new();
+    public static class TitleIDs
+    {
+        public static ReactiveObject<Optional<string>> CurrentApplication { get; } = new();
 
- public static string GetDiscordGameAsset(string titleId)
- => DiscordGameAssetKeys.Contains(titleId) ? titleId : "game";
+        public static string GetDiscordGameAsset(string titleId)
+        => DiscordGameAssetKeys.Contains(titleId) ? titleId : "game";
 
- public static readonly string[] DiscordGameAssetKeys = new string[]
- {
+        public static readonly string[] DiscordGameAssetKeys = new string[]
+        {
  //All games are in Alphabetical order by Game name.
  
  //Dragon Quest Franchise
@@ -216,11 +216,11 @@ namespace Ryujinx.Common
  "010069401adb8000", // Unicorn Overlord
  "01005c600ac68000", // Valkyria Chronicles4
  "0100534009ff2000", // Yonder - The cloud catcher chronicles
- };
+        };
 
- // Incompatible build IDs for updates that break compatibility. These are build IDs for update packages.
- public static readonly string[] IncompatibleBuildIds = new[]
- {
+        // Incompatible build IDs for updates that break compatibility. These are build IDs for update packages.
+        public static readonly string[] IncompatibleBuildIds = new[]
+        {
  "34FB6DEF8F659B43", // BOTW v1.8.0
  "A12F75F49B36F4B8", // BOTW v1.8.1
  "DE0B6AC4EFC1DDA7", // BOTW v1.8.2
@@ -229,8 +229,8 @@ namespace Ryujinx.Common
  "5CB42B1CF25469FB", // TOTK v1.4.2
  };
 
- // Returns true if the provided build ID is known to be an incompatible update.
- public static bool IsIncompatibleBuild(string buildId)
- => !string.IsNullOrEmpty(buildId) && IncompatibleBuildIds.Contains(buildId, StringComparer.OrdinalIgnoreCase);
- }
+        // Returns true if the provided build ID is known to be an incompatible update.
+        public static bool IsIncompatibleBuild(string buildId)
+        => !string.IsNullOrEmpty(buildId) && IncompatibleBuildIds.Contains(buildId, StringComparer.OrdinalIgnoreCase);
+    }
 }

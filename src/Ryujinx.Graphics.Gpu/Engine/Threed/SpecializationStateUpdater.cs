@@ -284,7 +284,7 @@ namespace Ryujinx.Graphics.Gpu.Engine.Threed
         {
             bool changed = false;
             int count = rtControl.UnpackCount();
-            
+
             Span<AttributeType> fragmentOutputTypesSpan = _graphics.FragmentOutputTypes.AsSpan();
 
             for (int index = 0; index < Constants.TotalRenderTargets; index++)

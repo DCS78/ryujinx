@@ -324,12 +324,19 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
                 if (nextThread == null)
                 {
                     ActivateIdleThread();
-                    currentThread.SchedulerWaitEvent.Wait();
+                    // Timed wait to reduce long blocking and CPU contention.
+                    while (!currentThread.SchedulerWaitEvent.Wait(1))
+                    {
+                        Thread.Yield();
+                    }
                 }
                 else
                 {
                     nextThread.SchedulerWaitEvent.Set();
-                    currentThread.SchedulerWaitEvent.Wait();
+                    while (!currentThread.SchedulerWaitEvent.Wait(1))
+                    {
+                        Thread.Yield();
+                    }
                 }
             }
             else

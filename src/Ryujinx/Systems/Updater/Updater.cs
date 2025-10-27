@@ -33,13 +33,13 @@ namespace Ryujinx.Ava.Systems
         private static readonly string _updateDir = Path.Combine(Path.GetTempPath(), "Ryujinx", "update");
         private static readonly string _updatePublishDir = Path.Combine(_updateDir, "publish");
         private const int ConnectionCount = 4;
-        
+
         private static long _buildSize;
         private static bool _updateSuccessful;
         private static bool _running;
 
         private static readonly string[] _windowsDependencyDirs = [];
-        
+
         public static async Task BeginUpdateAsync(bool showVersionUpToDate = false)
         {
             if (_running)
@@ -82,7 +82,7 @@ namespace Ryujinx.Ava.Systems
             try
             {
                 buildSizeClient.DefaultRequestHeaders.Add("Range", "bytes=0-0");
-                
+
                 // GitLab instance is located in Ukraine. Connection times will vary across the world.
                 buildSizeClient.Timeout = TimeSpan.FromSeconds(10);
 

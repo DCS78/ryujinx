@@ -3,7 +3,6 @@ using LibHac.Fs.Fsa;
 using LibHac.Ncm;
 using LibHac.Tools.FsSystem.NcaUtils;
 using LibHac.Tools.Ncm;
-using Ryujinx.HLE.Loaders.Processes.Extensions;
 using System;
 
 namespace Ryujinx.HLE.FileSystem

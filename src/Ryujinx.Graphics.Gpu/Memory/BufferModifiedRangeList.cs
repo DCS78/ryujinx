@@ -389,17 +389,17 @@ namespace Ryujinx.Graphics.Gpu.Memory
 
                 return;
             }
-            
+
             Lock.EnterWriteLock();
             // We use the non-span method here because the array is partially modified by the code, which would invalidate a span.
             RangeItem<BufferModifiedRange>[] overlaps = FindOverlapsAsArray(address, size);
-                
+
             int rangeCount = overlaps.Length;
 
             if (rangeCount == 0)
             {
                 Lock.ExitWriteLock();
-                
+
                 return;
             }
 
@@ -423,7 +423,7 @@ namespace Ryujinx.Graphics.Gpu.Memory
             if (highestDiff == long.MinValue)
             {
                 Lock.ExitWriteLock();
-                
+
                 return;
             }
 
@@ -431,7 +431,7 @@ namespace Ryujinx.Graphics.Gpu.Memory
             _context.Renderer.WaitSync(currentSync + (ulong)highestDiff);
 
             RemoveRangesAndFlush(overlaps.ToArray(), rangeCount, highestDiff, currentSync, address, endAddress);
-            
+
             Lock.ExitWriteLock();
         }
 
@@ -472,7 +472,7 @@ namespace Ryujinx.Graphics.Gpu.Memory
             ranges._migrationTarget = this;
 
             Lock.EnterWriteLock();
-            
+
             foreach (BufferModifiedRange range in inheritRanges)
             {
                 Add(range);
@@ -553,7 +553,7 @@ namespace Ryujinx.Graphics.Gpu.Memory
             ulong endAddress = address + size;
             Lock.EnterWriteLock();
             (RangeItem<BufferModifiedRange> first, RangeItem<BufferModifiedRange> last) = FindOverlapsAsNodes(address, size);
-            
+
             if (first is null)
             {
                 Lock.ExitWriteLock();

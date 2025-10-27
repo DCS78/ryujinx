@@ -470,7 +470,7 @@ namespace Ryujinx.HLE.HOS.Services.Nv
                 (ulong inlineInBufferPosition, ulong inlineInBufferSize) = context.Request.GetBufferType0x21(1);
 
                 errorCode = GetIoctlArgument(context, ioctlCommand, out Span<byte> arguments);
-                
+
                 if (!context.Memory.TryReadUnsafe(inlineInBufferPosition, (int)inlineInBufferSize, out Span<byte> inlineInBuffer))
                 {
                     inlineInBuffer = new byte[inlineInBufferSize];
@@ -519,7 +519,7 @@ namespace Ryujinx.HLE.HOS.Services.Nv
                 (ulong inlineOutBufferPosition, ulong inlineOutBufferSize) = context.Request.GetBufferType0x22(1);
 
                 errorCode = GetIoctlArgument(context, ioctlCommand, out Span<byte> arguments);
-                
+
                 if (!context.Memory.TryReadUnsafe(inlineOutBufferPosition, (int)inlineOutBufferSize, out Span<byte> inlineOutBuffer))
                 {
                     inlineOutBuffer = new byte[inlineOutBufferSize];

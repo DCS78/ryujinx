@@ -811,7 +811,7 @@ namespace Ryujinx.Ava.Systems.Configuration
         /// </summary>
         public static ConfigurationState Instance { get; private set; }
 
-        public static ConfigurationState InstanceExtra{ get; private set; }
+        public static ConfigurationState InstanceExtra { get; private set; }
 
         /// <summary>
         /// The UI section

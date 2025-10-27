@@ -25,4 +25,8 @@
     </ContentWithTargetPath>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Private.Uri" />
+  </ItemGroup>
+
 </Project>

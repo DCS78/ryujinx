@@ -50,7 +50,24 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
                     // even if they are not scheduled on guest cores.
                     if (currentThread != null && !currentThread.IsSchedulable && currentThread.Context.Running)
                     {
-                        currentThread.SchedulerWaitEvent.Wait();
+                        // First do a short spin to avoid entering the kernel if the event
+                        // will be signaled very shortly. If the spin yields, fall back to
+                        // a timed wait loop to avoid burning CPU.
+                        SpinWait spin = new();
+                        // Quick user-spin until we would yield.
+                        while (!currentThread.SchedulerWaitEvent.IsSet && !spin.NextSpinWillYield)
+                        {
+                            spin.SpinOnce();
+                        }
+
+                        // If not signaled yet, fall back to the timed wait loop that yields.
+                        if (!currentThread.SchedulerWaitEvent.IsSet)
+                        {
+                            while (!currentThread.SchedulerWaitEvent.Wait(1))
+                            {
+                                Thread.Yield();
+                            }
+                        }
                     }
                 }
             }

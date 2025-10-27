@@ -505,7 +505,7 @@ namespace Ryujinx.HLE.FileSystem
             {
                 VerifyKeysFile(keysSource);
                 File.Copy(keysSource, Path.Combine(installDirectory, info.Name), true);
-            } 
+            }
             else
                 throw new InvalidFirmwarePackageException("Input file is not a valid key package");
         }

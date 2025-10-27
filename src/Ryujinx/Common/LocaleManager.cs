@@ -67,7 +67,7 @@ namespace Ryujinx.Ava.Common.Locale
 
         public static string GetUnformatted(LocaleKeys key) => Instance.Get(key);
 
-        public static string GetFormatted(LocaleKeys key, params object[] values) 
+        public static string GetFormatted(LocaleKeys key, params object[] values)
             => GetUnformatted(key).Format(values);
 
         public static string FormatDynamicValue(LocaleKeys key, params object[] values)

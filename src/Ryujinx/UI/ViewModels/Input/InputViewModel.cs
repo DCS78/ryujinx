@@ -99,7 +99,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         public bool CanClearLed => SelectedGamepad.Name.ContainsIgnoreCase("DualSense");
 
         public event Action NotifyChangesEvent;
-        
+
         public string ChosenProfile
         {
             get => _chosenProfile;
@@ -332,7 +332,7 @@ namespace Ryujinx.Ava.UI.ViewModels.Input
         {
             if (UseGlobalConfig && Program.UseExtraConfig)
             {
-                Config = inputConfig ?? ConfigurationState.InstanceExtra.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);            
+                Config = inputConfig ?? ConfigurationState.InstanceExtra.Hid.InputConfig.Value.FirstOrDefault(inputConfig => inputConfig.PlayerIndex == _playerId);
             }
             else
             {

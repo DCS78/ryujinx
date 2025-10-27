@@ -52,7 +52,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
         public ulong AffinityMask { get; set; }
 
         public ulong ThreadUid { get; private set; }
-        
+
         public bool IsThreadNamed { get; set; }
 
         private long _totalTimeRunning;
@@ -150,7 +150,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
             {
                 SiblingsPerCore[i] = new LinkedListNode<KThread>(this);
             }
-            
+
             _mutexWaiters = [];
             _pinnedWaiters = [];
 
@@ -697,7 +697,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
             const int MaxFpuRegistersAArch32 = 16;
 
             ThreadContext context = new();
-            
+
             Span<ulong> registersSpan = context.Registers.AsSpan();
             Span<V128> fpuRegistersSpan = context.FpuRegisters.AsSpan();
 
@@ -1289,7 +1289,14 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
 
         private void ThreadStart()
         {
-            _schedulerWaitEvent.Wait();
+            // Use a timed wait loop instead of a blocking wait to reduce long blocking
+            // and lower CPU contention. This still waits until signaled, checking
+            // periodically with a short timeout.
+            while (!_schedulerWaitEvent.Wait(1))
+            {
+                // Yield to let other threads run; keep waiting until signaled.
+                Thread.Yield();
+            }
             DebugHalt.Reset();
             KernelStatic.SetKernelContext(KernelContext, this);
 
@@ -1544,11 +1551,14 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
                 }
                 return Encoding.UTF8.GetString(nameBytes.ToArray());
 
-            } catch (InvalidMemoryRegionException)
+            }
+            catch (InvalidMemoryRegionException)
             {
                 Logger.Warning?.Print(LogClass.Kernel, "Failed to get thread name.");
                 return "";
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Logger.Error?.Print(LogClass.Kernel, $"Error getting thread name: {e.Message}");
                 return "";
             }

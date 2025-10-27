@@ -1,6 +1,3 @@
-using LibHac.Common;
-using LibHac.Common.Keys;
-using LibHac.Fs;
 using LibHac.Fs.Fsa;
 using LibHac.FsSystem;
 using LibHac.Ncm;

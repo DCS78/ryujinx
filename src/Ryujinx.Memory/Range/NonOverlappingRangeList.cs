@@ -13,18 +13,18 @@ namespace Ryujinx.Memory.Range
     public unsafe class NonOverlappingRangeList<T> : RangeListBase<T> where T : class, INonOverlappingRange
     {
         public readonly ReaderWriterLockSlim Lock = new();
-        
+
         /// <summary>
         /// Creates a new non-overlapping range list.
         /// </summary>
         public NonOverlappingRangeList() { }
-        
+
         /// <summary>
         /// Creates a new non-overlapping range list.
         /// </summary>
         /// <param name="backingInitialSize">The initial size of the backing array</param>
         public NonOverlappingRangeList(int backingInitialSize) : base(backingInitialSize) { }
-        
+
         /// <summary>
         /// Adds a new item to the list.
         /// </summary>
@@ -32,14 +32,14 @@ namespace Ryujinx.Memory.Range
         public override void Add(T item)
         {
             int index = BinarySearch(item.Address);
-            
+
             if (index < 0)
             {
                 index = ~index;
             }
 
             RangeItem<T> rangeItem = new(item);
-            
+
             Insert(index, rangeItem);
         }
 
@@ -55,7 +55,7 @@ namespace Ryujinx.Memory.Range
             if (index >= 0 && Items[index].Value.Equals(item))
             {
                 RangeItem<T> rangeItem = new(item) { Previous = Items[index].Previous, Next = Items[index].Next };
-                
+
                 if (index > 0)
                 {
                     Items[index - 1].Next = rangeItem;
@@ -65,7 +65,7 @@ namespace Ryujinx.Memory.Range
                 {
                     Items[index + 1].Previous = rangeItem;
                 }
-                
+
                 Items[index] = rangeItem;
 
                 return true;
@@ -73,7 +73,7 @@ namespace Ryujinx.Memory.Range
 
             return false;
         }
-        
+
         /// <summary>
         /// Updates an item's end address on the list. Address must be the same.
         /// </summary>
@@ -84,7 +84,7 @@ namespace Ryujinx.Memory.Range
             int index = BinarySearch(item.Address);
 
             RangeItem<T> rangeItem = new(item.Value) { Previous = item.Previous, Next = item.Next };
-                
+
             if (index > 0)
             {
                 Items[index - 1].Next = rangeItem;
@@ -94,17 +94,17 @@ namespace Ryujinx.Memory.Range
             {
                 Items[index + 1].Previous = rangeItem;
             }
-                
+
             Items[index] = rangeItem;
 
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Insert(int index, RangeItem<T> item)
         {
             Debug.Assert(item.Address != item.EndAddress);
-            
+
             if (Count + 1 > Items.Length)
             {
                 Array.Resize(ref Items, Items.Length + BackingGrowthSize);
@@ -133,14 +133,14 @@ namespace Ryujinx.Memory.Range
                     item.Previous = Items[index - 1];
                     Items[index - 1].Next = item;
                 }
-                
+
                 item.Next = Items[index + 1];
                 Items[index + 1].Previous = item;
-                
+
                 Count++;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void RemoveAt(int index)
         {
@@ -153,7 +153,7 @@ namespace Ryujinx.Memory.Range
             {
                 Items[index - 1].Next = index < Count - 1 ? Items[index + 1] : null;
             }
-            
+
             if (index < --Count)
             {
                 Array.Copy(Items, index + 1, Items, index, Count - index);
@@ -173,7 +173,7 @@ namespace Ryujinx.Memory.Range
             if (index >= 0 && Items[index].Value.Equals(item))
             {
                 RemoveAt(index);
-                
+
                 return true;
             }
 
@@ -197,9 +197,9 @@ namespace Ryujinx.Memory.Range
                 Remove(startItem.Value);
                 return;
             }
-            
+
             (int startIndex, int endIndex) = BinarySearchEdges(startItem.Address, endItem.EndAddress);
-            
+
             if (endIndex < Count)
             {
                 Items[endIndex].Previous = startIndex > 0 ? Items[startIndex - 1] : null;
@@ -209,16 +209,16 @@ namespace Ryujinx.Memory.Range
             {
                 Items[startIndex - 1].Next = endIndex < Count ? Items[endIndex] : null;
             }
-            
-            
+
+
             if (endIndex < Count)
             {
                 Array.Copy(Items, endIndex, Items, startIndex, Count - endIndex);
             }
-            
+
             Count -= endIndex - startIndex;
         }
-        
+
         /// <summary>
         /// Removes a range of items from the item list
         /// </summary>
@@ -227,24 +227,24 @@ namespace Ryujinx.Memory.Range
         public void RemoveRange(ulong address, ulong size)
         {
             int startIndex = BinarySearchLeftEdge(address, address + size);
-            
+
             if (startIndex < 0)
             {
                 return;
             }
-            
+
             int endIndex = startIndex;
-            
+
             while (Items[endIndex] is not null && Items[endIndex].Address < address + size)
             {
                 if (endIndex == Count - 1)
                 {
                     break;
                 }
-                
+
                 endIndex++;
             }
-            
+
             if (endIndex < Count - 1)
             {
                 Items[endIndex + 1].Previous = startIndex > 0 ? Items[startIndex - 1] : null;
@@ -254,13 +254,13 @@ namespace Ryujinx.Memory.Range
             {
                 Items[startIndex - 1].Next = endIndex < Count - 1 ? Items[endIndex + 1] : null;
             }
-            
-            
+
+
             if (endIndex < Count - 1)
             {
                 Array.Copy(Items, endIndex + 1, Items, startIndex, Count - endIndex - 1);
             }
-            
+
             Count -= endIndex - startIndex + 1;
         }
 
@@ -274,7 +274,7 @@ namespace Ryujinx.Memory.Range
             Count = 0;
             Lock.ExitWriteLock();
         }
-        
+
         /// <summary>
         /// Finds a list of regions that cover the desired (address, size) range.
         /// If this range starts or ends in the middle of an existing region, it is split and only the relevant part is added.
@@ -291,11 +291,11 @@ namespace Ryujinx.Memory.Range
             // A new region may be split into multiple parts if multiple virtual regions have mapped to it.
             // For instance, while a virtual mapping could cover 0-2 in physical space, the space 0-1 may have already been reserved...
             // So we need to return both the split 0-1 and 1-2 ranges.
-            
+
             Lock.EnterWriteLock();
             (RangeItem<T> first, RangeItem<T> last) = FindOverlapsAsNodes(address, size);
             list = new List<T>();
-            
+
             if (first is null)
             {
                 // The region is fully unmapped. Create and add it to the range list.
@@ -355,7 +355,7 @@ namespace Ryujinx.Memory.Range
                     Add(fillRegion);
                 }
             }
-            
+
             Lock.ExitWriteLock();
         }
 
@@ -375,7 +375,7 @@ namespace Ryujinx.Memory.Range
             Add(newRegion);
             return newRegion;
         }
-        
+
         /// <summary>
         /// Gets an item on the list overlapping the specified memory range.
         /// </summary>
@@ -394,7 +394,7 @@ namespace Ryujinx.Memory.Range
 
             return Items[index];
         }
-        
+
         /// <summary>
         /// Gets an item on the list overlapping the specified memory range.
         /// </summary>
@@ -413,7 +413,7 @@ namespace Ryujinx.Memory.Range
 
             return Items[index];
         }
-        
+
         /// <summary>
         /// Gets all items on the list overlapping the specified memory range.
         /// </summary>
@@ -429,16 +429,16 @@ namespace Ryujinx.Memory.Range
             {
                 return (null, null);
             }
-            
+
             return (Items[index], Items[endIndex - 1]);
         }
-        
+
         public RangeItem<T>[] FindOverlapsAsArray(ulong address, ulong size)
         {
             (int index, int endIndex) = BinarySearchEdges(address, address + size);
 
             RangeItem<T>[] result;
-            
+
             if (index < 0)
             {
                 result = [];
@@ -446,19 +446,19 @@ namespace Ryujinx.Memory.Range
             else
             {
                 result = new RangeItem<T>[endIndex - index];
-                
+
                 Array.Copy(Items, index, result, 0, endIndex - index);
             }
-            
+
             return result;
         }
-        
+
         public Span<RangeItem<T>> FindOverlapsAsSpan(ulong address, ulong size)
         {
             (int index, int endIndex) = BinarySearchEdges(address, address + size);
 
             Span<RangeItem<T>> result;
-            
+
             if (index < 0)
             {
                 result = [];
@@ -467,7 +467,7 @@ namespace Ryujinx.Memory.Range
             {
                 result = Items.AsSpan().Slice(index, endIndex - index);
             }
-            
+
             return result;
         }
 

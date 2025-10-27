@@ -40,7 +40,7 @@ namespace Ryujinx.Audio.Renderer.Parameter.Effect
         /// The current usage status of the effect on the client side.
         /// </summary>
         public UsageState Status;
-        
+
         /// <summary>
         /// Reserved/unused.
         /// </summary>

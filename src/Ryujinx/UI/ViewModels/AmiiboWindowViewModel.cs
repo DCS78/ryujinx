@@ -409,7 +409,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     .OrderBy(amiibo => amiibo.Name).ToList();
             }
 
-            
+
 
             for (int i = 0; i < amiiboSortedList.Count; i++)
             {

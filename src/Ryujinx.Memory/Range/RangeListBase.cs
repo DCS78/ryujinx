@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -8,7 +8,7 @@ namespace Ryujinx.Memory.Range
     {
         public RangeItem<TValue> Next;
         public RangeItem<TValue> Previous;
-        
+
         public readonly ulong Address = value.Address;
         public readonly ulong EndAddress = value.Address + value.Size;
 
@@ -22,7 +22,7 @@ namespace Ryujinx.Memory.Range
             return Address < endAddress && address < EndAddress;
         }
     }
-    
+
     class AddressEqualityComparer : IEqualityComparer<ulong>
     {
         public bool Equals(ulong u1, ulong u2)
@@ -31,19 +31,19 @@ namespace Ryujinx.Memory.Range
         }
 
         public int GetHashCode(ulong value) => (int)(value << 5);
-        
+
         public static readonly AddressEqualityComparer Comparer = new();
     }
-    
+
     public unsafe abstract class RangeListBase<T> : IEnumerable<T> where T : IRange
     {
         private const int BackingInitialSize = 1024;
 
         protected RangeItem<T>[] Items;
         protected readonly int BackingGrowthSize;
-        
+
         public int Count { get; protected set; }
-        
+
         /// <summary>
         /// Creates a new range list.
         /// </summary>
@@ -53,7 +53,7 @@ namespace Ryujinx.Memory.Range
             BackingGrowthSize = backingInitialSize;
             Items = new RangeItem<T>[backingInitialSize];
         }
-        
+
         public abstract void Add(T item);
 
         /// <summary>
@@ -62,20 +62,20 @@ namespace Ryujinx.Memory.Range
         /// <param name="item">The item to be updated</param>
         /// <returns>True if the item was located and updated, false otherwise</returns>
         protected abstract bool Update(T item);
-        
+
         /// <summary>
         /// Updates an item's end address on the list. Address must be the same.
         /// </summary>
         /// <param name="item">The RangeItem to be updated</param>
         /// <returns>True if the item was located and updated, false otherwise</returns>
         protected abstract bool Update(RangeItem<T> item);
-        
+
         public abstract bool Remove(T item);
 
         public abstract void RemoveRange(RangeItem<T> startItem, RangeItem<T> endItem);
 
         public abstract RangeItem<T> FindOverlap(ulong address, ulong size);
-        
+
         public abstract RangeItem<T> FindOverlapFast(ulong address, ulong size);
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Ryujinx.Memory.Range
 
             return ~left;
         }
-        
+
         /// <summary>
         /// Performs binary search for items overlapping a given memory range.
         /// </summary>
@@ -152,7 +152,7 @@ namespace Ryujinx.Memory.Range
 
             return ~left;
         }
-        
+
         /// <summary>
         /// Performs binary search for items overlapping a given memory range.
         /// </summary>
@@ -204,7 +204,7 @@ namespace Ryujinx.Memory.Range
 
             return ~left;
         }
-        
+
         /// <summary>
         /// Performs binary search for items overlapping a given memory range.
         /// </summary>
@@ -256,7 +256,7 @@ namespace Ryujinx.Memory.Range
 
             return ~left;
         }
-        
+
         /// <summary>
         /// Performs binary search for items overlapping a given memory range.
         /// </summary>
@@ -386,7 +386,7 @@ namespace Ryujinx.Memory.Range
 
             return (leftEdge, right + 1);
         }
-        
+
         public abstract IEnumerator<T> GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()

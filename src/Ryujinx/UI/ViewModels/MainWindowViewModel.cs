@@ -975,7 +975,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                 string dialogTitle = LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.DialogKeysInstallerKeysInstallTitle);
                 string dialogMessage = LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.DialogKeysInstallerKeysInstallMessage);
-                
+
                 if (ContentManager.AreKeysAlredyPresent(systemDirectory))
                 {
                     dialogMessage += LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.DialogKeysInstallerKeysInstallSubMessage);
@@ -1590,9 +1590,9 @@ namespace Ryujinx.Ava.UI.ViewModels
             // Code where conditions will be executed after loading user configuration
             if (ConfigurationState.Instance.Graphics.BackendThreading.Value.ToString() != backendThreadingInit)
             {
-                Rebooter.RebootAppWithGame(application.Path, 
+                Rebooter.RebootAppWithGame(application.Path,
                 [
-                    "--bt", 
+                    "--bt",
                     ConfigurationState.Instance.Graphics.BackendThreading.Value.ToString()
                 ]);
 
@@ -1777,7 +1777,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                         }
                     }
                 });
-                
+
                 if (result.HasValue)
                 {
                     AppHost.Device.System.ScanAmiiboFromBin(result.Value.Path.LocalPath);
@@ -1891,7 +1891,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                 NotificationHelper.ShowWarning(
                     LocaleManager.Instance.UpdateAndGetDynamicValue(
-                        LocaleKeys.NotificationLaunchCheckDramSizeTitle, 
+                        LocaleKeys.NotificationLaunchCheckDramSizeTitle,
                         LocaleManager.Instance[memoryConfigurationLocaleKey]
                         ),
                     LocaleManager.Instance[LocaleKeys.NotificationLaunchCheckDramSizeMessage]);

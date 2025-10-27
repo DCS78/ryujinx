@@ -91,7 +91,7 @@ namespace ARMeilleure.Translation.PTC
         private static List<BufferedEntry> _threadLocalBuffer;
 
         // Tunable limits to avoid excessive memory usage while buffering.
-        private const int MaxBufferedEntriesPerThread =128; // Flush a thread buffer when it grows beyond this.
+        private const int MaxBufferedEntriesPerThread = 128; // Flush a thread buffer when it grows beyond this.
 
         private struct BufferedEntry
         {
@@ -108,7 +108,7 @@ namespace ARMeilleure.Translation.PTC
         {
             var localList = _threadLocalBuffer;
 
-            if (localList == null || localList.Count ==0)
+            if (localList == null || localList.Count == 0)
             {
                 return;
             }

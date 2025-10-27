@@ -1283,7 +1283,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Process
                 {
                     return false;
                 }
-                
+
                 _kernelContext.CriticalSection.Enter();
                 _steppingThread = target;
                 bool waiting = target.MutexOwner != null || target.WaitingSync || target.WaitingInArbitration;

@@ -97,9 +97,9 @@ namespace Ryujinx.Ava.Systems.PlayReport
                 //TODO DLC Locations
                 _ => FormattedValue.ForceReset
             };
-            
-            return locations.Reset 
-                ? FormattedValue.ForceReset 
+
+            return locations.Reset
+                ? FormattedValue.ForceReset
                 : $"{playStatus} in {locations}";
         }
 
