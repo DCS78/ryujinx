@@ -37,6 +37,9 @@ using System.Reactive.Linq;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Threading.Tasks;
+using Ryujinx.Ava.UI.Views.Dialog;
+using Ryujinx.Ava.Systems.AppLibrary;
+using Ryujinx.Common;
 
 namespace Ryujinx.Ava.UI.Windows
 {
@@ -214,6 +217,35 @@ namespace Ryujinx.Ava.UI.Windows
         {
             if (args.Application != null)
             {
+                // Check for incompatible update build before attempting to load the application
+                try
+                {
+                    string buildId = ApplicationData.GetBuildId(VirtualFileSystem, ConfigurationState.Instance.System.IntegrityCheckLevel, args.Application.Path);
+
+                    if (TitleIDs.IsIncompatibleBuild(buildId))
+                    {
+                        // Show modal warning dialog
+                        await ContentDialogHelper.ShowTextDialog(
+                            LocaleManager.Instance[LocaleKeys.DialogWarning],
+                            "This title contains an update known to break emulation. The game will not start until a compatible update is used or the update is removed.",
+                            string.Empty,
+                            string.Empty,
+                            string.Empty,
+                            LocaleManager.Instance[LocaleKeys.InputDialogOk],
+                            (int)Symbol.Important);
+
+                        // Open the Title Update Manager so user can inspect/remove updates
+                        await TitleUpdateManagerView.Show(ApplicationLibrary, args.Application);
+
+                        args.Handled = true;
+                        return;
+                    }
+                }
+                catch
+                {
+                    // If anything goes wrong while checking, fall back to normal behavior.
+                }
+
                 ViewModel.SelectedIcon = args.Application.Icon;
 
                 await ViewModel.LoadApplication(args.Application);
