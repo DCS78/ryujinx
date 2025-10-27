@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="Ryujinx.SDL2-CS" />
+    <PackageReference Include="System.Management" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" />
+    <PackageReference Include="System.Runtime.Extensions" />
   </ItemGroup>
 
   <ItemGroup>

@@ -222,10 +222,12 @@ namespace Ryujinx.HLE.HOS.Applets.SoftwareKeyboard
                 return;
             }
 
-            using SKPaint paint = new(_messageFont)
+            using SKPaint paint = new()
             {
                 Color = _textNormalColor,
-                IsAntialias = true
+                IsAntialias = true,
+                Typeface = _messageFont.Typeface,
+                TextSize = _messageFont.Size
             };
 
             SKCanvas canvas = _surface.Canvas;
@@ -307,18 +309,23 @@ namespace Ryujinx.HLE.HOS.Applets.SoftwareKeyboard
         }
         private static SKRect MeasureString(string text, SKPaint paint)
         {
-            SKRect bounds;
+            SKRect bounds = new();
             if (text == string.Empty)
             {
-                _ = paint != null && paint.ToFont() != null
-                    ? paint.ToFont().MeasureText(" ", out bounds)
-                    : new SKFont().MeasureText(" ", out bounds);
+                // Ensure 'bounds' is assigned before use to avoid CS0165
+                bounds = new SKRect();
+                paint.MeasureText(" ", ref bounds);
             }
             else
             {
-                _ = paint != null && paint.ToFont() != null
-                    ? paint.ToFont().MeasureText(text, out bounds)
-                    : new SKFont().MeasureText(text, out bounds);
+                if (paint != null)
+                {
+                    paint.MeasureText(text, ref bounds);
+                }
+                else
+                {
+                    new SKPaint().MeasureText(text, ref bounds);
+                }
             }
 
             return bounds;
@@ -326,18 +333,23 @@ namespace Ryujinx.HLE.HOS.Applets.SoftwareKeyboard
 
         private static SKRect MeasureString(ReadOnlySpan<char> text, SKPaint paint)
         {
-            SKRect bounds;
+            SKRect bounds = new();
             if (text == string.Empty)
             {
-                _ = paint != null && paint.ToFont() != null
-                    ? paint.ToFont().MeasureText(" ", out bounds)
-                    : new SKFont().MeasureText(" ", out bounds);
+                // Ensure 'bounds' is assigned before use to avoid CS0165
+                bounds = new SKRect();
+                paint.MeasureText(" ", ref bounds);
             }
             else
             {
-                _ = paint != null && paint.ToFont() != null
-                    ? paint.ToFont().MeasureText(text, out bounds)
-                    : new SKFont().MeasureText(text, out bounds);
+                if (paint != null)
+                {
+                    paint.MeasureText(text, ref bounds);
+                }
+                else
+                {
+                    new SKPaint().MeasureText(text, ref bounds);
+                }
             }
 
             return bounds;

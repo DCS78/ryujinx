@@ -26,7 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Management" />
     <PackageReference Include="System.Private.Uri" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" />
+    <PackageReference Include="System.Runtime.Extensions" />
   </ItemGroup>
 
 </Project>

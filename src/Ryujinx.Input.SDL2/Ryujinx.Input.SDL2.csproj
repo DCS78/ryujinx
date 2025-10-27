@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mono.Nat" />
+    <PackageReference Include="System.Management" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Ryujinx.Input\Ryujinx.Input.csproj" />
     <ProjectReference Include="..\Ryujinx.SDL2.Common\Ryujinx.SDL2.Common.csproj" />
   </ItemGroup>

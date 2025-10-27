@@ -12,7 +12,7 @@
     <ProjectReference Include="..\Ryujinx.Graphics.Host1x\Ryujinx.Graphics.Host1x.csproj" />
     <ProjectReference Include="..\Ryujinx.Graphics.Nvdec\Ryujinx.Graphics.Nvdec.csproj" />
     <ProjectReference Include="..\Ryujinx.Graphics.Vic\Ryujinx.Graphics.Vic.csproj" />
-    <ProjectReference Include="..\Ryujinx.HLE.Generators\Ryujinx.HLE.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Ryujinx.HLE.Generators\Ryujinx.HLE.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Ryujinx.Horizon.Common\Ryujinx.Horizon.Common.csproj" />
     <ProjectReference Include="..\Ryujinx.Horizon.Kernel.Generators\Ryujinx.Horizon.Kernel.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Ryujinx.Horizon\Ryujinx.Horizon.csproj" />
@@ -23,13 +23,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mono.Nat" />
     <PackageReference Include="Ryujinx.LibHac" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
     <PackageReference Include="MsgPack.Cli" />
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
     <PackageReference Include="NetCoreServer" />
-    <PackageReference Include="Open.NAT.Core" />
+    <PackageReference Include="System.Management" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" />
   </ItemGroup>
 
   <ItemGroup>

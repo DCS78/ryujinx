@@ -6,6 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="OpenTK.Audio.OpenAL" />
+    <PackageReference Include="System.Management" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" />
+    <PackageReference Include="System.Runtime.Extensions" />
   </ItemGroup>
 
   <ItemGroup>

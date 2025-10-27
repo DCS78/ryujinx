@@ -15,4 +15,10 @@
     <EmbeddedResource Include="CodeGen\Glsl\HelperFunctions\SwizzleAdd.glsl" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Management" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" />
+    <PackageReference Include="System.Runtime.Extensions" />
+  </ItemGroup>
+
 </Project>

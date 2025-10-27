@@ -15,5 +15,7 @@
   <ItemGroup>
     <PackageReference Include="Concentus" />
     <PackageReference Include="Ryujinx.LibHac" />
+    <PackageReference Include="System.Management" />
+    <PackageReference Include="System.Reflection.Emit.ILGeneration" />
   </ItemGroup>
 </Project>
