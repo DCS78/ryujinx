@@ -100,7 +100,8 @@ namespace Ryujinx.Ava.UI.Views.User
         {
             using SKBitmap bitmap = SKBitmap.Decode(buffer);
 
-            SKBitmap resizedBitmap = bitmap.Resize(new SKImageInfo(256, 256), SKFilterQuality.High);
+            // Use SKSamplingOptions with SKFilterMode.High for high quality resizing
+            SKBitmap resizedBitmap = bitmap.Resize(new SKImageInfo(256, 256), new SKSamplingOptions(SKFilterMode.Linear));
 
             using MemoryStream streamJpg = new();
 

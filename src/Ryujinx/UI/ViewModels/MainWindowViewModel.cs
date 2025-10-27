@@ -2369,7 +2369,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                     await using Stream fileStream = await iconFile.OpenWriteAsync();
 
                     using SKBitmap bitmap = SKBitmap.Decode(viewModel.SelectedApplication.Icon)
-                        .Resize(new SKSizeI(512, 512), SKFilterQuality.High);
+                        .Resize(new SKSizeI(512, 512), new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.None));
 
                     using SKData png = bitmap.Encode(SKEncodedImageFormat.Png, 100);
 

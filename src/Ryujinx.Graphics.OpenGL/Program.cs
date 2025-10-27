@@ -59,7 +59,14 @@ namespace Ryujinx.Graphics.OpenGL
                         GL.CompileShader(shaderHandle);
                         break;
                     case TargetLanguage.Spirv:
-                        GL.ShaderBinary(1, ref shaderHandle, (BinaryFormat)All.ShaderBinaryFormatSpirVArb, shader.BinaryCode, shader.BinaryCode.Length);
+                        unsafe
+                        {
+                            fixed (byte* ptr = shader.BinaryCode)
+                            {
+                                // The correct overload expects a single shader handle, not an array.
+                                GL.ShaderBinary(1, ref shaderHandle, (BinaryFormat)All.ShaderBinaryFormatSpirVArb, (nint)ptr, shader.BinaryCode.Length);
+                            }
+                        }
                         GL.SpecializeShader(shaderHandle, "main", 0, (int[])null, (int[])null);
                         break;
                 }

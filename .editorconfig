@@ -9,9 +9,9 @@ root = true
 charset = utf-8
 
 # Indentation and spacing
-indent_size = 4
+indent_size =4
 indent_style = space
-tab_width = 4
+tab_width =4
 
 # New line preferences
 end_of_line = lf
@@ -32,11 +32,15 @@ dotnet_style_explicit_tuple_names = true:suggestion
 [*.{md,json,yml,props,csproj}]
 
 # Indentation and spacing
-indent_size = 2
-tab_width = 2
+indent_size =2
+tab_width =2
 
 # C# files
 [*.cs]
+
+# Disable analyzer rules that require incremental generators (RS1035, RS1042)
+dotnet_diagnostic.RS1035.severity = none
+dotnet_diagnostic.RS1042.severity = none
 
 #### .NET Coding Conventions ####
 
@@ -254,15 +258,15 @@ csharp_prefer_system_threading_lock = true:suggestion
 
 
 # Analyzers
-dotnet_diagnostic.CA1069.severity = none  # CA1069: Enums values should not be duplicated
+dotnet_diagnostic.CA1069.severity = none # CA1069: Enums values should not be duplicated
 # Disable Collection initialization can be simplified
 dotnet_diagnostic.IDE0028.severity = none
 dotnet_diagnostic.IDE0300.severity = none
 dotnet_diagnostic.IDE0301.severity = none
 dotnet_diagnostic.IDE0302.severity = none
 dotnet_diagnostic.IDE0305.severity = none
-dotnet_diagnostic.CS9113.severity = none  # CS9113: Parameter 'value' is unread
-dotnet_diagnostic.IDE0130.severity = none  # IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.CS9113.severity = none # CS9113: Parameter 'value' is unread
+dotnet_diagnostic.IDE0130.severity = none # IDE0130: Namespace does not match folder structure
 
 [src/Ryujinx/UI/ViewModels/**.cs]
 # Disable "mark members as static" rule for ViewModels

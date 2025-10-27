@@ -27,7 +27,7 @@ namespace Ryujinx.Graphics.OpenGL
         public void Map(BufferHandle handle, int size)
         {
             GL.BindBuffer(BufferTarget.CopyWriteBuffer, handle.ToInt32());
-            nint ptr = GL.MapBufferRange(BufferTarget.CopyWriteBuffer, nint.Zero, size, BufferAccessMask.MapReadBit | BufferAccessMask.MapPersistentBit);
+            nint ptr = GL.MapBufferRange(BufferTarget.CopyWriteBuffer, nint.Zero, (nint)size, (MapBufferAccessMask)(BufferAccessMask.MapReadBit | BufferAccessMask.MapPersistentBit));
 
             _maps[handle] = ptr;
         }
@@ -75,7 +75,11 @@ namespace Ryujinx.Graphics.OpenGL
                 GL.BindBuffer(BufferTarget.CopyWriteBuffer, _copyBufferHandle);
                 GL.BufferStorage(BufferTarget.CopyWriteBuffer, requiredSize, nint.Zero, BufferStorageFlags.MapReadBit | BufferStorageFlags.MapPersistentBit);
 
-                _bufferMap = GL.MapBufferRange(BufferTarget.CopyWriteBuffer, nint.Zero, requiredSize, BufferAccessMask.MapReadBit | BufferAccessMask.MapPersistentBit);
+                _bufferMap = GL.MapBufferRange(
+                    BufferTarget.CopyWriteBuffer,
+                    nint.Zero,
+                    (nint)requiredSize,
+                    (MapBufferAccessMask)(BufferAccessMask.MapReadBit | BufferAccessMask.MapPersistentBit));
             }
         }
 

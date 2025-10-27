@@ -1,3 +1,4 @@
+#pragma warning disable RS1035, RS1042
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -76,3 +77,4 @@ namespace Ryujinx.HLE.Generators
         }
     }
 }
+#pragma warning restore RS1035, RS1042
