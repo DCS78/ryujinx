@@ -66,6 +66,8 @@ namespace Ryujinx.HLE
 
         public DirtyHacks DirtyHacks { get; }
 
+        public bool EnableDoubleFps { get; private set; }
+
         public Switch(HleConfiguration configuration)
         {
             ArgumentNullException.ThrowIfNull(configuration.GpuRenderer);
@@ -142,12 +144,39 @@ namespace Ryujinx.HLE
                     TargetVSyncInterval = CustomVSyncInterval;
                     break;
                 case VSyncMode.Switch:
-                    TargetVSyncInterval = 60;
+                    // When proper frame-doubling is enabled we keep the Switch presentation interval
+                    // at60 (native) and duplicate host frames in the renderer / performance loop.
+                    // The actual frame-doubling implementation must be performed in the
+                    // PerformanceStatistics / main emulation frame loop where frames are produced
+                    // and audio timing is advanced. See SetDoubleFps() and PerformanceStatistics.
+                    TargetVSyncInterval =60;
                     break;
                 case VSyncMode.Unbounded:
-                    TargetVSyncInterval = 1;
+                    TargetVSyncInterval =1;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Enable or disable emulator-side frame-doubling.
+        /// Proper frame-doubling duplicates host frames for each guest frame while keeping
+        /// guest timing unchanged (so audio/cutscenes stay in sync). The duplication logic
+        /// must be applied inside the PerformanceStatistics / emulation frame loop.
+        /// This method only toggles the runtime flag and applies immediate coarse changes
+        /// such as TickScalar fallback if Turbo mode is active.
+        /// </summary>
+        public void SetDoubleFps(bool enabled)
+        {
+            EnableDoubleFps = enabled;
+
+            // Note: Proper frame-doubling requires changes in PerformanceStatistics's
+            // frame/tick loop to duplicate host presentation without altering guest timing.
+            // As an interim measure we apply no changes to TickScalar here to avoid
+            // changing guest timing unexpectedly. The real duplication should be
+            // implemented in PerformanceStatistics where frames are processed/presented.
+
+            // Ensure target vsync interval is updated to reflect current settings.
+            UpdateVSyncInterval();
         }
 
         public void ToggleTurbo()

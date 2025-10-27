@@ -56,24 +56,24 @@
                                 SelectedIndex="{Binding PreferredGpuIndex}"
                                 ItemsSource="{Binding AvailableGpus}"/>
                     </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center"
-                                       ToolTip.Tip="{ext:Locale GraphicsBackendThreadingTooltip}"
-                                       Text="{ext:Locale SettingsTabGraphicsBackendMultithreading}"
-                                       Width="250" />
-                            <ComboBox Width="350"
-                                      HorizontalContentAlignment="Left"
-                                      ToolTip.Tip="{ext:Locale GalThreadingTooltip}"
-                                      SelectedIndex="{Binding GraphicsBackendMultithreadingIndex}">
-                                <ComboBoxItem
-                                    Content="{ext:Locale CommonAuto}" />
-                                <ComboBoxItem
-                                    Content="{ext:Locale CommonOff}" />
-                                <ComboBoxItem
-                                    Content="{ext:Locale CommonOn}" />
-                            </ComboBox>
-                        </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center"
+                                   ToolTip.Tip="{ext:Locale GraphicsBackendThreadingTooltip}"
+                                   Text="{ext:Locale SettingsTabGraphicsBackendMultithreading}"
+                                   Width="250" />
+                        <ComboBox Width="350"
+                                  HorizontalContentAlignment="Left"
+                                  ToolTip.Tip="{ext:Locale GalThreadingTooltip}"
+                                  SelectedIndex="{Binding GraphicsBackendMultithreadingIndex}">
+                            <ComboBoxItem
+                                Content="{ext:Locale CommonAuto}" />
+                            <ComboBoxItem
+                                Content="{ext:Locale CommonOff}" />
+                            <ComboBoxItem
+                                Content="{ext:Locale CommonOn}" />
+                        </ComboBox>
                     </StackPanel>
+                </StackPanel>
                 <Separator Height="1" />
                 <TextBlock Classes="h1" Text="{ext:Locale SettingsTabGraphicsFeatures}" />
                 <StackPanel Margin="10,0,0,0" Orientation="Vertical" Spacing="10">
@@ -89,6 +89,10 @@
                         <CheckBox IsChecked="{Binding EnableMacroHLE}"
                             ToolTip.Tip="{ext:Locale SettingsEnableMacroHLETooltip}">
                             <TextBlock Text="{ext:Locale SettingsEnableMacroHLE}" />
+                        </CheckBox>
+                        <CheckBox IsChecked="{Binding EnableDoubleFps, Mode=TwoWay}"
+                            ToolTip.Tip="{Binding EnableDoubleFpsTooltipText}">
+                            <TextBlock Text="{ext:Locale SettingsEnableDoubleFps}" />
                         </CheckBox>
                         <CheckBox IsChecked="{Binding EnableColorSpacePassthrough}"
                                   IsVisible="{Binding ColorSpacePassthroughAvailable}"
@@ -242,22 +246,6 @@
                             <ComboBoxItem
                                 Content="{ext:Locale SettingsTabGraphicsAspectRatioStretch}" />
                         </ComboBox>
-                    </StackPanel>
-                </StackPanel>
- 
-                <Separator Height="1" />
-                <TextBlock Classes="h1" Text="{ext:Locale SettingsTabGraphicsDeveloperOptions}" />
-                <StackPanel
-                    Margin="10,0,0,0"
-                    HorizontalAlignment="Stretch"
-                    Orientation="Vertical"
-                    Spacing="10">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center"
-                                   Text="{ext:Locale SettingsTabGraphicsShaderDumpPath}"
-                                   Width="250" />
-                        <TextBox Text="{Binding ShaderDumpPath}"
-                                 Width="350" />
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

@@ -21518,6 +21518,31 @@
       }
     },
     {
+      "ID": "SettingsEnableDoubleFps",
+      "Translations": {
+        "ar_SA": "تمكين مضاعفة معدل الإطارات (30 ->60)",
+        "de_DE": "Doppelte FPS aktivieren (30 ->60)",
+        "el_GR": "Ενεργοποίηση Διπλού FPS (30 ->60)",
+        "en_US": "Enable Double FPS (30 ->60)",
+        "es_ES": "Habilitar FPS dobles (30 ->60)",
+        "fr_FR": "Activer les FPS doubles (30 ->60)",
+        "he_IL": "הפעלת FPS כפול (30 ->60)",
+        "it_IT": "Abilita FPS doppi (30 ->60)",
+        "ja_JP": "ダブルFPSを有効にする (30 ->60)",
+        "ko_KR": "더블 FPS 활성화 (30 ->60)",
+        "no_NO": "Aktiver dobbel FPS (30 ->60)",
+        "pl_PL": "Włącz podwójne FPS (30 ->60)",
+        "pt_BR": "Ativar FPS duplo (30 ->60)",
+        "ru_RU": "Включить двойной FPS (30 ->60)",
+        "sv_SE": "Aktivera dubbel FPS (30 ->60)",
+        "th_TH": "เปิดใช้งาน FPS สองเท่า (30 ->60)",
+        "tr_TR": "Çift FPS'i etkinleştir (30 ->60)",
+        "uk_UA": "Увімкнути подвійний FPS (30 ->60)",
+        "zh_CN": "启用双倍帧率 (30 ->60)",
+        "zh_TW": "啟用雙倍幀率 (30 ->60)"
+      }
+    },
+    {
       "ID": "SettingsEnableMacroHLETooltip",
       "Translations": {
         "ar_SA": "محاكاة عالية المستوى لكود مايكرو وحدة معالجة الرسوميات.\n\nيعمل على تحسين الأداء، ولكنه قد يسبب خللا رسوميا في بعض الألعاب.\n\nاتركه مفعلا إذا لم تكن متأكدا.",
@@ -21540,6 +21565,31 @@
         "uk_UA": "Високорівнева емуляція коду макросу GPU.\n\nПокращує продуктивність, але може викликати графічні збої в деяких іграх.\n\nЗалиште увімкненим, якщо не впевнені.",
         "zh_CN": "GPU 宏指令的高级模拟。\n\n提高性能表现，但一些游戏可能会出现图形错误。\n\n如果不确定，请保持开启状态。",
         "zh_TW": "GPU 巨集程式碼的進階模擬。\n\n可提高效能，但在某些遊戲中可能會導致圖形閃爍。\n\n如果不確定，請保持開啟狀態。"
+      }
+    },
+    {
+      "ID": "SettingsEnableDoubleFpsTooltip",
+      "Translations": {
+        "ar_SA": "عند التمكين، محاولة مضاعفة حد FPS الخاص باللعبة (30 →60). قد تتطلب مقاطع الفيديو الصوتية مضاعفة الإطارات في المحاكي للحفاظ على التزامن.",
+        "de_DE": "Bei Aktivierung wird versucht, das FPS-Limit des Spiels zu verdoppeln (30 →60). Der Ton in Zwischensequenzen kann erfordern, dass der Emulator ebenfalls Frame-Doubling nutzt, um synchron zu bleiben.",
+        "el_GR": "Όταν ενεργοποιηθεί, προσπαθεί να διπλασιάσει το όριο FPS του παιχνιδιού (30 →60). Ο ήχος στις cutscenes ενδέχεται να απαιτεί διπλασιασμό καρέ στην πλευρά του εξομοιωτή για να παραμείνει συγχρονισμένος.",
+        "en_US": "When enabled, attempt to double the game's FPS limit (30 ->60). Cutscene audio may require emulator-side frame-doubling to remain in sync.",
+        "es_ES": "Al activarlo, intenta doblar el límite de FPS del juego (30 →60). El audio de las escenas puede necesitar que el emulador doble los frames para mantenerse sincronizado.",
+        "fr_FR": "Lorsqu'il est activé, tente de doubler la limite de FPS du jeu (30 →60). L'audio des cinématiques peut nécessiter un doublement des images côté émulateur pour rester synchronisé.",
+        "he_IL": "בהפעלה, מנסה להכפיל את גבול ה‑FPS של המשחק (30 →60). ייתכן שקול בסצנות יצטרך הכפלת פריימים בצד האמולטור כדי להישאר מסונכרן.",
+        "it_IT": "Se abilitato, tenta di raddoppiare il limite di FPS del gioco (30 →60). L'audio delle scene potrebbe richiedere il raddoppio dei frame lato emulatore per rimanere sincronizzato.",
+        "ja_JP": "有効にすると、ゲームのFPS制限を倍（30 →60）にしようとします。カットシーンの音声は、同期を保つためにエミュレータ側でフレーム倍増が必要になる場合があります。",
+        "ko_KR": "활성화하면 게임의 FPS 제한을 두 배로(30 →60) 시도합니다. 컷신 오디오가 동기 상태를 유지하려면 에뮬레이터 쪽에서 프레임 더블링이 필요할 수 있습니다.",
+        "no_NO": "Når aktivert prøver den å doble spillets FPS-grense (30 →60). Lyd i mellomsekvenser kan kreve rammedobling i emulatoren for å være synkron.",
+        "pl_PL": "Po włączeniu próbuje podwoić limit FPS gry (30 →60). Dźwięk w cutscenach może wymagać podwojenia klatek po stronie emulatora, aby pozostać zsynchronizowanym.",
+        "pt_BR": "Quando ativado, tenta dobrar o limite de FPS do jogo (30 →60). O áudio das cutscenes pode exigir duplicação de frames no emulador para permanecer sincronizado.",
+        "ru_RU": "При включении пытается удвоить ограничение FPS игры (30 →60). Аудио в катсценах может потребовать удвоения кадров со стороны эмулятора, чтобы оставаться синхронизированным.",
+        "sv_SE": "När aktiverad försöker den dubbla spelets FPS-gräns (30 →60). Ljudet i mellansekvenser kan kräva att emulatorn dubblerar bildrutor för att hålla synkronisering.",
+        "th_TH": "เมื่อเปิดใช้งาน จะพยายามเพิ่มขีดจำกัด FPS ของเกมเป็นสองเท่า (30 →60) เสียงของคัทซีนอาจต้องให้ตัวจำลองเพิ่มเฟรมเพื่อให้ยังคงซิงโครไนซ์",
+        "tr_TR": "Etkinleştirildiğinde, oyunun FPS sınırını iki katına çıkarmaya çalışır (30 →60). Ara sahne sesleri, senkron kalmak için emülatör tarafında çerçeve ikilemeye ihtiyaç duyabilir.",
+        "uk_UA": "При увімкненні намагається подвоїти ліміт FPS гри (30 →60). Аудіо у катсценах може вимагати подвоєння кадрів на боці емулятора, щоб залишатися синхронізованим.",
+        "zh_CN": "启用后，尝试将游戏的 FPS 限制加倍（30 →60）。过场动画的音频可能需要在模拟器端进行帧倍增以保持同步。",
+        "zh_TW": "啟用後，嘗試將遊戲的 FPS 限制加倍（30 →60）。過場動畫的音訊可能需要在模擬器端進行影格倍增以保持同步。"
       }
     },
     {

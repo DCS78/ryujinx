@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 using Projektanker.Icons.Avalonia;
 using Ryujinx.Ava.Common.Locale;
@@ -16,10 +17,26 @@ namespace Ryujinx.Ava.Common.Markup
         protected override Icon Value => new() { Value = iconString, Animation = IconAnimation.Spin };
     }
 
-    internal class LocaleExtension(LocaleKeys key) : BasicMarkupExtension<string>
+    internal class LocaleExtension : BasicMarkupExtension<string>
     {
+        private readonly LocaleKeys _key;
+
+        public LocaleExtension(LocaleKeys key)
+        {
+            _key = key;
+        }
+
+        public LocaleExtension(string key)
+        {
+            if (!Enum.TryParse<LocaleKeys>(key, out _key))
+            {
+                // Fallback to a safe default if parsing fails
+                _key = LocaleKeys.RyujinxInfo;
+            }
+        }
+
         public override string Name => "Translation";
-        protected override string Value => LocaleManager.Instance[key];
+        protected override string Value => LocaleManager.Instance[_key];
 
         protected override void ConfigureBindingExtension(CompiledBindingExtension bindingExtension)
             => bindingExtension.Source = LocaleManager.Instance;
