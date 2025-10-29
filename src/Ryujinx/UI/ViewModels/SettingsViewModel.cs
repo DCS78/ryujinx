@@ -77,11 +77,11 @@ namespace Ryujinx.Ava.UI.ViewModels
 
         public SettingsHacksViewModel DirtyHacks { get; }
 
-        private readonly bool _isGameRunning;
         private readonly Bitmap _gameIcon;
         private readonly string _gameTitle;
         private readonly string _gamePath;
         private readonly string _gameId;
+        private readonly bool _isGameRunning;
         public bool IsGameRunning => _isGameRunning;
         public Bitmap GameIcon => _gameIcon;
         public string GamePath => _gamePath;
@@ -258,20 +258,20 @@ namespace Ryujinx.Ava.UI.ViewModels
         // Note: proper cutscene audio sync requires frame-doubling logic in the emulator
         // (interpretation of certain frame-timed audio events twice). This ViewModel property
         // merely exposes the toggle and updates the running emulator at runtime.
-        private bool _enableDoubleFps;
-        public bool EnableDoubleFps
+        private bool _EnableDoubleFPS;
+        public bool EnableDoubleFPS
         {
-            get => _enableDoubleFps;
+            get => _EnableDoubleFPS;
             set
             {
-                if (_enableDoubleFps == value) return;
+                if (_EnableDoubleFPS == value) return;
 
-                _enableDoubleFps = value;
+                _EnableDoubleFPS = value;
 
                 // Apply immediately to running emulator if any.
                 try
                 {
-                    Ryujinx.HLE.Switch.Shared?.SetDoubleFps(_enableDoubleFps);
+                    Switch.Shared?.SetDoubleFPS(_EnableDoubleFPS);
                 }
                 catch { }
 
@@ -701,13 +701,14 @@ namespace Ryujinx.Ava.UI.ViewModels
 
             // Graphics
             GraphicsBackendIndex = (int)config.Graphics.GraphicsBackend.Value;
-            // Load DoubleFps setting if available in configuration (use reflection to keep
+            // Load DoubleFPS setting if available in configuration (use reflection to keep
             // compatibility if the Graphics configuration doesn't expose the property yet).
             // Support both a direct bool property and a wrapper config property exposing a `Value`.
             try
             {
                 var gfx = config.Graphics as object;
-                var p = gfx.GetType().GetProperty("DoubleFps");
+                // The config may expose this setting as "EnableDoubleFPS" or the older "DoubleFPS".
+                var p = gfx.GetType().GetProperty("EnableDoubleFPS") ?? gfx.GetType().GetProperty("DoubleFPS");
 
                 if (p != null)
                 {
@@ -715,7 +716,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                     if (raw is bool b)
                     {
-                        EnableDoubleFps = b;
+                        EnableDoubleFPS = b;
                     }
                     else if (raw != null)
                     {
@@ -727,7 +728,7 @@ namespace Ryujinx.Ava.UI.ViewModels
 
                             if (inner is bool ib)
                             {
-                                EnableDoubleFps = ib;
+                                EnableDoubleFPS = ib;
                             }
                         }
                     }
@@ -848,18 +849,19 @@ namespace Ryujinx.Ava.UI.ViewModels
             config.Graphics.EnableCustomVSyncInterval.Value = EnableCustomVSyncInterval;
             config.Graphics.CustomVSyncInterval.Value = CustomVSyncInterval;
             config.Graphics.GraphicsBackend.Value = (GraphicsBackend)GraphicsBackendIndex;
-            // Persist EnableDoubleFps setting if the configuration supports it.
+            // Persist EnableDoubleFPS setting if the configuration supports it.
             // Support both a direct bool property and a wrapper config property exposing a `Value`.
             try
             {
                 var gfx = config.Graphics as object;
-                var p = gfx.GetType().GetProperty("DoubleFps");
+                // The config may expose this setting as "EnableDoubleFPS" or the older "DoubleFPS".
+                var p = gfx.GetType().GetProperty("EnableDoubleFPS") ?? gfx.GetType().GetProperty("DoubleFPS");
 
                 if (p != null)
                 {
                     if (p.PropertyType == typeof(bool))
                     {
-                        p.SetValue(gfx, EnableDoubleFps);
+                        p.SetValue(gfx, EnableDoubleFPS);
                     }
                     else
                     {
@@ -869,7 +871,7 @@ namespace Ryujinx.Ava.UI.ViewModels
                             var valProp = p.PropertyType.GetProperty("Value");
                             if (valProp != null && valProp.PropertyType == typeof(bool))
                             {
-                                valProp.SetValue(raw, EnableDoubleFps);
+                                valProp.SetValue(raw, EnableDoubleFPS);
                             }
                         }
                     }
@@ -994,7 +996,6 @@ namespace Ryujinx.Ava.UI.ViewModels
             SaveSettings();
             CloseWindow?.Invoke();
         }
-
         [ObservableProperty] private bool _wantsToReset;
 
         public AsyncRelayCommand ResetButton => Commands.Create(async () =>
@@ -1021,11 +1022,11 @@ namespace Ryujinx.Ava.UI.ViewModels
             CloseWindow?.Invoke();
         }
 
-        public string EnableDoubleFpsTooltipText
+        public string EnableDoubleFPSTooltipText
         {
             get
             {
-                string baseText = LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.SettingsEnableDoubleFpsTooltip);
+                string baseText = LocaleManager.Instance.UpdateAndGetDynamicValue(LocaleKeys.SettingsEnableDoubleFPSTooltip);
 
                 return baseText + "\n\n" + "Requires frame-doubling support in the emulator for correct cutscene/audio sync; enabling without proper support may cause audio desync.";
             }

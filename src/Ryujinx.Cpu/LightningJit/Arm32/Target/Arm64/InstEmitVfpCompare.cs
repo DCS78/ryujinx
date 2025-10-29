@@ -67,7 +67,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm32.Target.Arm64
 
             // Save result flags from the FCMP operation on FPSCR register, then restore the old flags if needed.
 
-            WriteUpdateFpsrNzcv(context);
+            WriteUpdateFPSrNzcv(context);
 
             if (!canPeepholeOptimize)
             {
@@ -80,7 +80,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm32.Target.Arm64
             }
         }
 
-        private static void WriteUpdateFpsrNzcv(CodeGenContext context)
+        private static void WriteUpdateFPSrNzcv(CodeGenContext context)
         {
             using ScopedRegister fpsrRegister = context.RegisterAllocator.AllocateTempGprRegisterScoped();
             using ScopedRegister flagsRegister = context.RegisterAllocator.AllocateTempGprRegisterScoped();

@@ -90,9 +90,9 @@
                             ToolTip.Tip="{ext:Locale SettingsEnableMacroHLETooltip}">
                             <TextBlock Text="{ext:Locale SettingsEnableMacroHLE}" />
                         </CheckBox>
-                        <CheckBox IsChecked="{Binding EnableDoubleFps, Mode=TwoWay}"
-                            ToolTip.Tip="{Binding EnableDoubleFpsTooltipText}">
-                            <TextBlock Text="{ext:Locale SettingsEnableDoubleFps}" />
+                        <CheckBox IsChecked="{Binding EnableDoubleFPS}"
+                            ToolTip.Tip="{Binding EnableDoubleFPSTooltipText}">
+                            <TextBlock Text="{ext:Locale SettingsEnableDoubleFPS}" />
                         </CheckBox>
                         <CheckBox IsChecked="{Binding EnableColorSpacePassthrough}"
                                   IsVisible="{Binding ColorSpacePassthroughAvailable}"

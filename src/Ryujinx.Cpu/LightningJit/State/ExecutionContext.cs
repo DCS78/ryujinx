@@ -39,7 +39,7 @@ namespace Ryujinx.Cpu.LightningJit.State
             set => _nativeContext.SetPstate(value);
         }
 
-        public uint Fpsr
+        public uint FPSr
         {
             get => _nativeContext.GetFPState((uint)FPSR.Mask);
             set => _nativeContext.SetFPState(value, (uint)FPSR.Mask);

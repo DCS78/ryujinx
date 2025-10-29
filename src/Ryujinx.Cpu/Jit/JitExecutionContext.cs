@@ -41,10 +41,10 @@ namespace Ryujinx.Cpu.Jit
         }
 
         /// <inheritdoc/>
-        public uint Fpsr
+        public uint FPSr
         {
-            get => (uint)_impl.Fpsr;
-            set => _impl.Fpsr = (FPSR)value;
+            get => (uint)_impl.FPSr;
+            set => _impl.FPSr = (FPSR)value;
         }
 
         /// <inheritdoc/>

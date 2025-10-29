@@ -127,6 +127,9 @@ namespace Ryujinx.Headless
             if (NeedsOverride(nameof(DisableMacroHLE)))
                 DisableMacroHLE = !configurationState.Graphics.EnableMacroHLE;
 
+            if (NeedsOverride(nameof(DisableDoubleFPS)))
+                DisableDoubleFPS = !configurationState.Graphics.EnableDoubleFPS;
+
             if (NeedsOverride(nameof(GraphicsShadersDumpPath)))
                 GraphicsShadersDumpPath = configurationState.Graphics.ShadersDumpPath;
 
@@ -390,6 +393,7 @@ namespace Ryujinx.Headless
 
         [Option("disable-macro-hle", Required = false, HelpText = "Disables high-level emulation of Macro code. Leaving this enabled improves performance but may cause graphical glitches in some games.")]
         public bool DisableMacroHLE { get; set; }
+        public bool DisableDoubleFPS { get; set; }
 
         [Option("graphics-shaders-dump-path", Required = false, HelpText = "Dumps shaders in this local directory. (Developer only)")]
         public string GraphicsShadersDumpPath { get; set; }

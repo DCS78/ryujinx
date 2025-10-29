@@ -47,6 +47,11 @@ namespace Ryujinx.Graphics.Gpu
         public static bool EnableMacroHLE { get; set; } = true;
 
         /// <summary>
+        /// Enables or disables FPS doubling code.
+        /// </summary>
+        public static bool EnableDoubleFPS { get; set; } = true;
+
+        /// <summary>
         /// Title id of the current running game.
         /// Used by the shader cache.
         /// </summary>

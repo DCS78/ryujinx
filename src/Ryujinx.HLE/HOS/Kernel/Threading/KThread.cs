@@ -738,7 +738,7 @@ namespace Ryujinx.HLE.HOS.Kernel.Threading
             }
 
             context.Fpcr = (uint)Context.Fpcr;
-            context.Fpsr = (uint)Context.Fpsr;
+            context.FPSr = (uint)Context.FPSr;
 
             return context;
         }

@@ -14,7 +14,7 @@ namespace Ryujinx.Cpu.AppleHv
         uint Pstate { get; set; }
 
         uint Fpcr { get; set; }
-        uint Fpsr { get; set; }
+        uint FPSr { get; set; }
         ulong ThreadUid { get; set; }
 
         ulong GetX(int index);
@@ -32,7 +32,7 @@ namespace Ryujinx.Cpu.AppleHv
             TpidrroEl0 = context.TpidrroEl0;
             Pstate = context.Pstate;
             Fpcr = context.Fpcr;
-            Fpsr = context.Fpsr;
+            FPSr = context.FPSr;
 
             for (int i = 0; i < 32; i++)
             {

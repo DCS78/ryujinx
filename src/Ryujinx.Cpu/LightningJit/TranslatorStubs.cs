@@ -292,14 +292,14 @@ namespace Ryujinx.Cpu.LightningJit
         private static void EmitSwapFpFlags(ref Assembler asm, Operand context, Operand tempRegister, Operand tempRegister2, int loadOffset, int storeOffset)
         {
             asm.MrsFpcr(tempRegister);
-            asm.MrsFpsr(tempRegister2);
+            asm.MrsFPSr(tempRegister2);
             asm.Orr(tempRegister, tempRegister, tempRegister2);
 
             asm.StrRiUn(tempRegister, context, storeOffset);
 
             asm.LdrRiUn(tempRegister, context, loadOffset);
             asm.MsrFpcr(tempRegister);
-            asm.MsrFpsr(tempRegister2);
+            asm.MsrFPSr(tempRegister2);
         }
 
         /// <summary>

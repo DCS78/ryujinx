@@ -53,10 +53,10 @@ namespace Ryujinx.Cpu.AppleHv
         }
 
         /// <inheritdoc/>
-        public uint Fpsr
+        public uint FPSr
         {
-            get => _impl.Fpsr;
-            set => _impl.Fpsr = value;
+            get => _impl.FPSr;
+            set => _impl.FPSr = value;
         }
 
         /// <inheritdoc/>

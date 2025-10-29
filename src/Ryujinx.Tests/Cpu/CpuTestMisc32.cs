@@ -95,7 +95,7 @@ namespace Ryujinx.Tests.Cpu
             if (mode2)
             {
                 Opcode(0xEEF10A10); // VMRS R0, FPSCR
-                Opcode(0xE200020F); // AND R0, #0xF0000000 // R0 &= "Fpsr.Nzcv".
+                Opcode(0xE200020F); // AND R0, #0xF0000000 // R0 &= "FPSr.Nzcv".
             }
 
             if (mode3)
@@ -107,7 +107,7 @@ namespace Ryujinx.Tests.Cpu
 
             ExecuteOpcodes();
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Nzcv);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Nzcv);
         }
 #endif
     }

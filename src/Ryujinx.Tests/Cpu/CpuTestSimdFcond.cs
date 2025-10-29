@@ -162,7 +162,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v1: v1, v2: v2, overflow: v, carry: c, zero: z, negative: n);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc);
         }
 
         [Test, Pairwise]
@@ -188,7 +188,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v1: v1, v2: v2, overflow: v, carry: c, zero: z, negative: n);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc);
         }
 
         [Test, Pairwise]

@@ -18,7 +18,7 @@ namespace Ryujinx.Tests.Cpu
         private static readonly bool _ignoreFpcrFz = false;
         private static readonly bool _ignoreFpcrDn = false;
 
-        private static readonly bool _ignoreAllExceptFpsrQc = false;
+        private static readonly bool _ignoreAllExceptFPSrQc = false;
 
         private ulong _currAddress;
 
@@ -147,7 +147,7 @@ namespace Ryujinx.Tests.Cpu
             _context.SetPstateFlag(PState.NFlag, negative);
 
             _context.Fpcr = (FPCR)fpcr;
-            _context.Fpsr = (FPSR)fpsr;
+            _context.FPSr = (FPSR)fpsr;
 
             _unicornEmu.X[0] = x0;
             _unicornEmu.X[1] = x1;
@@ -170,7 +170,7 @@ namespace Ryujinx.Tests.Cpu
             _unicornEmu.NegativeFlag = negative;
 
             _unicornEmu.Fpcr = fpcr;
-            _unicornEmu.Fpsr = fpsr;
+            _unicornEmu.FPSr = fpsr;
         }
 
         protected void ExecuteOpcodes(bool runUnicorn = true)
@@ -269,7 +269,7 @@ namespace Ryujinx.Tests.Cpu
 
         /// <summary>Floating-point Status Register.</summary>
         [Flags]
-        protected enum Fpsr
+        protected enum FPSr
         {
             None = 0,
 
@@ -311,13 +311,13 @@ namespace Ryujinx.Tests.Cpu
         }
 
         protected void CompareAgainstUnicorn(
-            Fpsr fpsrMask = Fpsr.None,
+            FPSr fpsrMask = FPSr.None,
             FpSkips fpSkips = FpSkips.None,
             FpTolerances fpTolerances = FpTolerances.None)
         {
-            if (_ignoreAllExceptFpsrQc)
+            if (_ignoreAllExceptFPSrQc)
             {
-                fpsrMask &= Fpsr.Qc;
+                fpsrMask &= FPSr.Qc;
             }
 
             if (fpSkips != FpSkips.None)
@@ -411,7 +411,7 @@ namespace Ryujinx.Tests.Cpu
             });
 
             Assert.That((int)_context.Fpcr,                 Is.EqualTo(_unicornEmu.Fpcr),                 "Fpcr");
-            Assert.That((int)_context.Fpsr & (int)fpsrMask, Is.EqualTo(_unicornEmu.Fpsr & (int)fpsrMask), "Fpsr");
+            Assert.That((int)_context.FPSr & (int)fpsrMask, Is.EqualTo(_unicornEmu.FPSr & (int)fpsrMask), "FPSr");
 #pragma warning restore IDE0055
 
             if (_usingMemory)
@@ -442,7 +442,7 @@ namespace Ryujinx.Tests.Cpu
 
             if (fpSkips.HasFlag(FpSkips.IfUnderflow))
             {
-                if ((_unicornEmu.Fpsr & (int)Fpsr.Ufc) != 0)
+                if ((_unicornEmu.FPSr & (int)FPSr.Ufc) != 0)
                 {
                     Assert.Ignore("Underflow test.");
                 }
@@ -450,7 +450,7 @@ namespace Ryujinx.Tests.Cpu
 
             if (fpSkips.HasFlag(FpSkips.IfOverflow))
             {
-                if ((_unicornEmu.Fpsr & (int)Fpsr.Ofc) != 0)
+                if ((_unicornEmu.FPSr & (int)FPSr.Ofc) != 0)
                 {
                     Assert.Ignore("Overflow test.");
                 }

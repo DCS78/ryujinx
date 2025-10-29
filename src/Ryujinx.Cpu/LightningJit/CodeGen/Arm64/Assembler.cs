@@ -763,7 +763,7 @@ namespace Ryujinx.Cpu.LightningJit.CodeGen.Arm64
             WriteInstruction(0xd53b4400u, rt);
         }
 
-        public readonly void MrsFpsr(Operand rt)
+        public readonly void MrsFPSr(Operand rt)
         {
             WriteInstruction(0xd53b4420u, rt);
         }
@@ -793,7 +793,7 @@ namespace Ryujinx.Cpu.LightningJit.CodeGen.Arm64
             WriteInstruction(0xd51b4400, rt);
         }
 
-        public readonly void MsrFpsr(Operand rt)
+        public readonly void MsrFPSr(Operand rt)
         {
             WriteInstruction(0xd51b4420, rt);
         }

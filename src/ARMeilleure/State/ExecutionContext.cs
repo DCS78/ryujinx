@@ -45,7 +45,7 @@ namespace ARMeilleure.State
             set => _nativeContext.SetPstate(value);
         }
 
-        public FPSR Fpsr
+        public FPSR FPSr
         {
             get => (FPSR)_nativeContext.GetFPState((uint)FPSR.Mask);
             set => _nativeContext.SetFPState((uint)value, (uint)FPSR.Mask);
@@ -58,7 +58,7 @@ namespace ARMeilleure.State
         }
         public FPCR StandardFpcrValue => (Fpcr & (FPCR.Ahp)) | FPCR.Dn | FPCR.Fz;
 
-        public FPSCR Fpscr
+        public FPSCR FPScr
         {
             get => (FPSCR)_nativeContext.GetFPState((uint)FPSCR.Mask);
             set => _nativeContext.SetFPState((uint)value, (uint)FPSCR.Mask);

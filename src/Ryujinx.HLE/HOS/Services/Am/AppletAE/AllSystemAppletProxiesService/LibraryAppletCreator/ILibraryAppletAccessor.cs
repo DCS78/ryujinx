@@ -1,4 +1,5 @@
 using Ryujinx.Common.Logging;
+using Ryujinx.HLE.Exceptions;
 using Ryujinx.HLE.HOS.Applets;
 using Ryujinx.HLE.HOS.Ipc;
 using Ryujinx.HLE.HOS.Kernel;
@@ -115,6 +116,25 @@ namespace Ryujinx.HLE.HOS.Services.Am.AppletAE.AllSystemAppletProxiesService.Lib
 
             Logger.Stub?.PrintStub(LogClass.ServiceAm);
 
+            return ResultCode.Success;
+        }
+
+        [CommandCmif(90)]
+        // Unknown90(ulong[4])
+        public ResultCode Unknown90(ServiceCtx context)
+        {
+            // NOTE: This call is performed on SDK 20+ when applet is called.
+            //       Since we don't support most applets for now, it's fine to stub it.
+            //       Throw if values are not 0 to learn more about what this function does.
+
+            if (context.RequestData.ReadUInt64() != 0 || context.RequestData.ReadUInt64() != 0 ||
+                context.RequestData.ReadUInt64() != 0 || context.RequestData.ReadUInt64() != 0)
+            {
+                throw new ServiceNotImplementedException(this, context, $"{GetType().FullName}: 90");
+            }
+
+
+            Logger.Stub?.PrintStub(LogClass.ServiceAm);
             return ResultCode.Success;
         }
 

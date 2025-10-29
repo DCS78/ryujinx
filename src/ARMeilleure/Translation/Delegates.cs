@@ -152,43 +152,43 @@ namespace ARMeilleure.Translation
             SetDelegateInfo(typeof(SoftFloat16_64).GetMethod(nameof(SoftFloat16_64.FPConvert)));
 
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPAdd)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPAddFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPAddFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompare)));
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareEQ)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareEQFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareEQFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareGE)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareGEFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareGEFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareGT)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareGTFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareGTFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareLE)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareLEFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareLEFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareLT)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareLTFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPCompareLTFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPDiv)));
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMax)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMaxFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMaxFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMaxNum)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMaxNumFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMaxNumFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMin)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMinFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMinFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMinNum)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMinNumFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMinNumFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMul)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulAdd)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulAddFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulAddFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulSub)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulSubFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulSubFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPMulX)));
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPNegMulAdd)));
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPNegMulSub)));
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRecipEstimate)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRecipEstimateFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRecipEstimateFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRecipStep))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRecipStepFused)));
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRecpX)));
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRSqrtEstimate)));
-            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRSqrtEstimateFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRSqrtEstimateFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRSqrtStep))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPRSqrtStepFused)));
             SetDelegateInfo(typeof(SoftFloat32).GetMethod(nameof(SoftFloat32.FPSqrt)));
@@ -197,43 +197,43 @@ namespace ARMeilleure.Translation
             SetDelegateInfo(typeof(SoftFloat32_16).GetMethod(nameof(SoftFloat32_16.FPConvert)));
 
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPAdd)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPAddFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPAddFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompare)));
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareEQ)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareEQFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareEQFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareGE)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareGEFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareGEFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareGT)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareGTFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareGTFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareLE)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareLEFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareLEFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareLT)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareLTFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPCompareLTFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPDiv)));
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMax)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMaxFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMaxFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMaxNum)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMaxNumFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMaxNumFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMin)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMinFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMinFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMinNum)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMinNumFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMinNumFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMul)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulAdd)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulAddFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulAddFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulSub)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulSubFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulSubFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPMulX)));
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPNegMulAdd)));
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPNegMulSub)));
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRecipEstimate)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRecipEstimateFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRecipEstimateFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRecipStep))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRecipStepFused)));
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRecpX)));
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRSqrtEstimate)));
-            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRSqrtEstimateFpscr))); // A32 only.
+            SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRSqrtEstimateFPScr))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRSqrtStep))); // A32 only.
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPRSqrtStepFused)));
             SetDelegateInfo(typeof(SoftFloat64).GetMethod(nameof(SoftFloat64.FPSqrt)));

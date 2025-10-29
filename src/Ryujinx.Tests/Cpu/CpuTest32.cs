@@ -152,7 +152,7 @@ namespace Ryujinx.Tests.Cpu
             _context.SetPstateFlag(PState.ZFlag, zero);
             _context.SetPstateFlag(PState.NFlag, negative);
 
-            _context.Fpscr = (FPSCR)fpscr;
+            _context.FPScr = (FPSCR)fpscr;
 
             _context.SetPstateFlag(PState.TFlag, thumb);
 
@@ -177,7 +177,7 @@ namespace Ryujinx.Tests.Cpu
             _unicornEmu.ZeroFlag = zero;
             _unicornEmu.NegativeFlag = negative;
 
-            _unicornEmu.Fpscr = fpscr;
+            _unicornEmu.FPScr = fpscr;
 
             _unicornEmu.ThumbFlag = thumb;
         }
@@ -340,7 +340,7 @@ namespace Ryujinx.Tests.Cpu
 
         /// <summary>Floating-point Status Register.</summary>
         [Flags]
-        protected enum Fpsr
+        protected enum FPSr
         {
             None = 0,
 
@@ -385,7 +385,7 @@ namespace Ryujinx.Tests.Cpu
         }
 
         protected void CompareAgainstUnicorn(
-            Fpsr fpsrMask = Fpsr.None,
+            FPSr fpsrMask = FPSr.None,
             FpSkips fpSkips = FpSkips.None,
             FpTolerances fpTolerances = FpTolerances.None)
         {
@@ -448,7 +448,7 @@ namespace Ryujinx.Tests.Cpu
                 Assert.That(_context.GetPstateFlag(PState.NFlag), Is.EqualTo(_unicornEmu.NegativeFlag), "NFlag");
             });
 
-            Assert.That((int)_context.Fpscr & (int)fpsrMask, Is.EqualTo(_unicornEmu.Fpscr & (int)fpsrMask), "Fpscr");
+            Assert.That((int)_context.FPScr & (int)fpsrMask, Is.EqualTo(_unicornEmu.FPScr & (int)fpsrMask), "FPScr");
 
             if (_usingMemory)
             {
@@ -478,7 +478,7 @@ namespace Ryujinx.Tests.Cpu
 
             if (fpSkips.HasFlag(FpSkips.IfUnderflow))
             {
-                if ((_unicornEmu.Fpscr & (int)Fpsr.Ufc) != 0)
+                if ((_unicornEmu.FPScr & (int)FPSr.Ufc) != 0)
                 {
                     Assert.Ignore("Underflow test.");
                 }
@@ -486,7 +486,7 @@ namespace Ryujinx.Tests.Cpu
 
             if (fpSkips.HasFlag(FpSkips.IfOverflow))
             {
-                if ((_unicornEmu.Fpscr & (int)Fpsr.Ofc) != 0)
+                if ((_unicornEmu.FPScr & (int)FPSr.Ofc) != 0)
                 {
                     Assert.Ignore("Overflow test.");
                 }

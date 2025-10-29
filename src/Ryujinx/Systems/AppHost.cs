@@ -65,7 +65,7 @@ namespace Ryujinx.Ava.Systems
     {
         private const int CursorHideIdleTime = 5; // Hide Cursor seconds.
         private const float MaxResolutionScale = 4.0f; // Max resolution hotkeys can scale to before wrapping.
-        private const int TargetFps = 60;
+        private const int TargetFPS = 60;
         private const float VolumeDelta = 0.05f;
 
         private static readonly Cursor _invisibleCursor = new(StandardCursorType.None);
@@ -174,7 +174,7 @@ namespace Ryujinx.Ava.Systems
             RendererHost = renderer;
 
             _chrono = new Stopwatch();
-            _ticksPerFrame = Stopwatch.Frequency / TargetFps;
+            _ticksPerFrame = Stopwatch.Frequency / TargetFPS;
             _playTimer = new Stopwatch();
 
             if (ApplicationPath.StartsWith("@SystemContent"))
@@ -1157,8 +1157,8 @@ namespace Ryujinx.Ava.Systems
             string frameTime = Device.Statistics.GetGameFrameTime().ToString("00.00");
 
             return Device.TurboMode
-                ? LocaleManager.GetFormatted(LocaleKeys.FpsTurboStatusBarText, frameRate, frameTime, Device.TickScalar)
-                : LocaleManager.GetFormatted(LocaleKeys.FpsStatusBarText, frameRate, frameTime);
+                ? LocaleManager.GetFormatted(LocaleKeys.FPSTurboStatusBarText, frameRate, frameTime, Device.TickScalar)
+                : LocaleManager.GetFormatted(LocaleKeys.FPSStatusBarText, frameRate, frameTime);
         }
 
         public async Task ShowExitPrompt()

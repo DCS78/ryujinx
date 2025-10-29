@@ -124,7 +124,7 @@ namespace Ryujinx.Cpu.AppleHv
             }
         }
 
-        public uint Fpsr
+        public uint FPSr
         {
             get
             {

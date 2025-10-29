@@ -16,7 +16,7 @@ namespace Ryujinx.HLE.HOS.Kernel.SupervisorCall
 #pragma warning restore CS0169, IDE0051
         public Array32<V128> FpuRegisters;
         public uint Fpcr;
-        public uint Fpsr;
+        public uint FPSr;
         public ulong Tpidr;
     }
 }

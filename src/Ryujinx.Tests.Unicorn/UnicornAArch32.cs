@@ -36,7 +36,7 @@ namespace Ryujinx.Tests.Unicorn
             set => SetRegister(Arm.UC_ARM_REG_CPSR, value);
         }
 
-        public int Fpscr
+        public int FPScr
         {
             get => (int)GetRegister(Arm.UC_ARM_REG_FPSCR) | ((int)GetRegister(Arm.UC_ARM_REG_FPSCR_NZCV));
             set => SetRegister(Arm.UC_ARM_REG_FPSCR, (uint)value);

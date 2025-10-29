@@ -1213,7 +1213,7 @@ namespace ARMeilleure.Instructions
 
         // Generic Functions
 
-        public static Operand EmitSoftFloatCallDefaultFpscr(ArmEmitterContext context, string name, params Operand[] callArgs)
+        public static Operand EmitSoftFloatCallDefaultFPScr(ArmEmitterContext context, string name, params Operand[] callArgs)
         {
             IOpCodeSimd op = (IOpCodeSimd)context.CurrOp;
 

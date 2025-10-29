@@ -27,7 +27,7 @@ namespace ARMeilleure.Instructions
             }
             else
             {
-                EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareEQFpscr), false);
+                EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareEQFPScr), false);
             }
         }
 
@@ -52,7 +52,7 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareEQFpscr), true);
+                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareEQFPScr), true);
                 }
             }
             else
@@ -73,7 +73,7 @@ namespace ARMeilleure.Instructions
             }
             else
             {
-                EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareGEFpscr), false);
+                EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareGEFPScr), false);
             }
         }
 
@@ -100,7 +100,7 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareGEFpscr), true);
+                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareGEFPScr), true);
                 }
             }
             else
@@ -121,7 +121,7 @@ namespace ARMeilleure.Instructions
             }
             else
             {
-                EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareGTFpscr), false);
+                EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareGTFPScr), false);
             }
         }
 
@@ -148,7 +148,7 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareGTFpscr), true);
+                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareGTFPScr), true);
                 }
             }
             else
@@ -173,7 +173,7 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareLEFpscr), true);
+                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareLEFPScr), true);
                 }
             }
             else
@@ -198,7 +198,7 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareLTFpscr), true);
+                    EmitCmpOpF32(context, nameof(SoftFloat32.FPCompareLTFPScr), true);
                 }
             }
             else
@@ -215,14 +215,14 @@ namespace ARMeilleure.Instructions
                 {
                     Operand zeroOp = m.Type == OperandType.FP64 ? ConstF(0.0d) : ConstF(0.0f);
 
-                    return EmitSoftFloatCallDefaultFpscr(context, name, m, zeroOp);
+                    return EmitSoftFloatCallDefaultFPScr(context, name, m, zeroOp);
                 });
             }
             else
             {
                 EmitVectorBinaryOpF32(context, (n, m) =>
                 {
-                    return EmitSoftFloatCallDefaultFpscr(context, name, n, m);
+                    return EmitSoftFloatCallDefaultFPScr(context, name, n, m);
                 });
             }
         }
@@ -387,11 +387,11 @@ namespace ARMeilleure.Instructions
 
                 Operand nzcv = EmitSoftFloatCall(context, nameof(SoftFloat32.FPCompare), ne, me, Const(signalNaNs));
 
-                EmitSetFpscrNzcv(context, nzcv);
+                EmitSetFPScrNzcv(context, nzcv);
             }
         }
 
-        private static void EmitSetFpscrNzcv(ArmEmitterContext context, Operand nzcv)
+        private static void EmitSetFPScrNzcv(ArmEmitterContext context, Operand nzcv)
         {
             Operand Extract(Operand value, int bit)
             {

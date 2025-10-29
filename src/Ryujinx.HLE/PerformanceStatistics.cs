@@ -146,7 +146,7 @@ namespace Ryujinx.HLE
  // Implement frame-doubling: when enabled, count two host frames per guest frame
  // while advancing guest timing only once. This keeps guest timing / audio events
  // in sync while making the host present two frames for every guest frame.
- long increment = (_device != null && _device.EnableDoubleFps) ?2L :1L;
+ long increment = (_device != null && _device.EnableDoubleFPS) ?2L :1L;
 
  lock (_frameLock[frameType])
  {

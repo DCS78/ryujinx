@@ -92,7 +92,7 @@ namespace ARMeilleure.Instructions
             }
             else
             {
-                context.Fpsr |= (FPSR)(1 << (int)exc);
+                context.FPSr |= (FPSR)(1 << (int)exc);
             }
         }
 
@@ -391,7 +391,7 @@ namespace ARMeilleure.Instructions
 
             if ((context.Fpcr & FPCR.Fz) != 0 && exponent < MinimumExp)
             {
-                context.Fpsr |= FPSR.Ufc;
+                context.FPSr |= FPSR.Ufc;
 
                 return SoftFloat32.FPZero(sign);
             }
@@ -567,7 +567,7 @@ namespace ARMeilleure.Instructions
 
             if ((context.Fpcr & FPCR.Fz) != 0 && exponent < MinimumExp)
             {
-                context.Fpsr |= FPSR.Ufc;
+                context.FPSr |= FPSR.Ufc;
 
                 return SoftFloat64.FPZero(sign);
             }
@@ -788,19 +788,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPAdd(float value1, float value2)
         {
-            return FPAddFpscrImpl(value1, value2, false);
+            return FPAddFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPAddFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPAddFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPAddFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPAddFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static float FPAddFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPAddFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out uint op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out uint op2, context, fpcr);
@@ -838,7 +838,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -890,13 +890,13 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPCompareEQ(float value1, float value2)
         {
-            return FPCompareEQFpscrImpl(value1, value2, false);
+            return FPCompareEQFPScrImpl(value1, value2, false);
         }
 
-        private static float FPCompareEQFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPCompareEQFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -921,27 +921,27 @@ namespace ARMeilleure.Instructions
         }
 
         [UnmanagedCallersOnly]
-        public static float FPCompareEQFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPCompareEQFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPCompareEQFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPCompareEQFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
         [UnmanagedCallersOnly]
         public static float FPCompareGE(float value1, float value2)
         {
-            return FPCompareGEFpscrImpl(value1, value2, false);
+            return FPCompareGEFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPCompareGEFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPCompareGEFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPCompareGEFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPCompareGEFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static float FPCompareGEFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPCompareGEFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -965,19 +965,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPCompareGT(float value1, float value2)
         {
-            return FPCompareGTFpscrImpl(value1, value2, false);
+            return FPCompareGTFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPCompareGTFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPCompareGTFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPCompareGTFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPCompareGTFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static float FPCompareGTFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPCompareGTFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -1001,25 +1001,25 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPCompareLE(float value1, float value2)
         {
-            return FPCompareGEFpscrImpl(value2, value1, false);
+            return FPCompareGEFPScrImpl(value2, value1, false);
         }
 
         [UnmanagedCallersOnly]
         public static float FPCompareLT(float value1, float value2)
         {
-            return FPCompareGTFpscrImpl(value2, value1, false);
+            return FPCompareGTFPScrImpl(value2, value1, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPCompareLEFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPCompareLEFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPCompareGEFpscrImpl(value2, value1, standardFpscr == 1);
+            return FPCompareGEFPScrImpl(value2, value1, standardFPScr == 1);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPCompareLTFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPCompareLTFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPCompareGEFpscrImpl(value2, value1, standardFpscr == 1);
+            return FPCompareGEFPScrImpl(value2, value1, standardFPScr == 1);
         }
 
         [UnmanagedCallersOnly]
@@ -1065,7 +1065,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -1078,19 +1078,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPMax(float value1, float value2)
         {
-            return FPMaxFpscrImpl(value1, value2, false);
+            return FPMaxFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPMaxFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPMaxFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPMaxFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMaxFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static float FPMaxFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPMaxFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out uint op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out uint op2, context, fpcr);
@@ -1115,7 +1115,7 @@ namespace ARMeilleure.Instructions
 
                         if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                         {
-                            context.Fpsr |= FPSR.Ufc;
+                            context.FPSr |= FPSR.Ufc;
 
                             result = FPZero(result < 0f);
                         }
@@ -1137,7 +1137,7 @@ namespace ARMeilleure.Instructions
 
                         if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                         {
-                            context.Fpsr |= FPSR.Ufc;
+                            context.FPSr |= FPSR.Ufc;
 
                             result = FPZero(result < 0f);
                         }
@@ -1151,13 +1151,13 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPMaxNum(float value1, float value2)
         {
-            return FPMaxNumFpscrImpl(value1, value2, false);
+            return FPMaxNumFPScrImpl(value1, value2, false);
         }
 
-        private static float FPMaxNumFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPMaxNumFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -1171,31 +1171,31 @@ namespace ARMeilleure.Instructions
                 value2 = FPInfinity(true);
             }
 
-            return FPMaxFpscrImpl(value1, value2, standardFpscr);
+            return FPMaxFPScrImpl(value1, value2, standardFPScr);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPMaxNumFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPMaxNumFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPMaxNumFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMaxNumFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
         [UnmanagedCallersOnly]
         public static float FPMin(float value1, float value2)
         {
-            return FPMinFpscrImpl(value1, value2, false);
+            return FPMinFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPMinFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPMinFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPMinFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMinFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static float FPMinFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPMinFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out uint op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out uint op2, context, fpcr);
@@ -1220,7 +1220,7 @@ namespace ARMeilleure.Instructions
 
                         if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                         {
-                            context.Fpsr |= FPSR.Ufc;
+                            context.FPSr |= FPSR.Ufc;
 
                             result = FPZero(result < 0f);
                         }
@@ -1242,7 +1242,7 @@ namespace ARMeilleure.Instructions
 
                         if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                         {
-                            context.Fpsr |= FPSR.Ufc;
+                            context.FPSr |= FPSR.Ufc;
 
                             result = FPZero(result < 0f);
                         }
@@ -1256,19 +1256,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPMinNum(float value1, float value2)
         {
-            return FPMinNumFpscrImpl(value1, value2, false);
+            return FPMinNumFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPMinNumFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPMinNumFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPMinNumFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMinNumFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static float FPMinNumFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPMinNumFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -1282,25 +1282,25 @@ namespace ARMeilleure.Instructions
                 value2 = FPInfinity(false);
             }
 
-            return FPMinFpscrImpl(value1, value2, standardFpscr);
+            return FPMinFPScrImpl(value1, value2, standardFPScr);
         }
 
         [UnmanagedCallersOnly]
         public static float FPMul(float value1, float value2)
         {
-            return FPMulFpscrImpl(value1, value2, false);
+            return FPMulFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPMulFpscr(float value1, float value2, byte standardFpscr)
+        public static float FPMulFPScr(float value1, float value2, byte standardFPScr)
         {
-            return FPMulFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMulFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static float FPMulFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPMulFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out uint op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out uint op2, context, fpcr);
@@ -1334,7 +1334,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -1347,19 +1347,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPMulAdd(float valueA, float value1, float value2)
         {
-            return FPMulAddFpscrImpl(valueA, value1, value2, false);
+            return FPMulAddFPScrImpl(valueA, value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPMulAddFpscr(float valueA, float value1, float value2, byte standardFpscr)
+        public static float FPMulAddFPScr(float valueA, float value1, float value2, byte standardFPScr)
         {
-            return FPMulAddFpscrImpl(valueA, value1, value2, standardFpscr == 1);
+            return FPMulAddFPScrImpl(valueA, value1, value2, standardFPScr == 1);
         }
 
-        private static float FPMulAddFpscrImpl(float valueA, float value1, float value2, bool standardFpscr)
+        private static float FPMulAddFPScrImpl(float valueA, float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             valueA = valueA.FPUnpack(out FPType typeA, out bool signA, out uint addend, context, fpcr);
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out uint op1, context, fpcr);
@@ -1412,7 +1412,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -1427,15 +1427,15 @@ namespace ARMeilleure.Instructions
         {
             value1 = value1.FPNeg();
 
-            return FPMulAddFpscrImpl(valueA, value1, value2, false);
+            return FPMulAddFPScrImpl(valueA, value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPMulSubFpscr(float valueA, float value1, float value2, byte standardFpscr)
+        public static float FPMulSubFPScr(float valueA, float value1, float value2, byte standardFPScr)
         {
             value1 = value1.FPNeg();
 
-            return FPMulAddFpscrImpl(valueA, value1, value2, standardFpscr == 1);
+            return FPMulAddFPScrImpl(valueA, value1, value2, standardFPScr == 1);
         }
 
         [UnmanagedCallersOnly]
@@ -1474,7 +1474,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -1490,7 +1490,7 @@ namespace ARMeilleure.Instructions
             valueA = valueA.FPNeg();
             value1 = value1.FPNeg();
 
-            return FPMulAddFpscrImpl(valueA, value1, value2, false);
+            return FPMulAddFPScrImpl(valueA, value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
@@ -1498,25 +1498,25 @@ namespace ARMeilleure.Instructions
         {
             valueA = valueA.FPNeg();
 
-            return FPMulAddFpscrImpl(valueA, value1, value2, false);
+            return FPMulAddFPScrImpl(valueA, value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
         public static float FPRecipEstimate(float value)
         {
-            return FPRecipEstimateFpscrImpl(value, false);
+            return FPRecipEstimateFPScrImpl(value, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPRecipEstimateFpscr(float value, byte standardFpscr)
+        public static float FPRecipEstimateFPScr(float value, byte standardFPScr)
         {
-            return FPRecipEstimateFpscrImpl(value, standardFpscr == 1);
+            return FPRecipEstimateFPScrImpl(value, standardFPScr == 1);
         }
 
-        private static float FPRecipEstimateFpscrImpl(float value, bool standardFpscr)
+        private static float FPRecipEstimateFPScrImpl(float value, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value.FPUnpack(out FPType type, out bool sign, out uint op, context, fpcr);
 
@@ -1555,7 +1555,7 @@ namespace ARMeilleure.Instructions
             {
                 result = FPZero(sign);
 
-                context.Fpsr |= FPSR.Ufc;
+                context.FPSr |= FPSR.Ufc;
             }
             else
             {
@@ -1626,10 +1626,10 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    product = FPMulFpscrImpl(value1, value2, true);
+                    product = FPMulFPScrImpl(value1, value2, true);
                 }
 
-                result = FPSubFpscrImpl(FPTwo(false), product, true);
+                result = FPSubFPScrImpl(FPTwo(false), product, true);
             }
 
             return result;
@@ -1669,7 +1669,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -1708,19 +1708,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPRSqrtEstimate(float value)
         {
-            return FPRSqrtEstimateFpscrImpl(value, false);
+            return FPRSqrtEstimateFPScrImpl(value, false);
         }
 
         [UnmanagedCallersOnly]
-        public static float FPRSqrtEstimateFpscr(float value, byte standardFpscr)
+        public static float FPRSqrtEstimateFPScr(float value, byte standardFPScr)
         {
-            return FPRSqrtEstimateFpscrImpl(value, standardFpscr == 1);
+            return FPRSqrtEstimateFPScrImpl(value, standardFPScr == 1);
         }
 
-        private static float FPRSqrtEstimateFpscrImpl(float value, bool standardFpscr)
+        private static float FPRSqrtEstimateFPScrImpl(float value, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value.FPUnpack(out FPType type, out bool sign, out uint op, context, fpcr);
 
@@ -1821,7 +1821,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -1857,7 +1857,7 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    product = FPMulFpscrImpl(value1, value2, true);
+                    product = FPMulFPScrImpl(value1, value2, true);
                 }
 
                 result = FPHalvedSub(FPThree(false), product, context, fpcr);
@@ -1900,7 +1900,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -1944,7 +1944,7 @@ namespace ARMeilleure.Instructions
 
                 if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                 {
-                    context.Fpsr |= FPSR.Ufc;
+                    context.FPSr |= FPSR.Ufc;
 
                     result = FPZero(result < 0f);
                 }
@@ -1956,13 +1956,13 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static float FPSub(float value1, float value2)
         {
-            return FPSubFpscrImpl(value1, value2, false);
+            return FPSubFPScrImpl(value1, value2, false);
         }
 
-        private static float FPSubFpscrImpl(float value1, float value2, bool standardFpscr)
+        private static float FPSubFPScrImpl(float value1, float value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out uint op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out uint op2, context, fpcr);
@@ -2000,7 +2000,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && float.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0f);
                     }
@@ -2323,19 +2323,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPAdd(double value1, double value2)
         {
-            return FPAddFpscrImpl(value1, value2, false);
+            return FPAddFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPAddFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPAddFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPAddFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPAddFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPAddFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPAddFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out ulong op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out ulong op2, context, fpcr);
@@ -2373,7 +2373,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }
@@ -2425,19 +2425,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPCompareEQ(double value1, double value2)
         {
-            return FPCompareEQFpscrImpl(value1, value2, false);
+            return FPCompareEQFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPCompareEQFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPCompareEQFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPCompareEQFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPCompareEQFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPCompareEQFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPCompareEQFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -2464,19 +2464,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPCompareGE(double value1, double value2)
         {
-            return FPCompareGEFpscrImpl(value1, value2, false);
+            return FPCompareGEFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPCompareGEFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPCompareGEFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPCompareGEFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPCompareGEFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPCompareGEFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPCompareGEFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -2500,19 +2500,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPCompareGT(double value1, double value2)
         {
-            return FPCompareGTFpscrImpl(value1, value2, false);
+            return FPCompareGTFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPCompareGTFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPCompareGTFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPCompareGTFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPCompareGTFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPCompareGTFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPCompareGTFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -2536,25 +2536,25 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPCompareLE(double value1, double value2)
         {
-            return FPCompareGEFpscrImpl(value2, value1, false);
+            return FPCompareGEFPScrImpl(value2, value1, false);
         }
 
         [UnmanagedCallersOnly]
         public static double FPCompareLT(double value1, double value2)
         {
-            return FPCompareGTFpscrImpl(value2, value1, false);
+            return FPCompareGTFPScrImpl(value2, value1, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPCompareLEFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPCompareLEFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPCompareGEFpscrImpl(value2, value1, standardFpscr == 1);
+            return FPCompareGEFPScrImpl(value2, value1, standardFPScr == 1);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPCompareLTFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPCompareLTFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPCompareGTFpscrImpl(value2, value1, standardFpscr == 1);
+            return FPCompareGTFPScrImpl(value2, value1, standardFPScr == 1);
         }
 
         [UnmanagedCallersOnly]
@@ -2600,7 +2600,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }
@@ -2613,19 +2613,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPMax(double value1, double value2)
         {
-            return FPMaxFpscrImpl(value1, value2, false);
+            return FPMaxFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPMaxFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPMaxFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPMaxFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMaxFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPMaxFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPMaxFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out ulong op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out ulong op2, context, fpcr);
@@ -2650,7 +2650,7 @@ namespace ARMeilleure.Instructions
 
                         if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                         {
-                            context.Fpsr |= FPSR.Ufc;
+                            context.FPSr |= FPSR.Ufc;
 
                             result = FPZero(result < 0d);
                         }
@@ -2672,7 +2672,7 @@ namespace ARMeilleure.Instructions
 
                         if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                         {
-                            context.Fpsr |= FPSR.Ufc;
+                            context.FPSr |= FPSR.Ufc;
 
                             result = FPZero(result < 0d);
                         }
@@ -2686,19 +2686,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPMaxNum(double value1, double value2)
         {
-            return FPMaxNumFpscrImpl(value1, value2, false);
+            return FPMaxNumFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPMaxNumFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPMaxNumFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPMaxNumFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMaxNumFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPMaxNumFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPMaxNumFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -2712,25 +2712,25 @@ namespace ARMeilleure.Instructions
                 value2 = FPInfinity(true);
             }
 
-            return FPMaxFpscrImpl(value1, value2, standardFpscr);
+            return FPMaxFPScrImpl(value1, value2, standardFPScr);
         }
 
         [UnmanagedCallersOnly]
         public static double FPMin(double value1, double value2)
         {
-            return FPMinFpscrImpl(value1, value2, false);
+            return FPMinFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPMinFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPMinFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPMinFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMinFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPMinFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPMinFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out ulong op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out ulong op2, context, fpcr);
@@ -2755,7 +2755,7 @@ namespace ARMeilleure.Instructions
 
                         if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                         {
-                            context.Fpsr |= FPSR.Ufc;
+                            context.FPSr |= FPSR.Ufc;
 
                             result = FPZero(result < 0d);
                         }
@@ -2777,7 +2777,7 @@ namespace ARMeilleure.Instructions
 
                         if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                         {
-                            context.Fpsr |= FPSR.Ufc;
+                            context.FPSr |= FPSR.Ufc;
 
                             result = FPZero(result < 0d);
                         }
@@ -2791,19 +2791,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPMinNum(double value1, double value2)
         {
-            return FPMinNumFpscrImpl(value1, value2, false);
+            return FPMinNumFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPMinNumFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPMinNumFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPMinNumFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMinNumFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPMinNumFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPMinNumFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1.FPUnpack(out FPType type1, out _, out _, context, fpcr);
             value2.FPUnpack(out FPType type2, out _, out _, context, fpcr);
@@ -2817,25 +2817,25 @@ namespace ARMeilleure.Instructions
                 value2 = FPInfinity(false);
             }
 
-            return FPMinFpscrImpl(value1, value2, standardFpscr);
+            return FPMinFPScrImpl(value1, value2, standardFPScr);
         }
 
         [UnmanagedCallersOnly]
         public static double FPMul(double value1, double value2)
         {
-            return FPMulFpscrImpl(value1, value2, false);
+            return FPMulFPScrImpl(value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPMulFpscr(double value1, double value2, byte standardFpscr)
+        public static double FPMulFPScr(double value1, double value2, byte standardFPScr)
         {
-            return FPMulFpscrImpl(value1, value2, standardFpscr == 1);
+            return FPMulFPScrImpl(value1, value2, standardFPScr == 1);
         }
 
-        private static double FPMulFpscrImpl(double value1, double value2, bool standardFpscr)
+        private static double FPMulFPScrImpl(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out ulong op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out ulong op2, context, fpcr);
@@ -2869,7 +2869,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }
@@ -2882,19 +2882,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPMulAdd(double valueA, double value1, double value2)
         {
-            return FPMulAddFpscrImpl(valueA, value1, value2, false);
+            return FPMulAddFPScrImpl(valueA, value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPMulAddFpscr(double valueA, double value1, double value2, byte standardFpscr)
+        public static double FPMulAddFPScr(double valueA, double value1, double value2, byte standardFPScr)
         {
-            return FPMulAddFpscrImpl(valueA, value1, value2, standardFpscr == 1);
+            return FPMulAddFPScrImpl(valueA, value1, value2, standardFPScr == 1);
         }
 
-        private static double FPMulAddFpscrImpl(double valueA, double value1, double value2, bool standardFpscr)
+        private static double FPMulAddFPScrImpl(double valueA, double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             valueA = valueA.FPUnpack(out FPType typeA, out bool signA, out ulong addend, context, fpcr);
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out ulong op1, context, fpcr);
@@ -2947,7 +2947,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }
@@ -2962,15 +2962,15 @@ namespace ARMeilleure.Instructions
         {
             value1 = value1.FPNeg();
 
-            return FPMulAddFpscrImpl(valueA, value1, value2, false);
+            return FPMulAddFPScrImpl(valueA, value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPMulSubFpscr(double valueA, double value1, double value2, byte standardFpscr)
+        public static double FPMulSubFPScr(double valueA, double value1, double value2, byte standardFPScr)
         {
             value1 = value1.FPNeg();
 
-            return FPMulAddFpscrImpl(valueA, value1, value2, standardFpscr == 1);
+            return FPMulAddFPScrImpl(valueA, value1, value2, standardFPScr == 1);
         }
 
         [UnmanagedCallersOnly]
@@ -3009,7 +3009,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }
@@ -3025,7 +3025,7 @@ namespace ARMeilleure.Instructions
             valueA = valueA.FPNeg();
             value1 = value1.FPNeg();
 
-            return FPMulAddFpscrImpl(valueA, value1, value2, false);
+            return FPMulAddFPScrImpl(valueA, value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
@@ -3033,25 +3033,25 @@ namespace ARMeilleure.Instructions
         {
             valueA = valueA.FPNeg();
 
-            return FPMulAddFpscrImpl(valueA, value1, value2, false);
+            return FPMulAddFPScrImpl(valueA, value1, value2, false);
         }
 
         [UnmanagedCallersOnly]
         public static double FPRecipEstimate(double value)
         {
-            return FPRecipEstimateFpscrImpl(value, false);
+            return FPRecipEstimateFPScrImpl(value, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPRecipEstimateFpscr(double value, byte standardFpscr)
+        public static double FPRecipEstimateFPScr(double value, byte standardFPScr)
         {
-            return FPRecipEstimateFpscrImpl(value, standardFpscr == 1);
+            return FPRecipEstimateFPScrImpl(value, standardFPScr == 1);
         }
 
-        private static double FPRecipEstimateFpscrImpl(double value, bool standardFpscr)
+        private static double FPRecipEstimateFPScrImpl(double value, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value.FPUnpack(out FPType type, out bool sign, out ulong op, context, fpcr);
 
@@ -3090,7 +3090,7 @@ namespace ARMeilleure.Instructions
             {
                 result = FPZero(sign);
 
-                context.Fpsr |= FPSR.Ufc;
+                context.FPSr |= FPSR.Ufc;
             }
             else
             {
@@ -3161,10 +3161,10 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    product = FPMulFpscrImpl(value1, value2, true);
+                    product = FPMulFPScrImpl(value1, value2, true);
                 }
 
-                result = FPSubFpscr(FPTwo(false), product, true);
+                result = FPSubFPScr(FPTwo(false), product, true);
             }
 
             return result;
@@ -3204,7 +3204,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }
@@ -3243,19 +3243,19 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPRSqrtEstimate(double value)
         {
-            return FPRSqrtEstimateFpscrImpl(value, false);
+            return FPRSqrtEstimateFPScrImpl(value, false);
         }
 
         [UnmanagedCallersOnly]
-        public static double FPRSqrtEstimateFpscr(double value, byte standardFpscr)
+        public static double FPRSqrtEstimateFPScr(double value, byte standardFPScr)
         {
-            return FPRSqrtEstimateFpscrImpl(value, standardFpscr == 1);
+            return FPRSqrtEstimateFPScrImpl(value, standardFPScr == 1);
         }
 
-        private static double FPRSqrtEstimateFpscrImpl(double value, bool standardFpscr)
+        private static double FPRSqrtEstimateFPScrImpl(double value, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value.FPUnpack(out FPType type, out bool sign, out ulong op, context, fpcr);
 
@@ -3356,7 +3356,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }
@@ -3392,7 +3392,7 @@ namespace ARMeilleure.Instructions
                 }
                 else
                 {
-                    product = FPMulFpscrImpl(value1, value2, true);
+                    product = FPMulFPScrImpl(value1, value2, true);
                 }
 
                 result = FPHalvedSub(FPThree(false), product, context, fpcr);
@@ -3435,7 +3435,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }
@@ -3479,7 +3479,7 @@ namespace ARMeilleure.Instructions
 
                 if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                 {
-                    context.Fpsr |= FPSR.Ufc;
+                    context.FPSr |= FPSR.Ufc;
 
                     result = FPZero(result < 0d);
                 }
@@ -3491,13 +3491,13 @@ namespace ARMeilleure.Instructions
         [UnmanagedCallersOnly]
         public static double FPSub(double value1, double value2)
         {
-            return FPSubFpscr(value1, value2, false);
+            return FPSubFPScr(value1, value2, false);
         }
 
-        public static double FPSubFpscr(double value1, double value2, bool standardFpscr)
+        public static double FPSubFPScr(double value1, double value2, bool standardFPScr)
         {
             ExecutionContext context = NativeInterface.GetContext();
-            FPCR fpcr = standardFpscr ? context.StandardFpcrValue : context.Fpcr;
+            FPCR fpcr = standardFPScr ? context.StandardFpcrValue : context.Fpcr;
 
             value1 = value1.FPUnpack(out FPType type1, out bool sign1, out ulong op1, context, fpcr);
             value2 = value2.FPUnpack(out FPType type2, out bool sign2, out ulong op2, context, fpcr);
@@ -3535,7 +3535,7 @@ namespace ARMeilleure.Instructions
 
                     if ((fpcr & FPCR.Fz) != 0 && double.IsSubnormal(result))
                     {
-                        context.Fpsr |= FPSR.Ufc;
+                        context.FPSr |= FPSR.Ufc;
 
                         result = FPZero(result < 0d);
                     }

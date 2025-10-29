@@ -324,11 +324,11 @@ namespace Ryujinx.Tests.Cpu
             V128 v1 = MakeVectorE0E1(a, z);
             V128 v2 = MakeVectorE0E1(b, z);
 
-            int fpscr = (int)TestContext.CurrentContext.Random.NextUInt() & (int)Fpsr.Qc;
+            int fpscr = (int)TestContext.CurrentContext.Random.NextUInt() & (int)FPSr.Qc;
 
             SingleOpcode(opcode, v0: v0, v1: v1, v2: v2, fpscr: fpscr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise]
@@ -352,11 +352,11 @@ namespace Ryujinx.Tests.Cpu
             V128 v1 = MakeVectorE0E1(a, z);
             V128 v2 = MakeVectorE0E1(b, z);
 
-            int fpscr = (int)TestContext.CurrentContext.Random.NextUInt() & (int)Fpsr.Qc;
+            int fpscr = (int)TestContext.CurrentContext.Random.NextUInt() & (int)FPSr.Qc;
 
             SingleOpcode(opcode, v0: v0, v1: v1, v2: v2, fpscr: fpscr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 #endif
     }

@@ -485,7 +485,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v1: v1, v2: v2, fpscr: fpscr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Nzcv);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Nzcv);
         }
 
         // Fused.

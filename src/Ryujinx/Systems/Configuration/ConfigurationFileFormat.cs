@@ -255,6 +255,11 @@ namespace Ryujinx.Ava.Systems.Configuration
         public bool EnableMacroHLE { get; set; }
 
         /// <summary>
+        /// Enables or disables FPS doubling
+        /// </summary>
+        public bool EnableDoubleFPS { get; set; }
+
+        /// <summary>
         /// Enables or disables color space passthrough, if available.
         /// </summary>
         public bool EnableColorSpacePassthrough { get; set; }

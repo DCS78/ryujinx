@@ -66,7 +66,7 @@ namespace Ryujinx.HLE
 
         public DirtyHacks DirtyHacks { get; }
 
-        public bool EnableDoubleFps { get; private set; }
+        public bool EnableDoubleFPS { get; private set; }
 
         public Switch(HleConfiguration configuration)
         {
@@ -148,7 +148,7 @@ namespace Ryujinx.HLE
                     // at60 (native) and duplicate host frames in the renderer / performance loop.
                     // The actual frame-doubling implementation must be performed in the
                     // PerformanceStatistics / main emulation frame loop where frames are produced
-                    // and audio timing is advanced. See SetDoubleFps() and PerformanceStatistics.
+                    // and audio timing is advanced. See SetDoubleFPS() and PerformanceStatistics.
                     TargetVSyncInterval =60;
                     break;
                 case VSyncMode.Unbounded:
@@ -165,9 +165,9 @@ namespace Ryujinx.HLE
         /// This method only toggles the runtime flag and applies immediate coarse changes
         /// such as TickScalar fallback if Turbo mode is active.
         /// </summary>
-        public void SetDoubleFps(bool enabled)
+        public void SetDoubleFPS(bool enabled)
         {
-            EnableDoubleFps = enabled;
+            EnableDoubleFPS = enabled;
 
             // Note: Proper frame-doubling requires changes in PerformanceStatistics's
             // frame/tick loop to duplicate host presentation without altering guest timing.

@@ -1817,7 +1817,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -1836,7 +1836,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -1861,7 +1861,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -1884,7 +1884,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -1904,7 +1904,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -1925,7 +1925,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -1943,7 +1943,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -1961,7 +1961,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -1985,7 +1985,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -2007,7 +2007,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -2024,7 +2024,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v1: v1, overflow: v, carry: c, zero: z, negative: n);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc);
         }
 
         [Test, Pairwise]
@@ -2041,7 +2041,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v1: v1, overflow: v, carry: c, zero: z, negative: n);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc);
         }
 
         [Test, Pairwise]
@@ -2226,7 +2226,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Ofc | Fpsr.Ufc | Fpsr.Ixc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Ofc | FPSr.Ufc | FPSr.Ixc);
         }
 
         [Test, Pairwise]
@@ -2275,7 +2275,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Ofc | Fpsr.Ufc | Fpsr.Ixc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Ofc | FPSr.Ufc | FPSr.Ixc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -2318,7 +2318,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -2473,7 +2473,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Dzc | Fpsr.Ofc | Fpsr.Ufc | Fpsr.Ixc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Dzc | FPSr.Ofc | FPSr.Ufc | FPSr.Ixc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -2494,7 +2494,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Dzc | Fpsr.Ofc | Fpsr.Ufc | Fpsr.Ixc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Dzc | FPSr.Ofc | FPSr.Ufc | FPSr.Ixc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -2521,7 +2521,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Dzc | Fpsr.Ofc | Fpsr.Ufc | Fpsr.Ixc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Dzc | FPSr.Ofc | FPSr.Ufc | FPSr.Ixc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -2546,7 +2546,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcodes, v0: v0, v1: v1, fpcr: fpcr);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Ioc | Fpsr.Dzc | Fpsr.Ofc | Fpsr.Ufc | Fpsr.Ixc | Fpsr.Idc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Ioc | FPSr.Dzc | FPSr.Ofc | FPSr.Ufc | FPSr.Ixc | FPSr.Idc);
         }
 
         [Test, Pairwise]
@@ -3177,7 +3177,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQABS <Vd>.<T>, <Vn>.<T>")]
@@ -3196,7 +3196,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQABS <Vd>.<T>, <Vn>.<T>")]
@@ -3215,7 +3215,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQNEG <V><d>, <V><n>")]
@@ -3234,7 +3234,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQNEG <Vd>.<T>, <Vn>.<T>")]
@@ -3253,7 +3253,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQNEG <Vd>.<T>, <Vn>.<T>")]
@@ -3272,7 +3272,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQXTN <Vb><d>, <Va><n>")]
@@ -3291,7 +3291,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQXTN{2} <Vd>.<Tb>, <Vn>.<Ta>")]
@@ -3310,7 +3310,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQXTN{2} <Vd>.<Tb>, <Vn>.<Ta>")]
@@ -3329,7 +3329,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQXTUN <Vb><d>, <Va><n>")]
@@ -3348,7 +3348,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQXTUN{2} <Vd>.<Tb>, <Vn>.<Ta>")]
@@ -3367,7 +3367,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SQXTUN{2} <Vd>.<Tb>, <Vn>.<Ta>")]
@@ -3386,7 +3386,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SUQADD <V><d>, <V><n>")]
@@ -3405,7 +3405,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SUQADD <Vd>.<T>, <Vn>.<T>")]
@@ -3424,7 +3424,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("SUQADD <Vd>.<T>, <Vn>.<T>")]
@@ -3443,7 +3443,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("UADALP <Vd>.<Ta>, <Vn>.<Tb>")]
@@ -3538,7 +3538,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("UQXTN{2} <Vd>.<Tb>, <Vn>.<Ta>")]
@@ -3557,7 +3557,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("UQXTN{2} <Vd>.<Tb>, <Vn>.<Ta>")]
@@ -3576,7 +3576,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("USQADD <V><d>, <V><n>")]
@@ -3595,7 +3595,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("USQADD <Vd>.<T>, <Vn>.<T>")]
@@ -3614,7 +3614,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("USQADD <Vd>.<T>, <Vn>.<T>")]
@@ -3633,7 +3633,7 @@ namespace Ryujinx.Tests.Cpu
 
             SingleOpcode(opcode, v0: v0, v1: v1);
 
-            CompareAgainstUnicorn(fpsrMask: Fpsr.Qc);
+            CompareAgainstUnicorn(fpsrMask: FPSr.Qc);
         }
 
         [Test, Pairwise, Description("XTN{2} <Vd>.<Tb>, <Vn>.<Ta>")]

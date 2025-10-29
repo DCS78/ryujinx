@@ -59,6 +59,16 @@ namespace Ryujinx.HLE.HOS.Tamper
 
         public static ulong GetImmediate(byte[] instruction, int index, int nybbleCount)
         {
+            if (instruction == null)
+            {
+                throw new TamperCompilationException("Null instruction in Atmosphere cheat");
+            }
+
+            if (index < 0 || nybbleCount < 0 || index + nybbleCount > instruction.Length)
+            {
+                throw new TamperCompilationException($"Immediate out of bounds (index={index}, nybbleCount={nybbleCount}, length={instruction.Length}) in Atmosphere cheat");
+            }
+
             ulong value = 0;
 
             for (int i = 0; i < nybbleCount; i++)
@@ -72,15 +82,30 @@ namespace Ryujinx.HLE.HOS.Tamper
 
         public static CodeType GetCodeType(byte[] instruction)
         {
+            if (instruction == null || instruction.Length <= CodeTypeIndex)
+            {
+                throw new TamperCompilationException("Empty or invalid instruction in Atmosphere cheat");
+            }
+
             int codeType = instruction[CodeTypeIndex];
 
             if (codeType >= 0xC)
             {
+                if (instruction.Length <= CodeTypeIndex + 1)
+                {
+                    throw new TamperCompilationException("Instruction too short to read extended code type in Atmosphere cheat");
+                }
+
                 byte extension = instruction[CodeTypeIndex + 1];
                 codeType = (codeType << 4) | extension;
 
                 if (extension == 0xF)
                 {
+                    if (instruction.Length <= CodeTypeIndex + 2)
+                    {
+                        throw new TamperCompilationException("Instruction too short to read double-extended code type in Atmosphere cheat");
+                    }
+
                     extension = instruction[CodeTypeIndex + 2];
                     codeType = (codeType << 4) | extension;
                 }
@@ -118,7 +143,12 @@ namespace Ryujinx.HLE.HOS.Tamper
                 {
                     int index = wordIndex * WordSize + nybbleIndex;
 
-                    instruction[index] = byte.Parse(word.AsSpan(nybbleIndex, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                    if (!byte.TryParse(word.AsSpan(nybbleIndex, 1), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out byte parsed))
+                    {
+                        throw new TamperCompilationException($"Invalid nybble '{word[nybbleIndex]}' in Atmosphere cheat");
+                    }
+
+                    instruction[index] = parsed;
                 }
             }
 

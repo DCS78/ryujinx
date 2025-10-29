@@ -31,13 +31,13 @@ namespace Ryujinx.Ava.Systems.Configuration
             }
 
             foreach ((int newVersion, Action<ConfigurationFileFormat> migratorFunction)
-                     in _migrations.OrderBy(x => x.Key))
+            in _migrations.OrderBy(x => x.Key))
             {
                 if (cff.Version >= newVersion)
                     continue;
 
                 RyuLogger.Warning?.Print(LogClass.Application,
-                    $"Outdated configuration version {cff.Version}, migrating to version {newVersion}.");
+                $"Outdated configuration version {cff.Version}, migrating to version {newVersion}.");
 
                 migratorFunction(cff);
 
@@ -121,7 +121,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             UI.ColumnSort.SortColumnId.Value = shouldLoadFromFile ? cff.ColumnSort.SortColumnId : UI.ColumnSort.SortColumnId.Value;
             UI.ColumnSort.SortAscending.Value = shouldLoadFromFile ? cff.ColumnSort.SortAscending : UI.ColumnSort.SortAscending.Value;
             UI.GameDirs.Value = shouldLoadFromFile ? cff.GameDirs : UI.GameDirs.Value;
-            UI.AutoloadDirs.Value = shouldLoadFromFile ? (cff.AutoloadDirs ?? []) : UI.AutoloadDirs.Value;
+            UI.AutoloadDirs.Value = shouldLoadFromFile ? (cff.AutoloadDirs ?? new List<string>()) : UI.AutoloadDirs.Value;
             UI.ShownFileTypes.NSP.Value = shouldLoadFromFile ? cff.ShownFileTypes.NSP : UI.ShownFileTypes.NSP.Value;
             UI.ShownFileTypes.PFS0.Value = shouldLoadFromFile ? cff.ShownFileTypes.PFS0 : UI.ShownFileTypes.PFS0.Value;
             UI.ShownFileTypes.XCI.Value = shouldLoadFromFile ? cff.ShownFileTypes.XCI : UI.ShownFileTypes.XCI.Value;
@@ -148,7 +148,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Hid.EnableMouse.Value = cff.EnableMouse;
             Hid.DisableInputWhenOutOfFocus.Value = shouldLoadFromFile ? cff.DisableInputWhenOutOfFocus : Hid.DisableInputWhenOutOfFocus.Value; // Get from global config only
             Hid.Hotkeys.Value = shouldLoadFromFile ? cff.Hotkeys : Hid.Hotkeys.Value; // Get from global config only
-            Hid.InputConfig.Value = cff.InputConfig ?? [];
+            Hid.InputConfig.Value = cff.InputConfig ?? new List<InputConfig>();
             Hid.RainbowSpeed.Value = cff.RainbowSpeed;
 
             Multiplayer.LanInterfaceId.Value = cff.MultiplayerLanInterfaceId;
@@ -164,10 +164,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             {
                 Hacks.ShowDirtyHacks.Value = shouldLoadFromFile ? cff.ShowDirtyHacks : Hacks.ShowDirtyHacks.Value; // Get from global config only
 
-                DirtyHacks hacks = new(cff.DirtyHacks ?? []);
+                DirtyHacks hacks = cff.DirtyHacks != null
+                    ? new DirtyHacks(cff.DirtyHacks)
+                    : new DirtyHacks(Array.Empty<EnabledDirtyHack>());
 
                 Hacks.Xc2MenuSoftlockFix.Value = hacks.IsEnabled(DirtyHack.Xc2MenuSoftlockFix);
-
             }
 
             if (configurationFileUpdated)
@@ -179,312 +180,313 @@ namespace Ryujinx.Ava.Systems.Configuration
         }
 
         private static readonly Dictionary<int, Action<ConfigurationFileFormat>> _migrations =
-            Collections.NewDictionary<int, Action<ConfigurationFileFormat>>(
-                (2, static cff => cff.SystemRegion = Region.USA),
-                (3, static cff => cff.SystemTimeZone = "UTC"),
-                (4, static cff => cff.MaxAnisotropy = -1),
-                (5, static cff => cff.SystemTimeOffset = 0),
-                (8, static cff => cff.EnablePtc = true),
-                (9, static cff =>
-                {
-                    cff.ColumnSort = new ColumnSort { SortColumnId = 0, SortAscending = false };
-                    cff.Hotkeys = new KeyboardHotkeys { ToggleVSyncMode = Key.F1 };
-                }
+        Collections.NewDictionary<int, Action<ConfigurationFileFormat>>(
+        (2, static cff => cff.SystemRegion = Region.USA),
+        (3, static cff => cff.SystemTimeZone = "UTC"),
+        (4, static cff => cff.MaxAnisotropy = -1),
+        (5, static cff => cff.SystemTimeOffset = 0),
+        (8, static cff => cff.EnablePtc = true),
+        (9, static cff =>
+        {
+            cff.ColumnSort = new ColumnSort { SortColumnId = 0, SortAscending = false };
+            cff.Hotkeys = new KeyboardHotkeys { ToggleVSyncMode = Key.F1 };
+        }
         ),
-                (10, static cff => cff.AudioBackend = AudioBackend.OpenAl),
-                (11, static cff =>
-                {
-                    cff.ResScale = 1;
-                    cff.ResScaleCustom = 1.0f;
-                }
+        (10, static cff => cff.AudioBackend = AudioBackend.OpenAl),
+        (11, static cff =>
+        {
+            cff.ResScale = 1;
+            cff.ResScaleCustom = 1.0f;
+        }
         ),
-                (12, static cff => cff.LoggingGraphicsDebugLevel = GraphicsDebugLevel.None),
-                // 13 -> LDN1
-                (14, static cff => cff.CheckUpdatesOnStart = true),
-                (16, static cff => cff.EnableShaderCache = true),
-                (17, static cff => cff.StartFullscreen = false),
-                (18, static cff => cff.AspectRatio = AspectRatio.Fixed16x9),
-                // 19 -> LDN2
-                (20, static cff => cff.ShowConfirmExit = true),
-                (21, static cff =>
-                {
-                    // Initialize network config.
+        (12, static cff => cff.LoggingGraphicsDebugLevel = GraphicsDebugLevel.None),
+        //13 -> LDN1
+        (14, static cff => cff.CheckUpdatesOnStart = true),
+        (16, static cff => cff.EnableShaderCache = true),
+        (17, static cff => cff.StartFullscreen = false),
+        (18, static cff => cff.AspectRatio = AspectRatio.Fixed16x9),
+        //19 -> LDN2
+        (20, static cff => cff.ShowConfirmExit = true),
+        (21, static cff =>
+        {
+            // Initialize network config.
 
-                    cff.MultiplayerMode = MultiplayerMode.Disabled;
-                    cff.MultiplayerLanInterfaceId = "0";
-                }
+            cff.MultiplayerMode = MultiplayerMode.Disabled;
+            cff.MultiplayerLanInterfaceId = "0";
+        }
         ),
-                (22, static cff => cff.HideCursor = HideCursorMode.Never),
-                (24, static cff =>
-                {
-                    cff.InputConfig =
-                    [
-                        new StandardKeyboardInputConfig
-                        {
-                            Version = InputConfig.CurrentVersion,
-                            Backend = InputBackendType.WindowKeyboard,
-                            Id = "0",
-                            PlayerIndex = PlayerIndex.Player1,
-                            ControllerType = ControllerType.ProController,
-                            LeftJoycon = new LeftJoyconCommonConfig<Key>
-                            {
-                                DpadUp = Key.Up,
-                                DpadDown = Key.Down,
-                                DpadLeft = Key.Left,
-                                DpadRight = Key.Right,
-                                ButtonMinus = Key.Minus,
-                                ButtonL = Key.E,
-                                ButtonZl = Key.Q,
-                                ButtonSl = Key.Unbound,
-                                ButtonSr = Key.Unbound,
-                            },
-                            LeftJoyconStick = new JoyconConfigKeyboardStick<Key>
-                            {
-                                StickUp = Key.W,
-                                StickDown = Key.S,
-                                StickLeft = Key.A,
-                                StickRight = Key.D,
-                                StickButton = Key.F,
-                            },
-                            RightJoycon = new RightJoyconCommonConfig<Key>
-                            {
-                                ButtonA = Key.Z,
-                                ButtonB = Key.X,
-                                ButtonX = Key.C,
-                                ButtonY = Key.V,
-                                ButtonPlus = Key.Plus,
-                                ButtonR = Key.U,
-                                ButtonZr = Key.O,
-                                ButtonSl = Key.Unbound,
-                                ButtonSr = Key.Unbound,
-                            },
-                            RightJoyconStick = new JoyconConfigKeyboardStick<Key>
-                            {
-                                StickUp = Key.I,
-                                StickDown = Key.K,
-                                StickLeft = Key.J,
-                                StickRight = Key.L,
-                                StickButton = Key.H,
-                            },
-                        }
-                    ];
-                }
+        (22, static cff => cff.HideCursor = HideCursorMode.Never),
+        (24, static cff =>
+        {
+            cff.InputConfig =
+     new List<InputConfig>
+        {
+ new StandardKeyboardInputConfig
+ {
+ Version = InputConfig.CurrentVersion,
+ Backend = InputBackendType.WindowKeyboard,
+ Id = "0",
+ PlayerIndex = PlayerIndex.Player1,
+ ControllerType = ControllerType.ProController,
+ LeftJoycon = new LeftJoyconCommonConfig<Key>
+ {
+ DpadUp = Key.Up,
+ DpadDown = Key.Down,
+ DpadLeft = Key.Left,
+ DpadRight = Key.Right,
+ ButtonMinus = Key.Minus,
+ ButtonL = Key.E,
+ ButtonZl = Key.Q,
+ ButtonSl = Key.Unbound,
+ ButtonSr = Key.Unbound,
+ },
+ LeftJoyconStick = new JoyconConfigKeyboardStick<Key>
+ {
+ StickUp = Key.W,
+ StickDown = Key.S,
+ StickLeft = Key.A,
+ StickRight = Key.D,
+ StickButton = Key.F,
+ },
+ RightJoycon = new RightJoyconCommonConfig<Key>
+ {
+ ButtonA = Key.Z,
+ ButtonB = Key.X,
+ ButtonX = Key.C,
+ ButtonY = Key.V,
+ ButtonPlus = Key.Plus,
+ ButtonR = Key.U,
+ ButtonZr = Key.O,
+ ButtonSl = Key.Unbound,
+ ButtonSr = Key.Unbound,
+ },
+ RightJoyconStick = new JoyconConfigKeyboardStick<Key>
+ {
+ StickUp = Key.I,
+ StickDown = Key.K,
+ StickLeft = Key.J,
+ StickRight = Key.L,
+ StickButton = Key.H,
+ },
+ }
+        };
+        }
         ),
-                (26, static cff => cff.MemoryManagerMode = MemoryManagerMode.HostMappedUnsafe),
-                (27, static cff => cff.EnableMouse = false),
-                (29,
-                    static cff =>
-                        cff.Hotkeys = new KeyboardHotkeys
-                        {
-                            ToggleVSyncMode = Key.F1,
-                            Screenshot = Key.F8,
-                            ShowUI = Key.F4
-                        }),
-                (30, static cff =>
+        (26, static cff => cff.MemoryManagerMode = MemoryManagerMode.HostMappedUnsafe),
+        (27, static cff => cff.EnableMouse = false),
+        (29,
+        static cff =>
+        cff.Hotkeys = new KeyboardHotkeys
+        {
+            ToggleVSyncMode = Key.F1,
+            Screenshot = Key.F8,
+            ShowUI = Key.F4
+        }),
+        (30, static cff =>
+        {
+            foreach (StandardControllerInputConfig config in cff.InputConfig
+     .OfType<StandardControllerInputConfig>())
+            {
+                config.Rumble = new RumbleConfigController
                 {
-                    foreach (StandardControllerInputConfig config in cff.InputConfig.OfType<StandardControllerInputConfig>())
-                    {
-                        config.Rumble = new RumbleConfigController
-                        {
-                            EnableRumble = false,
-                            StrongRumble = 1f,
-                            WeakRumble = 1f,
-                        };
-                    }
-                }
+                    EnableRumble = false,
+                    StrongRumble = 1f,
+                    WeakRumble = 1f,
+                };
+            }
+        }
         ),
-                (31, static cff => cff.BackendThreading = BackendThreading.Auto),
-                (32, static cff => cff.Hotkeys = new KeyboardHotkeys
-                {
-                    ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
-                    Screenshot = cff.Hotkeys.Screenshot,
-                    ShowUI = cff.Hotkeys.ShowUI,
-                    Pause = Key.F5,
-                }),
-                (33, static cff =>
-                {
-                    cff.Hotkeys = new KeyboardHotkeys
-                    {
-                        ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
-                        Screenshot = cff.Hotkeys.Screenshot,
-                        ShowUI = cff.Hotkeys.ShowUI,
-                        Pause = cff.Hotkeys.Pause,
-                        ToggleMute = Key.F2,
-                    };
+        (31, static cff => cff.BackendThreading = BackendThreading.Auto),
+        (32, static cff => cff.Hotkeys = new KeyboardHotkeys
+        {
+            ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
+            Screenshot = cff.Hotkeys.Screenshot,
+            ShowUI = cff.Hotkeys.ShowUI,
+            Pause = Key.F5,
+        }),
+        (33, static cff =>
+        {
+            cff.Hotkeys = new KeyboardHotkeys
+            {
+                ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
+                Screenshot = cff.Hotkeys.Screenshot,
+                ShowUI = cff.Hotkeys.ShowUI,
+                Pause = cff.Hotkeys.Pause,
+                ToggleMute = Key.F2,
+            };
 
-                    cff.AudioVolume = 1;
-                }
+            cff.AudioVolume = 1;
+        }
         ),
-                (34, static cff => cff.EnableInternetAccess = false),
-                (35, static cff =>
-                {
-                    foreach (StandardControllerInputConfig config in cff.InputConfig
-                                 .OfType<StandardControllerInputConfig>())
-                    {
-                        config.RangeLeft = 1.0f;
-                        config.RangeRight = 1.0f;
-                    }
-                }
+        (34, static cff => cff.EnableInternetAccess = false),
+        (35, static cff =>
+        {
+            foreach (StandardControllerInputConfig config in cff.InputConfig
+     .OfType<StandardControllerInputConfig>())
+            {
+                config.RangeLeft = 1.0f;
+                config.RangeRight = 1.0f;
+            }
+        }
         ),
 
-                (36, static cff => cff.LoggingEnableTrace = false),
-                (37, static cff => cff.ShowConsole = true),
-                (38, static cff =>
-                {
-                    cff.BaseStyle = "Dark";
-                    cff.GameListViewMode = 0;
-                    cff.ShowNames = true;
-                    cff.GridSize = 2;
-                    cff.LanguageCode = "en_US";
-                }
+        (36, static cff => cff.LoggingEnableTrace = false),
+        (37, static cff => cff.ShowConsole = true),
+        (38, static cff =>
+        {
+            cff.BaseStyle = "Dark";
+            cff.GameListViewMode = 0;
+            cff.ShowNames = true;
+            cff.GridSize = 2;
+            cff.LanguageCode = "en_US";
+        }
         ),
-                (39,
-                    static cff => cff.Hotkeys = new KeyboardHotkeys
-                    {
-                        ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
-                        Screenshot = cff.Hotkeys.Screenshot,
-                        ShowUI = cff.Hotkeys.ShowUI,
-                        Pause = cff.Hotkeys.Pause,
-                        ToggleMute = cff.Hotkeys.ToggleMute,
-                        ResScaleUp = Key.Unbound,
-                        ResScaleDown = Key.Unbound
-                    }),
-                (40, static cff => cff.GraphicsBackend = GraphicsBackend.OpenGl),
-                (41,
-                    static cff => cff.Hotkeys = new KeyboardHotkeys
-                    {
-                        ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
-                        Screenshot = cff.Hotkeys.Screenshot,
-                        ShowUI = cff.Hotkeys.ShowUI,
-                        Pause = cff.Hotkeys.Pause,
-                        ToggleMute = cff.Hotkeys.ToggleMute,
-                        ResScaleUp = cff.Hotkeys.ResScaleUp,
-                        ResScaleDown = cff.Hotkeys.ResScaleDown,
-                        VolumeUp = Key.Unbound,
-                        VolumeDown = Key.Unbound
-                    }),
-                (42, static cff => cff.EnableMacroHLE = true),
-                (43, static cff => cff.UseHypervisor = true),
-                (44, static cff =>
-                {
-                    cff.AntiAliasing = AntiAliasing.None;
-                    cff.ScalingFilter = ScalingFilter.Bilinear;
-                    cff.ScalingFilterLevel = 80;
-                }
+        (39,
+        static cff => cff.Hotkeys = new KeyboardHotkeys
+        {
+            ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
+            Screenshot = cff.Hotkeys.Screenshot,
+            ShowUI = cff.Hotkeys.ShowUI,
+            Pause = cff.Hotkeys.Pause,
+            ToggleMute = cff.Hotkeys.ToggleMute,
+            ResScaleUp = Key.Unbound,
+            ResScaleDown = Key.Unbound
+        }),
+        (40, static cff => cff.GraphicsBackend = GraphicsBackend.OpenGl),
+        (41,
+        static cff => cff.Hotkeys = new KeyboardHotkeys
+        {
+            ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
+            Screenshot = cff.Hotkeys.Screenshot,
+            ShowUI = cff.Hotkeys.ShowUI,
+            Pause = cff.Hotkeys.Pause,
+            ToggleMute = cff.Hotkeys.ToggleMute,
+            ResScaleUp = cff.Hotkeys.ResScaleUp,
+            ResScaleDown = cff.Hotkeys.ResScaleDown,
+            VolumeUp = Key.Unbound,
+            VolumeDown = Key.Unbound
+        }),
+        (42, static cff => cff.EnableMacroHLE = true),
+        (43, static cff => cff.UseHypervisor = true),
+        (44, static cff =>
+        {
+            cff.AntiAliasing = AntiAliasing.None;
+            cff.ScalingFilter = ScalingFilter.Bilinear;
+            cff.ScalingFilterLevel = 80;
+        }
         ),
-                (45,
-                    static cff => cff.ShownFileTypes = new ShownFileTypes
-                    {
-                        NSP = true,
-                        PFS0 = true,
-                        XCI = true,
-                        NCA = true,
-                        NRO = true,
-                        NSO = true
-                    }),
-                (46, static cff => cff.UseHypervisor = OperatingSystem.IsMacOS()),
-                (47,
-                    static cff => cff.WindowStartup = new WindowStartup
-                    {
-                        WindowPositionX = 0,
-                        WindowPositionY = 0,
-                        WindowSizeHeight = 760,
-                        WindowSizeWidth = 1280,
-                        WindowMaximized = false
-                    }),
-                (48, static cff => cff.EnableColorSpacePassthrough = false),
-                (49, static _ =>
-                {
-                    if (OperatingSystem.IsMacOS())
-                    {
-                        AppDataManager.FixMacOSConfigurationFolders();
-                    }
-                }
+        (45,
+        static cff => cff.ShownFileTypes = new ShownFileTypes
+        {
+            NSP = true,
+            PFS0 = true,
+            XCI = true,
+            NCA = true,
+            NRO = true,
+            NSO = true
+        }),
+        (46, static cff => cff.UseHypervisor = OperatingSystem.IsMacOS()),
+        (47, static cff => cff.WindowStartup = new WindowStartup
+        {
+            WindowPositionX = 0,
+            WindowPositionY = 0,
+            WindowSizeHeight = 760,
+            WindowSizeWidth = 1280,
+            WindowMaximized = false
+        }),
+        (48, static cff => cff.EnableColorSpacePassthrough = false),
+        (49, static _ =>
+        {
+            if (OperatingSystem.IsMacOS())
+            {
+                AppDataManager.FixMacOSConfigurationFolders();
+            }
+        }
         ),
-                (50, static cff => cff.EnableHardwareAcceleration = true),
-                (51, static cff => cff.RememberWindowState = true),
-                (52, static cff => cff.AutoloadDirs = []),
-                (53, static cff => cff.EnableLowPowerPtc = false),
-                (54, static cff => cff.DramSize = MemoryConfiguration.MemoryConfiguration4GiB),
-                (55, static cff => cff.IgnoreApplet = false),
-                (56, static cff => cff.ShowTitleBar = !OperatingSystem.IsWindows()),
-                (57, static cff =>
-                {
-                    cff.VSyncMode = VSyncMode.Switch;
-                    cff.EnableCustomVSyncInterval = false;
+        (50, static cff => cff.EnableHardwareAcceleration = true),
+        (51, static cff => cff.RememberWindowState = true),
+        (52, static cff => cff.AutoloadDirs = new List<string>()),
+        (53, static cff => cff.EnableLowPowerPtc = false),
+        (54, static cff => cff.DramSize = MemoryConfiguration.MemoryConfiguration4GiB),
+        (55, static cff => cff.IgnoreApplet = false),
+        (56, static cff => cff.ShowTitleBar = !OperatingSystem.IsWindows()),
+        (57, static cff =>
+        {
+            cff.VSyncMode = VSyncMode.Switch;
+            cff.EnableCustomVSyncInterval = false;
 
-                    cff.Hotkeys = new KeyboardHotkeys
-                    {
-                        ToggleVSyncMode = Key.F1,
-                        Screenshot = cff.Hotkeys.Screenshot,
-                        ShowUI = cff.Hotkeys.ShowUI,
-                        Pause = cff.Hotkeys.Pause,
-                        ToggleMute = cff.Hotkeys.ToggleMute,
-                        ResScaleUp = cff.Hotkeys.ResScaleUp,
-                        ResScaleDown = cff.Hotkeys.ResScaleDown,
-                        VolumeUp = cff.Hotkeys.VolumeUp,
-                        VolumeDown = cff.Hotkeys.VolumeDown,
-                        CustomVSyncIntervalIncrement = Key.Unbound,
-                        CustomVSyncIntervalDecrement = Key.Unbound,
-                    };
+            cff.Hotkeys = new KeyboardHotkeys
+            {
+                ToggleVSyncMode = Key.F1,
+                Screenshot = cff.Hotkeys.Screenshot,
+                ShowUI = cff.Hotkeys.ShowUI,
+                Pause = cff.Hotkeys.Pause,
+                ToggleMute = cff.Hotkeys.ToggleMute,
+                ResScaleUp = cff.Hotkeys.ResScaleUp,
+                ResScaleDown = cff.Hotkeys.ResScaleDown,
+                VolumeUp = cff.Hotkeys.VolumeUp,
+                VolumeDown = cff.Hotkeys.VolumeDown,
+                CustomVSyncIntervalIncrement = Key.Unbound,
+                CustomVSyncIntervalDecrement = Key.Unbound,
+            };
 
-                    cff.CustomVSyncInterval = 120;
-                }
+            cff.CustomVSyncInterval = 120;
+        }
         ),
-                // 58 migration accidentally got skipped, but it worked with no issues somehow lol
-                (59, static cff =>
-                {
-                    cff.ShowDirtyHacks = false;
-                    cff.DirtyHacks = [];
+        //58 migration accidentally got skipped, but it worked with no issues somehow lol
+        (59, static cff =>
+        {
+            cff.ShowDirtyHacks = false;
+            cff.DirtyHacks = Array.Empty<ulong>();
 
-                    // This was accidentally enabled by default when it was PRed. That is not what we want,
-                    // so as a compromise users who want to use it will simply need to re-enable it once after updating.
-                    cff.IgnoreApplet = false;
-                }
+            // This was accidentally enabled by default when it was PRed. That is not what we want,
+            // so as a compromise users who want to use it will simply need to re-enable it once after updating.
+            cff.IgnoreApplet = false;
+        }
         ),
-                (60, static cff => cff.StartNoUI = false),
-                (61, static cff =>
+        (60, static cff => cff.StartNoUI = false),
+        (61, static cff =>
+        {
+            foreach (StandardControllerInputConfig config in cff.InputConfig.OfType<StandardControllerInputConfig>())
+            {
+                config.Led = new LedConfigController
                 {
-                    foreach (StandardControllerInputConfig config in cff.InputConfig.OfType<StandardControllerInputConfig>())
-                    {
-                        config.Led = new LedConfigController
-                        {
-                            EnableLed = false,
-                            TurnOffLed = false,
-                            UseRainbow = false,
-                            LedColor = new Color(255, 5, 1, 253).ToUInt32()
-                        };
-                    }
-                }
+                    EnableLed = false,
+                    TurnOffLed = false,
+                    UseRainbow = false,
+                    LedColor = new Color(255, 5, 1, 253).ToUInt32()
+                };
+            }
+        }
         ),
-                (62, static cff => cff.RainbowSpeed = 1f),
-                (63, static cff => cff.MatchSystemTime = false),
-                (64, static cff => cff.LoggingEnableAvalonia = false),
-                (65, static cff => cff.UpdateCheckerType = cff.CheckUpdatesOnStart ? UpdaterType.PromptAtStartup : UpdaterType.Off),
-                (66, static cff => cff.DisableInputWhenOutOfFocus = false),
-                (67, static cff => cff.FocusLostActionType = cff.DisableInputWhenOutOfFocus ? FocusLostType.BlockInput : FocusLostType.DoNothing),
-                (68, static cff =>
-                {
-                    cff.TickScalar = 200;
-                    cff.Hotkeys = new KeyboardHotkeys
-                    {
-                        ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
-                        Screenshot = cff.Hotkeys.Screenshot,
-                        ShowUI = cff.Hotkeys.ShowUI,
-                        Pause = cff.Hotkeys.Pause,
-                        ToggleMute = cff.Hotkeys.ToggleMute,
-                        ResScaleUp = cff.Hotkeys.ResScaleUp,
-                        ResScaleDown = cff.Hotkeys.ResScaleDown,
-                        VolumeUp = cff.Hotkeys.VolumeUp,
-                        VolumeDown = cff.Hotkeys.VolumeDown,
-                        CustomVSyncIntervalIncrement = cff.Hotkeys.CustomVSyncIntervalIncrement,
-                        CustomVSyncIntervalDecrement = cff.Hotkeys.CustomVSyncIntervalDecrement,
-                        TurboMode = Key.Unbound,
-                        TurboModeWhileHeld = false
-                    };
-                }
+        (62, static cff => cff.RainbowSpeed = 1f),
+        (63, static cff => cff.MatchSystemTime = false),
+        (64, static cff => cff.LoggingEnableAvalonia = false),
+        (65, static cff => cff.UpdateCheckerType = cff.CheckUpdatesOnStart ? UpdaterType.PromptAtStartup : UpdaterType.Off),
+        (66, static cff => cff.DisableInputWhenOutOfFocus = false),
+        (67, static cff => cff.FocusLostActionType = cff.DisableInputWhenOutOfFocus ? FocusLostType.BlockInput : FocusLostType.DoNothing),
+        (68, static cff =>
+        {
+            cff.TickScalar = 200;
+            cff.Hotkeys = new KeyboardHotkeys
+            {
+                ToggleVSyncMode = cff.Hotkeys.ToggleVSyncMode,
+                Screenshot = cff.Hotkeys.Screenshot,
+                ShowUI = cff.Hotkeys.ShowUI,
+                Pause = cff.Hotkeys.Pause,
+                ToggleMute = cff.Hotkeys.ToggleMute,
+                ResScaleUp = cff.Hotkeys.ResScaleUp,
+                ResScaleDown = cff.Hotkeys.ResScaleDown,
+                VolumeUp = cff.Hotkeys.VolumeUp,
+                VolumeDown = cff.Hotkeys.VolumeDown,
+                CustomVSyncIntervalIncrement = cff.Hotkeys.CustomVSyncIntervalIncrement,
+                CustomVSyncIntervalDecrement = cff.Hotkeys.CustomVSyncIntervalDecrement,
+                TurboMode = Key.Unbound,
+                TurboModeWhileHeld = false
+            };
+        }
         ),
-                (69, static cff => cff.SkipUserProfiles = false)
-            );
+        (69, static cff => cff.SkipUserProfiles = false)
+        );
     }
 }

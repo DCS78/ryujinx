@@ -14,7 +14,7 @@ namespace Ryujinx.Cpu.AppleHv
         public uint Pstate { get; set; }
 
         public uint Fpcr { get; set; }
-        public uint Fpsr { get; set; }
+        public uint FPSr { get; set; }
 
         public bool IsAarch32 { get; set; }
 

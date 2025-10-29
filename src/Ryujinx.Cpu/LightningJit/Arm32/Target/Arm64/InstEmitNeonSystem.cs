@@ -41,7 +41,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm32.Target.Arm64
 
                     Operand rtOperand = InstEmitCommon.GetOutputGpr(context, rt);
 
-                    context.Arm64Assembler.MrsFpsr(rtOperand);
+                    context.Arm64Assembler.MrsFPSr(rtOperand);
                     context.Arm64Assembler.MrsFpcr(tempRegister.Operand);
                     context.Arm64Assembler.Orr(rtOperand, rtOperand, tempRegister.Operand);
                     context.Arm64Assembler.LdrRiUn(tempRegister.Operand, ctx, NativeContextOffsets.FpFlagsBaseOffset);
@@ -69,7 +69,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm32.Target.Arm64
                 Operand rtOperand = InstEmitCommon.GetInputGpr(context, rt);
 
                 context.Arm64Assembler.MsrFpcr(rtOperand);
-                context.Arm64Assembler.MsrFpsr(rtOperand);
+                context.Arm64Assembler.MsrFPSr(rtOperand);
                 context.Arm64Assembler.StrRiUn(rtOperand, ctx, NativeContextOffsets.FpFlagsBaseOffset);
             }
         }

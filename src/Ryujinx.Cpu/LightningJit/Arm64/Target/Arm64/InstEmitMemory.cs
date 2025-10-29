@@ -277,7 +277,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm64.Target.Arm64
 
             Operand rt;
 
-            if (name == InstName.LdrLitFpsimd)
+            if (name == InstName.LdrLitFPSimd)
             {
                 uint opc = encoding >> 30;
 
@@ -317,7 +317,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm64.Target.Arm64
                     break;
                 case InstName.LdrLitGen:
                 case InstName.LdrswLit:
-                case InstName.LdrLitFpsimd:
+                case InstName.LdrLitFPSimd:
                 case InstName.PrfmLit:
                     imm = encoding & ~0x1fu;
                     imm <<= 40;
@@ -332,7 +332,7 @@ namespace Ryujinx.Cpu.LightningJit.Arm64.Target.Arm64
                     switch (name)
                     {
                         case InstName.LdrLitGen:
-                        case InstName.LdrLitFpsimd:
+                        case InstName.LdrLitFPSimd:
                             asm.LdrRiUn(rt, rn, 0);
                             break;
                         case InstName.LdrswLit:

@@ -183,9 +183,9 @@ namespace ARMeilleure.Instructions
             if (toInteger)
             {
                 bool unsigned = (op.Opc2 & 1) == 0;
-                bool roundWithFpscr = op.Opc != 1;
+                bool roundWithFPScr = op.Opc != 1;
 
-                if (!roundWithFpscr && Optimizations.UseAdvSimd)
+                if (!roundWithFPScr && Optimizations.UseAdvSimd)
                 {
                     bool doubleSize = floatSize == OperandType.FP64;
 
@@ -206,7 +206,7 @@ namespace ARMeilleure.Instructions
                         InstEmitSimdHelper32Arm64.EmitScalarUnaryOpF32(context, unsigned ? Intrinsic.Arm64FcvtzuS : Intrinsic.Arm64FcvtzsS, false);
                     }
                 }
-                else if (!roundWithFpscr && Optimizations.UseSse41)
+                else if (!roundWithFPScr && Optimizations.UseSse41)
                 {
                     EmitSse41ConvertInt32(context, FPRoundingMode.TowardsZero, !unsigned);
                 }
@@ -215,7 +215,7 @@ namespace ARMeilleure.Instructions
                     Operand toConvert = ExtractScalar(context, floatSize, op.Vm);
 
                     // TODO: Fast Path.
-                    if (roundWithFpscr)
+                    if (roundWithFPScr)
                     {
                         toConvert = EmitRoundByRMode(context, toConvert);
                     }

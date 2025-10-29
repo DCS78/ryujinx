@@ -36,7 +36,7 @@ namespace Ryujinx.Headless
     {
         protected const int DefaultWidth = 1280;
         protected const int DefaultHeight = 720;
-        private const int TargetFps = 60;
+        private const int TargetFPS = 60;
         private SDL_WindowFlags DefaultFlags = SDL_WindowFlags.SDL_WINDOW_ALLOW_HIGHDPI | SDL_WindowFlags.SDL_WINDOW_RESIZABLE | SDL_WindowFlags.SDL_WINDOW_INPUT_FOCUS | SDL_WindowFlags.SDL_WINDOW_SHOWN;
         private SDL_WindowFlags FullscreenFlag = 0;
 
@@ -107,7 +107,7 @@ namespace Ryujinx.Headless
             _keyboardInterface = (IKeyboard)_inputManager.KeyboardDriver.GetGamepad("0");
             GlLogLevel = glLogLevel;
             _chrono = new Stopwatch();
-            _ticksPerFrame = Stopwatch.Frequency / TargetFps;
+            _ticksPerFrame = Stopwatch.Frequency / TargetFPS;
             _gpuCancellationTokenSource = new CancellationTokenSource();
             _exitEvent = new ManualResetEvent(false);
             _gpuDoneEvent = new ManualResetEvent(false);

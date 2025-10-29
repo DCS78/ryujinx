@@ -41,7 +41,7 @@ namespace ARMeilleure.Instructions
                     EmitGetFpcr(context);
                     return;
                 case 0b11_011_0100_0100_001:
-                    EmitGetFpsr(context);
+                    EmitGetFPSr(context);
                     return;
                 case 0b11_011_1101_0000_010:
                     EmitGetTpidrEl0(context);
@@ -82,7 +82,7 @@ namespace ARMeilleure.Instructions
                     EmitSetFpcr(context);
                     return;
                 case 0b11_011_0100_0100_001:
-                    EmitSetFpsr(context);
+                    EmitSetFPSr(context);
                     return;
                 case 0b11_011_1101_0000_010:
                     EmitSetTpidrEl0(context);
@@ -178,7 +178,7 @@ namespace ARMeilleure.Instructions
             SetIntOrZR(context, op.Rt, fpcr);
         }
 
-        private static void EmitGetFpsr(ArmEmitterContext context)
+        private static void EmitGetFPSr(ArmEmitterContext context)
         {
             OpCodeSystem op = (OpCodeSystem)context.CurrOp;
 
@@ -261,7 +261,7 @@ namespace ARMeilleure.Instructions
             context.UpdateArmFpMode();
         }
 
-        private static void EmitSetFpsr(ArmEmitterContext context)
+        private static void EmitSetFPSr(ArmEmitterContext context)
         {
             OpCodeSystem op = (OpCodeSystem)context.CurrOp;
 

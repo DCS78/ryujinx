@@ -220,7 +220,7 @@ namespace ARMeilleure.Instructions
                 case 0b0000: // FPSID
                     throw new NotImplementedException("Supervisor Only");
                 case 0b0001: // FPSCR
-                    EmitGetFpscr(context);
+                    EmitGetFPScr(context);
                     return;
                 case 0b0101: // MVFR2
                     throw new NotImplementedException("MVFR2");
@@ -244,7 +244,7 @@ namespace ARMeilleure.Instructions
                 case 0b0000: // FPSID
                     throw new NotImplementedException("Supervisor Only");
                 case 0b0001: // FPSCR
-                    EmitSetFpscr(context);
+                    EmitSetFPScr(context);
                     return;
                 case 0b0101: // MVFR2
                     throw new NotImplementedException("MVFR2");
@@ -272,7 +272,7 @@ namespace ARMeilleure.Instructions
             SetFlag(context, PState.NFlag, n);
         }
 
-        private static void EmitGetFpscr(ArmEmitterContext context)
+        private static void EmitGetFPScr(ArmEmitterContext context)
         {
             OpCode32SimdSpecial op = (OpCode32SimdSpecial)context.CurrOp;
 
@@ -289,7 +289,7 @@ namespace ARMeilleure.Instructions
             SetIntA32(context, op.Rt, fpscr);
         }
 
-        private static void EmitSetFpscr(ArmEmitterContext context)
+        private static void EmitSetFPScr(ArmEmitterContext context)
         {
             OpCode32SimdSpecial op = (OpCode32SimdSpecial)context.CurrOp;
 

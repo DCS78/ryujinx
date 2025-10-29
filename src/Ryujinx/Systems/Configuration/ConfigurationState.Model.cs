@@ -583,6 +583,11 @@ namespace Ryujinx.Ava.Systems.Configuration
             public ReactiveObject<bool> EnableMacroHLE { get; private set; }
 
             /// <summary>
+            /// Enables or disables FPS doubling
+            /// </summary>
+            public ReactiveObject<bool> EnableDoubleFPS { get; private set; }
+
+            /// <summary>
             /// Enables or disables color space passthrough, if available.
             /// </summary>
             public ReactiveObject<bool> EnableColorSpacePassthrough { get; private set; }
@@ -641,6 +646,8 @@ namespace Ryujinx.Ava.Systems.Configuration
                 PreferredGpu.LogChangesToValue(nameof(PreferredGpu));
                 EnableMacroHLE = new ReactiveObject<bool>();
                 EnableMacroHLE.LogChangesToValue(nameof(EnableMacroHLE));
+                EnableDoubleFPS = new ReactiveObject<bool>();
+                EnableDoubleFPS.LogChangesToValue(nameof(EnableDoubleFPS));
                 EnableColorSpacePassthrough = new ReactiveObject<bool>();
                 EnableColorSpacePassthrough.LogChangesToValue(nameof(EnableColorSpacePassthrough));
                 AntiAliasing = new ReactiveObject<AntiAliasing>();

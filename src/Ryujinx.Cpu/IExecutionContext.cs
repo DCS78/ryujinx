@@ -39,12 +39,12 @@ namespace Ryujinx.Cpu
         /// <summary>
         /// Floating-point Status Register.
         /// </summary>
-        uint Fpsr { get; set; }
+        uint FPSr { get; set; }
 
         /// <summary>
         /// Floating-point Status and Control Register.
         /// </summary>
-        uint Fpscr => Fpsr | Fpcr;
+        uint FPScr => FPSr | Fpcr;
 
         /// <summary>
         /// Indicates whenever the CPU is running 64-bit (AArch64 mode) or 32-bit (AArch32 mode) code.

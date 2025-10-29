@@ -71,6 +71,7 @@ namespace Ryujinx.Ava.Systems.Configuration
                 EnableShaderCache = Graphics.EnableShaderCache,
                 EnableTextureRecompression = Graphics.EnableTextureRecompression,
                 EnableMacroHLE = Graphics.EnableMacroHLE,
+                EnableDoubleFPS = Graphics.EnableDoubleFPS,
                 EnableColorSpacePassthrough = Graphics.EnableColorSpacePassthrough,
                 EnablePtc = System.EnablePtc,
                 EnableLowPowerPtc = System.EnableLowPowerPtc,
@@ -199,6 +200,7 @@ namespace Ryujinx.Ava.Systems.Configuration
             Graphics.EnableShaderCache.Value = true;
             Graphics.EnableTextureRecompression.Value = false;
             Graphics.EnableMacroHLE.Value = true;
+            Graphics.EnableDoubleFPS.Value = false;
             Graphics.EnableColorSpacePassthrough.Value = false;
             Graphics.AntiAliasing.Value = AntiAliasing.None;
             Graphics.ScalingFilter.Value = ScalingFilter.Bilinear;

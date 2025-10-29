@@ -25,7 +25,7 @@ namespace Ryujinx.HLE.Debugger.Gdb
                 32 => Helpers.ToHex(BitConverter.GetBytes(state.DebugPc)),
                 33 => Helpers.ToHex(BitConverter.GetBytes(state.Pstate)),
                 >= 34 and <= 65 => Helpers.ToHex(state.GetV(registerId - 34).ToArray()),
-                66 => Helpers.ToHex(BitConverter.GetBytes(state.Fpsr)),
+                66 => Helpers.ToHex(BitConverter.GetBytes(state.FPSr)),
                 67 => Helpers.ToHex(BitConverter.GetBytes(state.Fpcr)),
                 _ => null
             };
@@ -62,7 +62,7 @@ namespace Ryujinx.HLE.Debugger.Gdb
                 case 66:
                     {
                         ulong value = ss.ReadLengthAsLittleEndianHex(8);
-                        state.Fpsr = (uint)value;
+                        state.FPSr = (uint)value;
                         return true;
                     }
                 case 67:
@@ -99,7 +99,7 @@ namespace Ryujinx.HLE.Debugger.Gdb
                     ulong value = state.GetV(n).Extract<ulong>(shift);
                     return Helpers.ToHex(BitConverter.GetBytes(value));
                 case 65:
-                    return Helpers.ToHex(BitConverter.GetBytes(state.Fpscr));
+                    return Helpers.ToHex(BitConverter.GetBytes(state.FPScr));
                 default:
                     return null;
             }
@@ -147,7 +147,7 @@ namespace Ryujinx.HLE.Debugger.Gdb
                 case 65:
                     {
                         ulong value = ss.ReadLengthAsLittleEndianHex(8);
-                        state.Fpsr = (uint)value & FpcrMask;
+                        state.FPSr = (uint)value & FpcrMask;
                         state.Fpcr = (uint)value & ~FpcrMask;
                         return true;
                     }
